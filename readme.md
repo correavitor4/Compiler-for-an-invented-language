@@ -7,6 +7,8 @@
 ## Por que tem "makefile" no projeto?
 Foi especificado que o projeto não deveria ter bibliotecas externas. Mas sem o make fica inviável compilar o projeto, pois o número de arquivos ".c" vai aumentar muito, e o comando para compilar na mão ficaria extremamente grande.
 
+"Mas você poderia deixar tudo num mesmo arquivo .c grandão". Até poderia, mas ficaria muito desorganizado. É melhor deixar tudo separado, até porque isso pode facilitar o desenvolvimento de etapas futuras do compilador. 
+
 ## Sobre os testes 
 Optei por escrever testes, pois acredito que nenhum projeto deva ser feito sem eles. 
 É **INACEITÁVEL** um projeto sem testes!

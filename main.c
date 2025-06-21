@@ -3,7 +3,7 @@
 #include "config/options.h"
 
 int main(){
-    FILE *file = fopen("seuarquivo.txt", "r");
+    load_options();
 
     return 0;
 }

@@ -10,12 +10,6 @@ const size_t MEMORY_LIMIT_BYTES = 2 * 1024 * 1024; // 2 MB
 // Variável estática para controlar memória usada
 static size_t memory_used = 0;
 
-// Estrutura para armazenar o tamanho da alocação junto com o ponteiro
-typedef struct {
-    size_t size;
-    // Pode adicionar mais campos se quiser
-} MemHeader;
-
 // Aloca memória com controle de uso
 void* allocate_memory(size_t size) {
     size_t total_size = size + sizeof(MemHeader);
@@ -56,7 +50,6 @@ void check_available_memory(size_t size) {
     }
 }
 
-//TODO: testar
 void* reallocate_memory(void* ptr, size_t new_size) {
     if (!ptr) {
         // Se ptr é NULL, comporta-se como allocate_memory

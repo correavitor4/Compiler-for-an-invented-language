@@ -2,6 +2,9 @@
     "files.associations": {
         "stdlib.h": "c",
         "options.h": "c",
-        "string.h": "c"
+        "string.h": "c",
+        "reader.h": "c",
+        "unity.h": "c",
+        "memory_controller.h": "c"
     }
 }

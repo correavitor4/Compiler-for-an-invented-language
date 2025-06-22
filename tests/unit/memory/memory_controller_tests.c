@@ -12,14 +12,12 @@ void tearDown(void) {
 
 // Testa alocação simples e liberação
 void test_allocate_and_free_memory(void) {
-    size_t initial_used, total;
-    get_memory_usage(&initial_used, &total);
+    size_t initial_used = get_memory_usage();
 
     void* ptr = allocate_memory(1024); // 1 KB
     TEST_ASSERT_NOT_NULL(ptr);
 
-    size_t used_after_alloc;
-    get_memory_usage(&used_after_alloc, NULL);
+    size_t used_after_alloc = get_memory_usage();
     TEST_ASSERT_TRUE(used_after_alloc > initial_used);
 
     free_memory(ptr);

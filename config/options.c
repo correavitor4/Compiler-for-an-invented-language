@@ -47,3 +47,13 @@ void set_directory_path(const char *path)
     strncpy(directory_path, path, sizeof(directory_path) - 1);
     directory_path[sizeof(directory_path) - 1] = '\0';
 }
+
+
+
+// Lex options
+int initial_lex_token_accumulator_size = 64;
+// TODO: Must be tested
+int get_initial_lex_token_accumulator_size()
+{
+    return initial_lex_token_accumulator_size;
+}

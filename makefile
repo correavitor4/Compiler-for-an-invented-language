@@ -1,67 +1,61 @@
-# Compilador e flags
+# Compiler and flags
 CC = gcc
-CFLAGS = -Wall -Wextra -g -std=c11
+# Use -g for debugging, -Wall for warnings.
+# -Iinclude tells gcc to look for headers in the 'include' directory.
+# -MMD -MP generates dependency files (.d) for header tracking
+CFLAGS = -g -Wall -std=c11 -Iinclude -MMD -MP
+# Add linker flags if needed, e.g., -lm for math library
+LDFLAGS =
 
-# Diretórios
-SRC_DIR = .
-CONFIG_DIR = config
-READER_DIR = reader
-MEMORY_CONTROLLER_DIR = memory
-TESTS_DIR = tests
-UNITY_DIR = $(TESTS_DIR)/libs/unity/src
-OPTIONS_TESTS_DIR = $(TESTS_DIR)/unit/options
-MEMORY_TESTS_DIR = $(TESTS_DIR)/unit/memory
-READER_TESTS_DIR = $(TESTS_DIR)/unit/reader
-READER_TEST_FILES = $(READER_TESTS_DIR)/reader_tests.c
-READER_SRC_FILE = $(READER_DIR)/reader.c
-READER_TEST_EXE = test_reader
+MAIN_MODULE = core
 
+# --- BUILD SPECIFIC FOLDERS ---
+# List the names of the folders inside 'src' that you want to build.
+# For example, to build only 'src/core' and 'src/utils', set:
 
-# Fontes principais do programa
-SRC_FILES = $(SRC_DIR)/main.c \
-            $(CONFIG_DIR)/options.c \
-            $(READER_DIR)/reader.c
+# WARNING : Must be in order of dependencies!
 
-# Arquivos de teste unitário
-OPTIONS_TEST_FILES = $(OPTIONS_TESTS_DIR)/options_unit_tests.c
-MEMORY_TEST_FILES = $(MEMORY_TESTS_DIR)/memory_controller_tests.c
+# Ex: SRC_MODULES = core utils
+SRC_MODULES = memory reader core
 
-# Arquivo Unity
-UNITY_SRC = $(UNITY_DIR)/unity.c
+# Project name and directories
+EXEC = $(MAIN_MODULE)
+BUILD_DIR = build
+BIN_DIR = $(BUILD_DIR)/bin
+SRC_DIR = src
+INCLUDE_DIR = include
 
-# Executáveis
-MAIN_EXE = main
-OPTIONS_TEST_EXE = test_options
-MEMORY_TEST_EXE = test_memory_controller
+# Find all .c files within the specified module directories
+MODULE_PATHS = $(patsubst %,$(SRC_DIR)/%,$(SRC_MODULES))
+SOURCES = $(foreach dir,$(MODULE_PATHS),$(shell find $(dir) -name '*.c'))
 
-.PHONY: all build test test_options test_memory clean
+# Create object file paths in the BUILD_DIR, preserving the subdirectory structure
+OBJECTS = $(patsubst $(SRC_DIR)/%.c,$(BUILD_DIR)/%.o,$(SOURCES))
+# Create dependency file paths (.d) in the BUILD_DIR
+DEPS = $(OBJECTS:.o=.d)
 
-all: build
+# The default target, which builds the executable in the BIN_DIR
+all: $(BIN_DIR)/$(EXEC)
 
-build: $(SRC_FILES)
-	$(CC) $(CFLAGS) -o $(MAIN_EXE) $(SRC_FILES)
+# Rule to link the executable
+$(BIN_DIR)/$(EXEC): $(OBJECTS)
+	@mkdir -p $(@D)
+	$(CC) $(OBJECTS) -o $@ $(LDFLAGS)
+	@echo "Linking complete. Executable '$(EXEC)' is at $(BIN_DIR)/$(EXEC)"
 
-# Regra principal para rodar todos os testes
-test: test_options test_memory test_reader
+# Rule to compile source files into object files in the build directory
+$(BUILD_DIR)/%.o: $(SRC_DIR)/%.c
+	@mkdir -p $(@D)
+	$(CC) $(CFLAGS) -c $< -o $@
+	@echo "Compiled $< into $@"
 
-# Testes do módulo options
-test_options: $(OPTIONS_TEST_FILES) $(CONFIG_DIR)/options.c $(UNITY_SRC)
-	@echo "Compilando e executando testes do módulo options..."
-	$(CC) $(CFLAGS) -DTESTING -I$(UNITY_DIR) -I$(CONFIG_DIR) -o $(OPTIONS_TEST_EXE) $(OPTIONS_TEST_FILES) $(CONFIG_DIR)/options.c $(UNITY_SRC)
-	./$(OPTIONS_TEST_EXE)
-
-# Testes do módulo memory_controller
-test_memory: $(MEMORY_TEST_FILES) $(MEMORY_CONTROLLER_DIR)/memory_controller.c $(UNITY_SRC)
-	@echo "Compilando e executando testes do módulo memory_controller..."
-	$(CC) $(CFLAGS) -DTESTING -I$(UNITY_DIR) -I$(MEMORY_CONTROLLER_DIR) -o $(MEMORY_TEST_EXE) $(MEMORY_TEST_FILES) $(MEMORY_CONTROLLER_DIR)/memory_controller.c $(UNITY_SRC)
-	./$(MEMORY_TEST_EXE)
-
-# Testes do módulo reader
-test_reader: $(READER_TEST_FILES) $(READER_SRC_FILE) $(MEMORY_CONTROLLER_DIR)/memory_controller.c $(UNITY_SRC)
-	$(CC) $(CFLAGS) -DTESTING -I$(UNITY_DIR) -I$(READER_DIR) -I$(MEMORY_CONTROLLER_DIR) -o $(READER_TEST_EXE) \
-		$(READER_TEST_FILES) $(READER_SRC_FILE) $(MEMORY_CONTROLLER_DIR)/memory_controller.c $(UNITY_SRC)
-	./$(READER_TEST_EXE)
-
+# Clean up build artifacts
 clean:
-	@echo "Removendo executáveis..."
-	rm -f $(MAIN_EXE) $(OPTIONS_TEST_EXE) $(MEMORY_TEST_EXE) $(READER_TEST_EXE)
+	@echo "Cleaning up build files..."
+	rm -rf $(BUILD_DIR) $(BIN_DIR)
+
+# Declare non-file targets
+.PHONY: all clean
+
+# Include the dependency files. The '-' prevents errors if the files don't exist yet.
+-include $(DEPS)

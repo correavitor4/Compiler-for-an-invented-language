@@ -1,5 +1,5 @@
 #include "unity.h"
-#include "memory_controller.h"
+#include "memory/memory_controller.h"
 #include <string.h>  // para memset
 
 void setUp(void) {

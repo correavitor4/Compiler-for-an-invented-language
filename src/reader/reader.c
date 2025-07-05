@@ -115,3 +115,33 @@ void file_reader_destroy(FileReader *fr) {
     free_memory(fr->buffer);
     free_memory(fr);
 }
+
+
+/**
+ * @brief Resets the buffer of the given FileReader to its initial size.
+ *
+ * This function checks if the provided FileReader and its buffer are valid.
+ * It then attempts to reallocate the buffer to the predefined INITIAL_BUFFER_SIZE.
+ * On success, the buffer pointer and size are updated accordingly.
+ *
+ * @param fr Pointer to the FileReader whose buffer is to be reset.
+ * @return int Returns 0 on success, or -1 if the FileReader or buffer is invalid,
+ *             or if memory reallocation fails.
+ */
+
+int reset_buffer_size(FileReader *fr) {
+    if (!fr || !fr->buffer) {
+        return -1; // Invalid FileReader or buffer.
+    }
+
+    // Reallocate the buffer to its initial size.
+    char *new_buf = reallocate_memory(fr->buffer, INITIAL_BUFFER_SIZE);
+    if (!new_buf) {
+        return -1; // Reallocation failed.
+    }
+
+    fr->buffer = new_buf;
+    fr->buffer_size = INITIAL_BUFFER_SIZE;
+
+    return 0; // Success
+}

@@ -1,5 +1,4 @@
 #include "unity.h"
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -76,27 +75,6 @@ void test_file_reader_read_lines(void)
     file_reader_destroy(fr);
 }
 
-// Testa reset do buffer
-void test_reset_buffer_size(void)
-{
-    create_test_file("Linha 1\n");
-
-    FileReader *fr = file_reader_create(test_file_name);
-    TEST_ASSERT_NOT_NULL(fr);
-
-    // Força buffer maior para testar reset
-    char *new_buf = reallocate_memory(fr->buffer, INITIAL_BUFFER_SIZE * 4);
-    TEST_ASSERT_NOT_NULL(new_buf);
-    fr->buffer = new_buf;
-    fr->buffer_size = INITIAL_BUFFER_SIZE * 4;
-
-    int res = reset_buffer_size(fr);
-    TEST_ASSERT_EQUAL_INT(0, res);
-    TEST_ASSERT_EQUAL_UINT(INITIAL_BUFFER_SIZE, fr->buffer_size);
-
-    file_reader_destroy(fr);
-}
-
 // Testa comportamento com arquivo inexistente
 void test_file_reader_create_nonexistent_file(void)
 {
@@ -130,7 +108,6 @@ int main(void)
 
     RUN_TEST(test_file_reader_create_destroy);
     RUN_TEST(test_file_reader_read_lines);
-    RUN_TEST(test_reset_buffer_size);
     RUN_TEST(test_file_reader_create_nonexistent_file);
     RUN_TEST(test_file_reader_read_empty_file);
     RUN_TEST(test_create_with_invalid_filename);

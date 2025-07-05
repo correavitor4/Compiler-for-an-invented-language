@@ -1,16 +1,14 @@
-#include "options.h"
+#include "config.h"
 #include <stdio.h>
 #include <string.h>
 
 static char directory_path[256] = "files/";
 
 // I created a custom fgets function to "mock" the fgets function for testing purposes.
-#ifndef TESTING
 char *my_fgets(char *str, int num, FILE *stream)
 {
     return fgets(str, num, stream);
 }
-#endif
 
 void read_directory_path()
 {

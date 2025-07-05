@@ -1,11 +1,14 @@
+#define my_fgets_mocked my_fgets_mocked_mocked
+
 #include "unity.h"
 #include <string.h>  // Inclua para strncpy
+#include "config/config.h"
 
-#include "config/options.h"
+#undef my_fgets_mocked  // Desfaz a definição para evitar conflitos
 
 static const char* mock_input = NULL;
 
-char* my_fgets(char* str, int num, FILE* stream) {
+char* my_fgets_mocked(char* str, int num, FILE* stream) {
     (void)stream; // evita warning unused parameter
     if (!mock_input) return NULL;
     strncpy(str, mock_input, num - 1);

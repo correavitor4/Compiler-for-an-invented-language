@@ -5,7 +5,7 @@
 static char directory_path[256] = "files/";
 
 // I created a custom fgets function to "mock" the fgets function for testing purposes.
-char *my_fgets(char *str, int num, FILE *stream)
+__attribute__((weak)) char* my_fgets(char* str, int num, FILE* stream)
 {
     return fgets(str, num, stream);
 }

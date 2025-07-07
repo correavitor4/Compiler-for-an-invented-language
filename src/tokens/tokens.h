@@ -1,6 +1,7 @@
 #ifndef TOKENS_H
 #define TOKENS_H
 
+//TODO: describe each token using comments
 typedef enum {
     TOKEN_VAR_DATA_TYPE_INT,
     TOKEN_VAR_DATA_TYPE_DECIMAL,

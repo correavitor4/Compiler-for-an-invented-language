@@ -141,6 +141,60 @@ void test_try_parse_functions____with_null_function____should_return_error()
 
 #pragma endregion
 
+#pragma region try_parse_console_ops
+void test_try_parse_console_ops____with_valid_op____should_return_sucess()
+{
+    const char* functions[] = {
+        "leia",
+        "escreva"
+    };
+    
+    for (int i = 0; i < 2; i++)
+    {
+        TokenType token_type;
+        int result = try_parse_console_ops(functions[i], strlen(functions[i]), &token_type);
+        TEST_ASSERT_EQUAL_INT(TRY_PARSE_CONSOLE_OPS_TOKEN_SUCCESS, result);
+        TEST_ASSERT_EQUAL_INT(TOKEN_LEIA + i, token_type);
+    }
+}
+
+void test_try_parse_console_ops____with_invalid_op____should_return_not_found()
+{
+    const char* functions[] = {
+        "leiax",
+        "escrevax"
+        "_leia",
+        "_escreva",
+        "__leia_",
+        "__escreva_"
+        "xescreva",
+        " ",
+        ""
+    };
+
+    for (int i = 0; i < 2; i++)
+    {
+        TokenType token_type;
+        int result = try_parse_console_ops(functions[i], strlen(functions[i]), &token_type);
+        TEST_ASSERT_EQUAL_INT(TRY_PARSE_CONSOLE_OPS_TOKEN_NOT_FOUND, result);
+    }
+}
+
+void test_try_parse_console_ops____with_null_token____should_return_error()
+{
+    int result = try_parse_console_ops("leia", 4, NULL);
+    TEST_ASSERT_EQUAL_INT(TRY_PARSE_CONSOLE_OPS_TOKEN_ERROR, result);
+}
+
+void test_try_parse_console_ops____with_null_op____should_return_error()
+{
+    TokenType token_type;
+    int result = try_parse_console_ops(NULL, 0, &token_type);
+    TEST_ASSERT_EQUAL_INT(TRY_PARSE_CONSOLE_OPS_TOKEN_ERROR, result);
+}
+
+#pragma endregion
+
 int main(void)
 {
     UNITY_BEGIN();
@@ -158,6 +212,12 @@ int main(void)
     RUN_TEST(test_try_parse_functions____with_null_token____should_return_error);
     RUN_TEST(test_try_parse_functions____with_null_function____should_return_error);
    
+
+    // console ops
+    RUN_TEST(test_try_parse_console_ops____with_valid_op____should_return_sucess);
+    RUN_TEST(test_try_parse_console_ops____with_invalid_op____should_return_not_found);
+    RUN_TEST(test_try_parse_console_ops____with_null_token____should_return_error);
+    RUN_TEST(test_try_parse_console_ops____with_null_op____should_return_error);
     
     return UNITY_END();
 }

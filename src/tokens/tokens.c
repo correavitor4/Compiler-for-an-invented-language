@@ -166,7 +166,6 @@ int try_parse_data_type(char *variable, TokenType *token_type) {
     return TRY_PARSE_DATA_TYPE_TOKEN_NOT_FOUND;
 }
 
-//TODO: testar
 int try_parse_functions(char *function_string, int function_string_length, TokenType *token_type) {
     #pragma region programação defensiva
     if (token_type == NULL) {
@@ -211,13 +210,13 @@ int try_parse_console_ops(char *console_string, int console_string_length, Token
     #pragma endregion
 
     // 1 Verifica se é um token de leitura
-    if (strncmp(console_string, "leia", (size_t)4) == 0) {
+    if (console_string_length == 4 && strncmp(console_string, "leia", 4) == 0) {
         *token_type = TOKEN_LEIA;
         return TRY_PARSE_CONSOLE_OPS_TOKEN_SUCCESS;
     }
 
     // 2 Verifica se é um token de escrita
-    else if (strncmp(console_string, "escreva", (size_t)7) == 0) {
+    else if (console_string_length == 7 && strncmp(console_string, "escreva", 7) == 0) {
         *token_type = TOKEN_ESCREVA;
         return TRY_PARSE_CONSOLE_OPS_TOKEN_SUCCESS;
     }
@@ -241,13 +240,12 @@ int try_parse_conditional(char *conditional_string, int conditional_string_lengt
     #pragma endregion
 
     // 1 Verifica se é um token de condição
-    if (strncmp(conditional_string, "se", (size_t)2) == 0) {
+    if (conditional_string_length == 2 && strncmp(conditional_string, "se", 2) == 0) {
         *token_type = TOKEN_SE;
         return TRY_PARSE_CONDITIONAL_TOKEN_SUCCESS;
     }
 
-    
-    if (strncmp(conditional_string, "senao", 5) == 0) {
+    if (conditional_string_length == 5 && strncmp(conditional_string, "senao", 5) == 0) {
         *token_type = TOKEN_SENAO;
         return TRY_PARSE_CONDITIONAL_TOKEN_SUCCESS;
     }
@@ -270,7 +268,7 @@ int try_parse_para(char *para_string, int para_string_length, TokenType *token_t
     #pragma endregion
 
     // 1 Verifica se é um token de laço "para"
-    if (strncmp(para_string, "para", 4) == 0) {
+    if (para_string_length == 4 && strncmp(para_string, "para", 4) == 0) {
         *token_type = TOKEN_PARA;
         return TRY_PARSE_FOR_LOOP_TOKEN_SUCCESS;
     }
@@ -391,49 +389,49 @@ int try_parse_special_token(char *token_string, int token_string_length, TokenTy
     #pragma endregion
 
     // 1. Verifica se é um parêntese aberto
-    if (strncmp(token_string, "(", 1) == 0) {
+    if (token_string_length == 1 && strncmp(token_string, "(", 1) == 0) {
         *token_type = TOKEN_PARENTESES_ABRIR;
         return TRY_PARSE_SPECIAL_TOKEN_SUCCESS;
     }
 
     // 2. Verifica se é um parêntese fechado
-    if (strncmp(token_string, ")", 1) == 0) {
+    if (token_string_length == 1 && strncmp(token_string, ")", 1) == 0) {
         *token_type = TOKEN_PARENTESES_FECHAR;
         return TRY_PARSE_SPECIAL_TOKEN_SUCCESS;
     }
 
     // 3. Verifica se é uma chave aberta
-    if (strncmp(token_string, "{", 1) == 0) {
+    if (token_string_length == 1 && strncmp(token_string, "{", 1) == 0) {
         *token_type = TOKEN_CHAVE_ABRIR;
         return TRY_PARSE_SPECIAL_TOKEN_SUCCESS;
     }
 
     // 4. Verifica se é uma chave fechada
-    if (strncmp(token_string, "}", 1) == 0) {
+    if (token_string_length == 1 && strncmp(token_string, "}", 1) == 0) {
         *token_type = TOKEN_CHAVE_FECHAR;
         return TRY_PARSE_SPECIAL_TOKEN_SUCCESS;
     }
 
     // 5. Verifica se é uma vírgula
-    if (strncmp(token_string, ",", 1) == 0) {
+    if (token_string_length == 1 && strncmp(token_string, ",", 1) == 0) {
         *token_type = TOKEN_VIRGULA;
         return TRY_PARSE_SPECIAL_TOKEN_SUCCESS;
     }
 
     // 6. Verifica se é um ponto e vírgula
-    if (strncmp(token_string, ";", 1) == 0) {
+    if (token_string_length == 1 && strncmp(token_string, ";", 1) == 0) {
         *token_type = TOKEN_PONTO_E_VIRGULA;
         return TRY_PARSE_SPECIAL_TOKEN_SUCCESS;
     }
 
     // 7. Verifica se é um colchete aberto
-    if (strncmp(token_string, "[", 1) == 0) {
+    if (token_string_length == 1 && strncmp(token_string, "[", 1) == 0) {
         *token_type = TOKEN_COCHETE_ABRIR;
         return TRY_PARSE_SPECIAL_TOKEN_SUCCESS;
     }
 
     // 8. Verifica se é um colchete fechado
-    if (strncmp(token_string, "]", 1) == 0) {
+    if (token_string_length == 1 && strncmp(token_string, "]", 1) == 0) {
         *token_type = TOKEN_COCHETE_FECHAR;
         return TRY_PARSE_SPECIAL_TOKEN_SUCCESS;
     }
@@ -456,31 +454,31 @@ int try_parse_arithmetic_operator(char *operator_string, int operator_string_len
     #pragma endregion
 
     // 1. Verifica se é um operador de adição
-    if (strncmp(operator_string, "+", 1) == 0) {
+    if (operator_string_length == 1 && strncmp(operator_string, "+", 1) == 0) {
         *token_type = TOKEN_OPERADOR_SOMA;
         return TRY_PARSE_ARITHMETIC_OPERATOR_TOKEN_SUCCESS;
     }
 
     // 2. Verifica se é um operador de subtração
-    if (strncmp(operator_string, "-", 1) == 0) {
+    if (operator_string_length == 1 && strncmp(operator_string, "-", 1) == 0) {
         *token_type = TOKEN_OPERADOR_SUBTRACAO;
         return TRY_PARSE_ARITHMETIC_OPERATOR_TOKEN_SUCCESS;
     }
 
     // 3. Verifica se é um operador de multiplicação
-    if (strncmp(operator_string, "*", 1) == 0) {
+    if (operator_string_length == 1 && strncmp(operator_string, "*", 1) == 0) {
         *token_type = TOKEN_OPERADOR_MULTIPLICACAO;
         return TRY_PARSE_ARITHMETIC_OPERATOR_TOKEN_SUCCESS;
     }
 
     // 4. Verifica se é um operador de divisão
-    if (strncmp(operator_string, "/", 1) == 0) {
+    if (operator_string_length == 1 && strncmp(operator_string, "/", 1) == 0) {
         *token_type = TOKEN_OPERADOR_DIVISAO;
         return TRY_PARSE_ARITHMETIC_OPERATOR_TOKEN_SUCCESS;
     }
 
     // 5. Verifica se é um operador de exponenciação
-    if (strncmp(operator_string, "^", 1) == 0) {
+    if (operator_string_length == 1 && strncmp(operator_string, "^", 1) == 0) {
         *token_type = TOKEN_OPERADOR_EXPONENCIACAO;
         return TRY_PARSE_ARITHMETIC_OPERATOR_TOKEN_SUCCESS;
     }
@@ -503,37 +501,37 @@ int try_parse_comparison_operator(char *operator_string, int operator_string_len
     #pragma endregion
 
     // 1. Verifica se é um operador de comparação de igualdade
-    if (strncmp(operator_string, "==", 2) == 0) {
+    if (operator_string_length == 2 && strncmp(operator_string, "==", 2) == 0) {
         *token_type = TOKEN_OPERADOR_COMPARACAO_IGUAL;
         return TRY_PARSE_COMPARISON_OPERATOR_TOKEN_SUCCESS;
     }
 
     // 2. Verifica se é um operador de comparação de diferença
-    if (strncmp(operator_string, "!=", 2) == 0) {
+    if (operator_string_length == 2 && strncmp(operator_string, "!=", 2) == 0) {
         *token_type = TOKEN_OPERADOR_COMPARACAO_DIFERENTE;
         return TRY_PARSE_COMPARISON_OPERATOR_TOKEN_SUCCESS;
     }
 
     // 3. Verifica se é um operador de comparação maior que
-    if (strncmp(operator_string, ">", 1) == 0) {
+    if (operator_string_length == 1 && strncmp(operator_string, ">", 1) == 0) {
         *token_type = TOKEN_OPERADOR_COMPARACAO_MAIOR;
         return TRY_PARSE_COMPARISON_OPERATOR_TOKEN_SUCCESS;
     }
 
     // 4. Verifica se é um operador de comparação maior ou igual a
-    if (strncmp(operator_string, ">=", 2) == 0) {
+    if (operator_string_length == 2 && strncmp(operator_string, ">=", 2) == 0) {
         *token_type = TOKEN_OPERADOR_COMPARACAO_MAIOR_IGUAL;
         return TRY_PARSE_COMPARISON_OPERATOR_TOKEN_SUCCESS;
     }
 
     // 5. Verifica se é um operador de comparação menor que
-    if (strncmp(operator_string, "<", 1) == 0) {
+    if (operator_string_length == 1 && strncmp(operator_string, "<", 1) == 0) {
         *token_type = TOKEN_OPERADOR_COMPARACAO_MENOR;
         return TRY_PARSE_COMPARISON_OPERATOR_TOKEN_SUCCESS;
     }
 
     // 6. Verifica se é um operador de comparação menor ou igual a
-    if (strncmp(operator_string, "<=", 2) == 0) {
+    if (operator_string_length == 2 && strncmp(operator_string, "<=", 2) == 0) {
         *token_type = TOKEN_OPERADOR_COMPARACAO_MENOR_IGUAL;
         return TRY_PARSE_COMPARISON_OPERATOR_TOKEN_SUCCESS;
     }
@@ -556,13 +554,13 @@ int try_parse_logical_operator(char *operator_string, int operator_string_length
     #pragma endregion
 
     // 1. Verifica se é um operador lógico E
-    if (strncmp(operator_string, "&&", 2) == 0) {
+    if (operator_string_length == 2 && strncmp(operator_string, "&&", 2) == 0) {
         *token_type = TOKEN_OPERADOR_LOGICO_E;
         return TRY_PARSE_LOGICAL_OPERATOR_TOKEN_SUCCESS;
     }
 
     // 2. Verifica se é um operador lógico OU
-    if (strncmp(operator_string, "||", 2) == 0) {
+    if (operator_string_length == 2 && strncmp(operator_string, "||", 2) == 0) {
         *token_type = TOKEN_OPERADOR_LOGICO_OU;
         return TRY_PARSE_LOGICAL_OPERATOR_TOKEN_SUCCESS;
     }
@@ -570,4 +568,3 @@ int try_parse_logical_operator(char *operator_string, int operator_string_length
     // 3. Se chegou aqui, operador lógico desconhecido
     return TRY_PARSE_LOGICAL_OPERATOR_TOKEN_NOT_FOUND;
 }
-

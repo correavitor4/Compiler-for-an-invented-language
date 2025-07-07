@@ -195,7 +195,6 @@ int try_parse_functions(char *function_string, int function_string_length, Token
     return TRY_PARSE_FUNCTION_TOKEN_NOT_FOUND;
 }
 
-//TODO: testar
 int try_parse_console_ops(char *console_string, int console_string_length, TokenType *token_type) {
     #pragma region programação defensiva
     if (token_type == NULL) {
@@ -225,7 +224,6 @@ int try_parse_console_ops(char *console_string, int console_string_length, Token
     return TRY_PARSE_CONSOLE_OPS_TOKEN_NOT_FOUND;
 }
 
-//TODO: testar
 int try_parse_conditional(char *conditional_string, int conditional_string_length, TokenType *token_type) {
     #pragma region programação defensiva
     if (token_type == NULL) {
@@ -254,7 +252,6 @@ int try_parse_conditional(char *conditional_string, int conditional_string_lengt
     return TRY_PARSE_CONDITIONAL_TOKEN_NOT_FOUND;
 }
 
-//TODO: testar
 int try_parse_para(char *para_string, int para_string_length, TokenType *token_type) {
     #pragma region programação defensiva
     if (token_type == NULL) {

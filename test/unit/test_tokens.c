@@ -249,6 +249,56 @@ void test_try_parse_conditional____with_null_function____should_return_error()
 
 #pragma endregion
 
+#pragma region try_parse_para
+void test_try_parse_para____with_valid_token____should_return_sucess()
+{
+    const char* functions[] = {
+        "para",
+    };
+    
+    for (int i = 0; i < 1; i++)
+    {
+        TokenType token_type;
+        int result = try_parse_para(functions[i], strlen(functions[i]), &token_type);
+        TEST_ASSERT_EQUAL_INT(TRY_PARSE_FOR_LOOP_TOKEN_SUCCESS, result);
+        TEST_ASSERT_EQUAL_INT(TOKEN_PARA + i, token_type);
+    }
+}
+
+void test_try_parse_para____with_invalid_token____should_return_not_found()
+{
+    const char* functions[] = {
+        "para_",
+        "_para",
+        "__para_",
+        "xpara",
+        " ",
+        ""
+    };
+    
+    for (int i = 0; i < 2; i++)
+    {
+        TokenType token_type;
+        int result = try_parse_para(functions[i], strlen(functions[i]), &token_type);
+        TEST_ASSERT_EQUAL_INT(TRY_PARSE_FOR_LOOP_TOKEN_NOT_FOUND, result);
+    }
+}
+
+void test_try_parse_para____with_null_token____should_return_error()
+{
+    int result = try_parse_para("para", 4, NULL);
+    TEST_ASSERT_EQUAL_INT(TRY_PARSE_FOR_LOOP_TOKEN_ERROR, result);
+}
+
+void test_try_parse_para____with_null_function____should_return_error()
+{
+    TokenType token_type;
+    int result = try_parse_para(NULL, 0, &token_type);
+    TEST_ASSERT_EQUAL_INT(TRY_PARSE_FOR_LOOP_TOKEN_ERROR, result);
+}
+
+#pragma endregion
+
 int main(void)
 {
     UNITY_BEGIN();
@@ -279,6 +329,14 @@ int main(void)
     RUN_TEST(test_try_parse_conditional____with_invalid_token____should_return_not_found);
     RUN_TEST(test_try_parse_conditional____with_null_token____should_return_error);
     RUN_TEST(test_try_parse_conditional____with_null_function____should_return_error);
+
+
+    // for loop
+    RUN_TEST(test_try_parse_para____with_valid_token____should_return_sucess);
+    RUN_TEST(test_try_parse_para____with_invalid_token____should_return_not_found);
+    RUN_TEST(test_try_parse_para____with_null_token____should_return_error);
+    RUN_TEST(test_try_parse_para____with_null_function____should_return_error);
+    
 
     return UNITY_END();
 }

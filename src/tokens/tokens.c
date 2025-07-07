@@ -274,8 +274,6 @@ int try_parse_para(char *para_string, int para_string_length, TokenType *token_t
     return TRY_PARSE_FOR_LOOP_TOKEN_NOT_FOUND;
 }
 
-
-//TODO: testar
 int try_parse_function_name(char *function_name_string, int function_name_string_length, TokenType *token_type) {
     #pragma region programação defensiva
     if (token_type == NULL) {

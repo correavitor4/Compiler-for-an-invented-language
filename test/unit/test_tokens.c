@@ -46,16 +46,15 @@ void test_try_parse_data_type____with_invalid_data_type____should_return_not_fou
         " ",
         "xinteiro",
         "xdecimal",
-        "xtexto"
+        "xtexto",
         "_inteiro",
         "_decimal",
-        "_texto"
+        "_texto",
         "__inteiro_",
         "__decimal_",
-        "__texto_"
-    };
+        "__texto_"};
 
-    for (int i = 0; i < 5; i++)
+    for (int i = 0; i < 15; i++)
     {
         Token *token = allocate_memory(sizeof(Token));
         TEST_ASSERT_NOT_NULL(token);
@@ -64,7 +63,6 @@ void test_try_parse_data_type____with_invalid_data_type____should_return_not_fou
         TEST_ASSERT_EQUAL_INT(TRY_PARSE_DATA_TYPE_TOKEN_NOT_FOUND, result);
         free_memory(token);
     }
-
 }
 
 void test_try_parse_data_type____with_null_token____should_return_error()
@@ -83,18 +81,17 @@ void test_try_parse_data_type____with_null_data_type____should_return_error()
     int result = try_parse_data_type(NULL, token);
     TEST_ASSERT_EQUAL_INT(TRY_PARSE_DATA_TYPE_TOKEN_ERROR, result);
     free_memory(token);
-}   
+}
 
 #pragma endregion
 
 #pragma region try_parse_functions
 void test_try_parse_functions____with_valid_function____should_return_sucess()
 {
-    const char* functions[] = {
+    const char *functions[] = {
         "principal",
-        "funcao"
-    };
-    
+        "funcao"};
+
     for (int i = 0; i < 2; i++)
     {
         TokenType token_type;
@@ -106,7 +103,7 @@ void test_try_parse_functions____with_valid_function____should_return_sucess()
 
 void test_try_parse_functions____with_invalid_function____should_return_not_found()
 {
-    const char* functions[] = {
+    const char *functions[] = {
         "funcaox",
         "principalx"
         "_funcao",
@@ -115,8 +112,7 @@ void test_try_parse_functions____with_invalid_function____should_return_not_foun
         "__principal_"
         "xprincipal",
         " ",
-        ""
-    };
+        ""};
 
     for (int i = 0; i < 2; i++)
     {
@@ -144,11 +140,10 @@ void test_try_parse_functions____with_null_function____should_return_error()
 #pragma region try_parse_console_ops
 void test_try_parse_console_ops____with_valid_op____should_return_sucess()
 {
-    const char* functions[] = {
+    const char *functions[] = {
         "leia",
-        "escreva"
-    };
-    
+        "escreva"};
+
     for (int i = 0; i < 2; i++)
     {
         TokenType token_type;
@@ -160,7 +155,7 @@ void test_try_parse_console_ops____with_valid_op____should_return_sucess()
 
 void test_try_parse_console_ops____with_invalid_op____should_return_not_found()
 {
-    const char* functions[] = {
+    const char *functions[] = {
         "leiax",
         "escrevax"
         "_leia",
@@ -169,8 +164,7 @@ void test_try_parse_console_ops____with_invalid_op____should_return_not_found()
         "__escreva_"
         "xescreva",
         " ",
-        ""
-    };
+        ""};
 
     for (int i = 0; i < 2; i++)
     {
@@ -198,11 +192,10 @@ void test_try_parse_console_ops____with_null_op____should_return_error()
 #pragma region try_parse_conditional
 void test_try_parse_conditional____with_valid_token____should_return_sucess()
 {
-    const char* functions[] = {
+    const char *functions[] = {
         "se",
-        "senao"
-    };
-    
+        "senao"};
+
     for (int i = 0; i < 2; i++)
     {
         TokenType token_type;
@@ -214,7 +207,7 @@ void test_try_parse_conditional____with_valid_token____should_return_sucess()
 
 void test_try_parse_conditional____with_invalid_token____should_return_not_found()
 {
-    const char* functions[] = {
+    const char *functions[] = {
         "se_",
         "senao_",
         "_se",
@@ -223,9 +216,8 @@ void test_try_parse_conditional____with_invalid_token____should_return_not_found
         "__senao_",
         "xse",
         " ",
-        ""
-    };
-    
+        ""};
+
     for (int i = 0; i < 2; i++)
     {
         TokenType token_type;
@@ -252,10 +244,10 @@ void test_try_parse_conditional____with_null_function____should_return_error()
 #pragma region try_parse_para
 void test_try_parse_para____with_valid_token____should_return_sucess()
 {
-    const char* functions[] = {
+    const char *functions[] = {
         "para",
     };
-    
+
     for (int i = 0; i < 1; i++)
     {
         TokenType token_type;
@@ -267,15 +259,14 @@ void test_try_parse_para____with_valid_token____should_return_sucess()
 
 void test_try_parse_para____with_invalid_token____should_return_not_found()
 {
-    const char* functions[] = {
+    const char *functions[] = {
         "para_",
         "_para",
         "__para_",
         "xpara",
         " ",
-        ""
-    };
-    
+        ""};
+
     for (int i = 0; i < 2; i++)
     {
         TokenType token_type;
@@ -299,6 +290,66 @@ void test_try_parse_para____with_null_function____should_return_error()
 
 #pragma endregion
 
+#pragma region try_parse_function_name
+void test_try_parse_function_name____with_valid_function_name____should_return_sucess()
+{
+    const char *functions[] = {
+        "__bar",
+        "__foo",
+        "__foo",
+        "__BAR",
+        "__FOO",
+        "__FooBar",
+        "__fooBar",
+        "__FOOBAR"};
+
+    for (int i = 0; i < 8; i++)
+    {
+        TokenType token_type;
+        int result = try_parse_function_name(functions[i], strlen(functions[i]), &token_type);
+        TEST_ASSERT_EQUAL_INT(TRY_PARSE_FUNCTION_NAME_TOKEN_SUCCESS, result);
+        TEST_ASSERT_EQUAL_INT(TOKEN_NOME_FUNCAO, token_type);
+    }
+}
+
+void test_try_parse_function_name____with_invalid_function_name____should_return_not_found()
+{
+    const char *functions[] = {
+        "_bar",
+        "_foo",
+        "_BAR",
+        "_FOO",
+        "_FooBar",
+        "_fooBar",
+        "_FOOBAR",
+        "__for_error",
+        "__sdfsdf!d",
+        "__sdfsdf!d_dfgbsdfb",
+        "__&ddfvsd",
+        "__askiddf&*()"};
+
+    for (int i = 0; i < 7; i++)
+    {
+        TokenType token_type;
+        int result = try_parse_function_name(functions[i], strlen(functions[i]), &token_type);
+        TEST_ASSERT_EQUAL_INT(TRY_PARSE_FUNCTION_NAME_TOKEN_NOT_FOUND, result);
+    }
+}
+
+void test_try_parse_function_name____with_null_token____should_return_error()
+{
+    int result = try_parse_function_name("__foo", 5, NULL);
+    TEST_ASSERT_EQUAL_INT(TRY_PARSE_FUNCTION_NAME_TOKEN_ERROR, result);
+}
+
+void test_try_parse_function_name____with_null_function_name____should_return_error()
+{
+    TokenType token_type;
+    int result = try_parse_function_name(NULL, 0, &token_type);
+    TEST_ASSERT_EQUAL_INT(TRY_PARSE_FUNCTION_NAME_TOKEN_ERROR, result);
+}
+
+#pragma endregion
 int main(void)
 {
     UNITY_BEGIN();
@@ -308,21 +359,18 @@ int main(void)
     RUN_TEST(test_try_parse_data_type____with_invalid_data_type____should_return_not_found);
     RUN_TEST(test_try_parse_data_type____with_null_token____should_return_error);
     RUN_TEST(test_try_parse_data_type____with_null_data_type____should_return_error);
-   
 
     // functions
     RUN_TEST(test_try_parse_functions____with_valid_function____should_return_sucess);
     RUN_TEST(test_try_parse_functions____with_invalid_function____should_return_not_found);
     RUN_TEST(test_try_parse_functions____with_null_token____should_return_error);
     RUN_TEST(test_try_parse_functions____with_null_function____should_return_error);
-   
 
     // console ops
     RUN_TEST(test_try_parse_console_ops____with_valid_op____should_return_sucess);
     RUN_TEST(test_try_parse_console_ops____with_invalid_op____should_return_not_found);
     RUN_TEST(test_try_parse_console_ops____with_null_token____should_return_error);
     RUN_TEST(test_try_parse_console_ops____with_null_op____should_return_error);
-    
 
     // conditional
     RUN_TEST(test_try_parse_conditional____with_valid_token____should_return_sucess);
@@ -330,13 +378,16 @@ int main(void)
     RUN_TEST(test_try_parse_conditional____with_null_token____should_return_error);
     RUN_TEST(test_try_parse_conditional____with_null_function____should_return_error);
 
-
     // for loop
     RUN_TEST(test_try_parse_para____with_valid_token____should_return_sucess);
     RUN_TEST(test_try_parse_para____with_invalid_token____should_return_not_found);
     RUN_TEST(test_try_parse_para____with_null_token____should_return_error);
     RUN_TEST(test_try_parse_para____with_null_function____should_return_error);
-    
 
+    // function name
+    RUN_TEST(test_try_parse_function_name____with_valid_function_name____should_return_sucess);
+    RUN_TEST(test_try_parse_function_name____with_invalid_function_name____should_return_not_found);
+    RUN_TEST(test_try_parse_function_name____with_null_token____should_return_error);
+    RUN_TEST(test_try_parse_function_name____with_null_function_name____should_return_error);
     return UNITY_END();
 }

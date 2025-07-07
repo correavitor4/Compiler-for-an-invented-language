@@ -134,9 +134,6 @@ int try_parse_token(char *token_string, int token_string_length, Token *token)
     return TRY_PARSE_IS_A_NOT_TOKEN;
 }
 
-
-//TODO: testar
-//TODO: corrigir comentários (tipo de variável -> tipo de dado)
 int try_parse_data_type(char *variable, TokenType *token_type) {
     if (token_type == NULL) {
         fprintf(stderr, "Erro: ponteiro token_type é NULL.\n");
@@ -184,13 +181,13 @@ int try_parse_functions(char *function_string, int function_string_length, Token
     #pragma endregion
 
     // 1 Verifica se é um token de função
-    if (strncmp(function_string, "funcao",(size_t)6) == 0) {
+    if (function_string_length == 6 && strncmp(function_string, "funcao", 6) == 0) {
         *token_type = TOKEN_FUNCTION;
         return TRY_PARSE_FUNCTION_TOKEN_SUCCESS;
     }
 
     // 2 Verifica se é um token de função principal
-    else if (strncmp(function_string, "funcao_principal", (size_t)16) == 0) {
+    else if (function_string_length == 9 && strncmp(function_string, "principal", 9) == 0) {
         *token_type = TOKEN_MAIN_FUNCTION;
         return TRY_PARSE_FUNCTION_TOKEN_SUCCESS;
     }

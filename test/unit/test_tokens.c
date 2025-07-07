@@ -16,6 +16,7 @@ void tearDown(void)
     // Executado depois de cada teste
 }
 
+#pragma region try_parse_data_type
 void test_try_parse_data_type____with_valid_data_type____should_return_sucess()
 {
     const char *data_types[] = {
@@ -84,12 +85,76 @@ void test_try_parse_data_type____with_null_data_type____should_return_error()
     free_memory(token);
 }   
 
+#pragma endregion
+
+#pragma region try_parse_functions
+void test_try_parse_functions____with_valid_function____should_return_sucess()
+{
+    const char* functions[] = {
+        "principal",
+        "funcao"
+    };
+    
+    for (int i = 0; i < 2; i++)
+    {
+        TokenType token_type;
+        int result = try_parse_functions(functions[i], strlen(functions[i]), &token_type);
+        TEST_ASSERT_EQUAL_INT(TRY_PARSE_FUNCTION_TOKEN_SUCCESS, result);
+        TEST_ASSERT_EQUAL_INT(TOKEN_MAIN_FUNCTION + i, token_type);
+    }
+}
+
+void test_try_parse_functions____with_invalid_function____should_return_not_found()
+{
+    const char* functions[] = {
+        "funcaox",
+        "principalx"
+        "_funcao",
+        "_principal",
+        "__funcao_",
+        "__principal_"
+    };
+
+    for (int i = 0; i < 2; i++)
+    {
+        TokenType token_type;
+        int result = try_parse_functions(functions[i], strlen(functions[i]), &token_type);
+        TEST_ASSERT_EQUAL_INT(TRY_PARSE_FUNCTION_TOKEN_NOT_FOUND, result);
+    }
+}
+
+void test_try_parse_functions____with_null_token____should_return_error()
+{
+    int result = try_parse_functions("funcao", 6, NULL);
+    TEST_ASSERT_EQUAL_INT(TRY_PARSE_FUNCTION_TOKEN_ERROR, result);
+}
+
+void test_try_parse_functions____with_null_function____should_return_error()
+{
+    TokenType token_type;
+    int result = try_parse_functions(NULL, 0, &token_type);
+    TEST_ASSERT_EQUAL_INT(TRY_PARSE_FUNCTION_TOKEN_ERROR, result);
+}
+
+#pragma endregion
+
 int main(void)
 {
     UNITY_BEGIN();
+
+    // data type
     RUN_TEST(test_try_parse_data_type____with_valid_data_type____should_return_sucess);
     RUN_TEST(test_try_parse_data_type____with_invalid_data_type____should_return_not_found);
     RUN_TEST(test_try_parse_data_type____with_null_token____should_return_error);
     RUN_TEST(test_try_parse_data_type____with_null_data_type____should_return_error);
+   
+
+    // functions
+    RUN_TEST(test_try_parse_functions____with_valid_function____should_return_sucess);
+    RUN_TEST(test_try_parse_functions____with_invalid_function____should_return_not_found);
+    RUN_TEST(test_try_parse_functions____with_null_token____should_return_error);
+    RUN_TEST(test_try_parse_functions____with_null_function____should_return_error);
+   
+    
     return UNITY_END();
 }

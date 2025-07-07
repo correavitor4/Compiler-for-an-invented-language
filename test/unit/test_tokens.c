@@ -195,6 +195,60 @@ void test_try_parse_console_ops____with_null_op____should_return_error()
 
 #pragma endregion
 
+#pragma region try_parse_conditional
+void test_try_parse_conditional____with_valid_token____should_return_sucess()
+{
+    const char* functions[] = {
+        "se",
+        "senao"
+    };
+    
+    for (int i = 0; i < 2; i++)
+    {
+        TokenType token_type;
+        int result = try_parse_conditional(functions[i], strlen(functions[i]), &token_type);
+        TEST_ASSERT_EQUAL_INT(TRY_PARSE_CONDITIONAL_TOKEN_SUCCESS, result);
+        TEST_ASSERT_EQUAL_INT(TOKEN_SE + i, token_type);
+    }
+}
+
+void test_try_parse_conditional____with_invalid_token____should_return_not_found()
+{
+    const char* functions[] = {
+        "se_",
+        "senao_",
+        "_se",
+        "_senao",
+        "__se_",
+        "__senao_",
+        "xse",
+        " ",
+        ""
+    };
+    
+    for (int i = 0; i < 2; i++)
+    {
+        TokenType token_type;
+        int result = try_parse_conditional(functions[i], strlen(functions[i]), &token_type);
+        TEST_ASSERT_EQUAL_INT(TRY_PARSE_CONDITIONAL_TOKEN_NOT_FOUND, result);
+    }
+}
+
+void test_try_parse_conditional____with_null_token____should_return_error()
+{
+    int result = try_parse_conditional("se", 2, NULL);
+    TEST_ASSERT_EQUAL_INT(TRY_PARSE_CONDITIONAL_TOKEN_ERROR, result);
+}
+
+void test_try_parse_conditional____with_null_function____should_return_error()
+{
+    TokenType token_type;
+    int result = try_parse_conditional(NULL, 0, &token_type);
+    TEST_ASSERT_EQUAL_INT(TRY_PARSE_CONDITIONAL_TOKEN_ERROR, result);
+}
+
+#pragma endregion
+
 int main(void)
 {
     UNITY_BEGIN();
@@ -219,5 +273,12 @@ int main(void)
     RUN_TEST(test_try_parse_console_ops____with_null_token____should_return_error);
     RUN_TEST(test_try_parse_console_ops____with_null_op____should_return_error);
     
+
+    // conditional
+    RUN_TEST(test_try_parse_conditional____with_valid_token____should_return_sucess);
+    RUN_TEST(test_try_parse_conditional____with_invalid_token____should_return_not_found);
+    RUN_TEST(test_try_parse_conditional____with_null_token____should_return_error);
+    RUN_TEST(test_try_parse_conditional____with_null_function____should_return_error);
+
     return UNITY_END();
 }

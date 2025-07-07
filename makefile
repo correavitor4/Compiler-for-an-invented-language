@@ -21,8 +21,8 @@ LDFLAGS =
 
 # --- PROJECT MODULES ---
 MAIN_MODULE = core
-SRC_MODULES = memory reader config core
-TEST_MODULES = memory reader config  # Adicione 'options' se tiver testes para ele
+SRC_MODULES = memory reader config core tokens
+TEST_MODULES = memory reader config tokens # Adicione 'options' se tiver testes para ele
 
 # --- SOURCES & OBJECTS ---
 

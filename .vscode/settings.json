@@ -29,6 +29,7 @@
         "system_error": "c",
         "typeinfo": "c",
         "utility": "c",
-        "stdio.h": "c"
+        "stdio.h": "c",
+        "ctype.h": "c"
     }
 }

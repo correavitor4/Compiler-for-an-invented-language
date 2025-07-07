@@ -44,7 +44,12 @@ typedef struct {
 } Token;
 
 #pragma region return codes
-// try parse r
+//try parse (general)
+#define TRY_PARSE_IS_A_TOKEN_SUCCESS 0
+#define TRY_PARSE_IS_A_NOT_TOKEN 1
+#define TRY_PARSE_IS_A_TOKEN_ERROR -1
+
+// try parse data type
 #define TRY_PARSE_DATA_TYPE_TOKEN_SUCCESS 0
 #define TRY_PARSE_DATA_TYPE_TOKEN_NOT_FOUND 1
 #define TRY_PARSE_DATA_TYPE_TOKEN_ERROR -1

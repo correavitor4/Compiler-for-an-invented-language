@@ -113,6 +113,9 @@ void test_try_parse_functions____with_invalid_function____should_return_not_foun
         "_principal",
         "__funcao_",
         "__principal_"
+        "xprincipal",
+        " ",
+        ""
     };
 
     for (int i = 0; i < 2; i++)

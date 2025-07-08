@@ -7,9 +7,16 @@
 #include "tokens/tokens.h"
 #include "memory/memory_controller.h"
 
+bool try_parse_data_type_should_return_success = false;
+bool try_parse_data_type_should_return_error = false;
+bool try_parse_data_type_should_return_not_found = true;
+
 void setUp(void)
 {
-    // Executado antes de cada teste
+    // Set all flag to default values
+    try_parse_data_type_should_return_success = false;
+    try_parse_data_type_should_return_error = false;
+    try_parse_data_type_should_return_not_found = true;
 }
 
 void tearDown(void)
@@ -17,11 +24,7 @@ void tearDown(void)
     // Executado depois de cada teste
 }
 
-#pragma region mock try_parse_data_type
-bool try_parse_data_type_should_return_success = false;
-bool try_parse_data_type_should_return_error = false;
-bool try_parse_data_type_should_return_not_found = true;
-
+#pragma region mocks
 int try_parse_data_type(char *variable, TokenType *token_type)
 {
     if (try_parse_data_type_should_return_not_found)
@@ -38,16 +41,42 @@ int try_parse_data_type(char *variable, TokenType *token_type)
         return TRY_PARSE_DATA_TYPE_TOKEN_SUCCESS;
     }
 }
+#pragma endregion
+
+#pragma region tests
+void test_try_parse_data_type_should_return_success(void)
+{
+    try_parse_data_type_should_return_success = true;
+    try_parse_data_type_should_return_not_found = false;
+    try_parse_data_type_should_return_error = false;
+
+    Token *tokenobj = allocate_memory(sizeof(Token));
+    TEST_ASSERT_NOT_NULL(tokenobj);
+
+    int result = try_parse_token("inteiro", strlen("inteiro"), *tokenobj);
+    TEST_ASSERT_EQUAL(TRY_PARSE_IS_A_TOKEN_SUCCESS, result);
+}
+
+void test_try_parse_data_type_should_return_error(void)
+{
+    try_parse_data_type_should_return_error = true;
+    
+    Token *tokenobj = allocate_memory(sizeof(Token));
+    TEST_ASSERT_NOT_NULL(tokenobj);
+
+    int result = try_parse_token("inteiro", strlen("inteiro"), *tokenobj);
+    TEST_ASSERT_EQUAL(TRY_PARSE_DATA_TYPE_TOKEN_ERROR, result);
+}
 
 #pragma endregion
 
-int try_parse_data_type(char *variable, TokenType *token_type)
-{
-}
 
 int main(void)
 {
     UNITY_BEGIN();
+
+    RUN_TEST(test_try_parse_data_type_should_return_success);
+    RUN_TEST(test_try_parse_data_type_should_return_error);
 
     return UNITY_END();
 }

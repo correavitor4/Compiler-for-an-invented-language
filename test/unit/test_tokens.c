@@ -16,10 +16,6 @@ void tearDown(void)
     // Executado depois de cada teste
 }
 
-#pragma region try_parse_token
-#pragma endregion
-
-
 #pragma region try_parse_data_type
 void test_try_parse_data_type____with_valid_data_type____should_return_sucess()
 {
@@ -486,8 +482,7 @@ void test_try_parse_arithmetic_op____with_valid_op____should_return_sucess()
         "-",
         "*",
         "/",
-        "^"
-    };
+        "^"};
 
     for (int i = 0; i < 4; i++)
     {
@@ -516,8 +511,7 @@ void test_try_parse_arithmetic_op____with_invalid_op____should_return_not_found(
         "(bfsdbdfbs)",
         "^sdafasdfasdf"
         "*sdafasdfasdf"
-        "dfbssdfbsdfb*"
-    };
+        "dfbssdfbsdfb*"};
 
     for (int i = 0; i < 8; i++)
     {
@@ -548,10 +542,9 @@ void test_try_parse_comparison_op____with_valid_op____should_return_sucess()
         "==",
         "<>",
         ">",
-        ">=" ,
+        ">=",
         "<",
-        "<="
-    };
+        "<="};
 
     for (int i = 0; i < 6; i++)
     {
@@ -586,8 +579,7 @@ void test_try_parse_comparison_op____with_invalid_op____should_return_not_found(
         "DFFDFDF<"
         "DFFDFDF>"
         "DFFDFDF>="
-        "sedrfbsdfb<>asdvasdv"
-    };
+        "sedrfbsdfb<>asdvasdv"};
 
     for (int i = 0; i < 8; i++)
     {
@@ -616,8 +608,7 @@ void test_try_parse_logical_op____with_valid_op____should_return_sucess()
 {
     const char *tokens[] = {
         "&&",
-        "||"
-    };
+        "||"};
 
     for (int i = 0; i < 2; i++)
     {
@@ -711,21 +702,18 @@ int main(void)
     RUN_TEST(test_try_parse_function_name____with_invalid_function_name____should_return_not_found);
     RUN_TEST(test_try_parse_function_name____with_null_token____should_return_error);
     RUN_TEST(test_try_parse_function_name____with_null_function_name____should_return_error);
-    
-    
+
     // try parse variable name
     RUN_TEST(test_try_parse_variable_name____with_valid_variable_name____should_return_sucess);
     RUN_TEST(test_try_parse_variable_name____with_invalid_variable_name____should_return_not_found);
     RUN_TEST(test_try_parse_variable_name____with_null_token____should_return_error);
     RUN_TEST(test_try_parse_variable_name____with_null_variable_name____should_return_error);
 
-    
     // try parse special token
     RUN_TEST(test_try_parse_special_token____with_valid_token____should_return_sucess);
     RUN_TEST(test_try_parse_special_token____with_invalid_token____should_return_not_found);
     RUN_TEST(test_try_parse_special_token____with_null_token____should_return_error);
     RUN_TEST(test_try_parse_special_token____with_null_token____should_return_error);
-
 
     // try pase arithmetic operator
     RUN_TEST(test_try_parse_arithmetic_op____with_valid_op____should_return_sucess);
@@ -733,13 +721,11 @@ int main(void)
     RUN_TEST(test_try_parse_arithmetic_op____with_null_token____should_return_error);
     RUN_TEST(test_try_parse_arithmetic_op____with_null_token_type____should_return_error);
 
-
     // try pase comparison operator
     RUN_TEST(test_try_parse_comparison_op____with_valid_op____should_return_sucess);
     RUN_TEST(test_try_parse_comparison_op____with_invalid_op____should_return_not_found);
     RUN_TEST(test_try_parse_comparison_op____with_null_token____should_return_error);
     RUN_TEST(test_try_parse_comparison_op____with_null_token_type____should_return_error);
-
 
     // try pase logical operator
     RUN_TEST(test_try_parse_logical_op____with_valid_op____should_return_sucess);

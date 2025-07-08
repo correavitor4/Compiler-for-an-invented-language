@@ -320,7 +320,6 @@ int try_parse_function_name(char *function_name_string, int function_name_string
     return TRY_PARSE_FUNCTION_NAME_TOKEN_SUCCESS;
 }
 
-//TODO: testar
 int try_parse_variable(char *variable_string, int variable_string_length, TokenType *token_type) {
     #pragma region programação defensiva
     if (token_type == NULL) {
@@ -370,7 +369,6 @@ int try_parse_variable(char *variable_string, int variable_string_length, TokenT
     return TRY_PARSE_VARIABLE_TOKEN_SUCCESS;
 }
 
-//TODO: testar
 int try_parse_special_token(char *token_string, int token_string_length, TokenType *token_type) {
     #pragma region programação defensiva
     if (token_type == NULL) {
@@ -435,7 +433,6 @@ int try_parse_special_token(char *token_string, int token_string_length, TokenTy
     return TRY_PARSE_SPECIAL_TOKEN_NOT_FOUND;
 }
 
-//TODO: testar
 int try_parse_arithmetic_operator(char *operator_string, int operator_string_length, TokenType *token_type) {
     #pragma region programação defensiva
     if (token_type == NULL) {

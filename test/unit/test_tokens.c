@@ -411,6 +411,68 @@ void test_try_parse_variable_name____with_null_variable_name____should_return_er
 
 #pragma endregion
 
+#pragma region try_parse_special_token
+void test_try_parse_special_token____with_valid_token____should_return_sucess()
+{
+    const char *tokens[] = {
+        "(",
+        ")",
+        "{",
+        "}",
+        ",",
+        ";",
+        "[",
+        "]",
+    };
+
+    for (int i = 0; i < 8; i++)
+    {
+        TokenType token_type;
+        int result = try_parse_special_token(tokens[i], strlen(tokens[i]), &token_type);
+        TEST_ASSERT_EQUAL_INT(TRY_PARSE_SPECIAL_TOKEN_SUCCESS, result);
+        TEST_ASSERT_EQUAL_INT(TOKEN_PARENTESES_ABRIR + i, token_type);
+    }
+}
+
+void test_try_parse_special_token____with_invalid_token____should_return_not_found()
+{
+    const char *tokens[] = {
+        " ",
+        " ",
+        " ",
+        " ",
+        " ",
+        " ",
+        " ",
+        " ",
+        "afsdbfbfadb",
+        "!dsdfijdfg",
+        "!dsdfijdfg_",
+        ")sdfbfdsbfbsd",
+        "(bfsdbdfbs)",
+    };
+
+    for (int i = 0; i < 8; i++)
+    {
+        TokenType token_type;
+        int result = try_parse_special_token(tokens[i], strlen(tokens[i]), &token_type);
+        TEST_ASSERT_EQUAL_INT(TRY_PARSE_SPECIAL_TOKEN_NOT_FOUND, result);
+    }
+}
+
+void test_try_parse_special_token____with_null_token____should_return_error()
+{
+    int result = try_parse_special_token("(", 1, NULL);
+    TEST_ASSERT_EQUAL_INT(TRY_PARSE_SPECIAL_TOKEN_ERROR, result);
+}
+
+void test_try_parse_special_token____with_null_token_type____should_return_error()
+{
+    int result = try_parse_special_token("(", 1, NULL);
+    TEST_ASSERT_EQUAL_INT(TRY_PARSE_SPECIAL_TOKEN_ERROR, result);
+}
+
+#pragma endregion
 
 int main(void)
 {
@@ -458,6 +520,13 @@ int main(void)
     RUN_TEST(test_try_parse_variable_name____with_invalid_variable_name____should_return_not_found);
     RUN_TEST(test_try_parse_variable_name____with_null_token____should_return_error);
     RUN_TEST(test_try_parse_variable_name____with_null_variable_name____should_return_error);
+
+    
+    // try parse special token
+    RUN_TEST(test_try_parse_special_token____with_valid_token____should_return_sucess);
+    RUN_TEST(test_try_parse_special_token____with_invalid_token____should_return_not_found);
+    RUN_TEST(test_try_parse_special_token____with_null_token____should_return_error);
+    RUN_TEST(test_try_parse_special_token____with_null_token____should_return_error);
 
     return UNITY_END();
 }

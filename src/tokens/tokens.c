@@ -531,7 +531,6 @@ int try_parse_comparison_operator(char *operator_string, int operator_string_len
     return TRY_PARSE_COMPARISON_OPERATOR_TOKEN_NOT_FOUND;
 }
 
-//TODO: testar
 int try_parse_logical_operator(char *operator_string, int operator_string_length, TokenType *token_type) {
     #pragma region programação defensiva
     if (token_type == NULL) {

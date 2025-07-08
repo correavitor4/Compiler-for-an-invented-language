@@ -607,6 +607,67 @@ void test_try_parse_comparison_op____with_null_token_type____should_return_error
 
 #pragma endregion
 
+#pragma region try_parse_logical_operator
+void test_try_parse_logical_op____with_valid_op____should_return_sucess()
+{
+    const char *tokens[] = {
+        "&&",
+        "||"
+    };
+
+    for (int i = 0; i < 2; i++)
+    {
+        TokenType token_type;
+        int result = try_parse_logical_operator(tokens[i], strlen(tokens[i]), &token_type);
+        TEST_ASSERT_EQUAL_INT(TRY_PARSE_LOGICAL_OPERATOR_TOKEN_SUCCESS, result);
+        TEST_ASSERT_EQUAL_INT(TOKEN_OPERADOR_LOGICO_E + i, token_type);
+    }
+}
+
+void test_try_parse_logical_op____with_invalid_op____should_return_not_found()
+{
+    const char *tokens[] = {
+        " ",
+        " ",
+        " ",
+        " ",
+        " ",
+        " ",
+        " ",
+        " ",
+        "afsdbfbfadb",
+        "!dsdfijdfg",
+        "!dsdfijdfg_",
+        ")sdfbfdsbfbsd",
+        "(bfsdbdfbs)",
+        "&&sdavgdasf",
+        "||sdavgdasf",
+        "&&sdavgdasf||",
+        "||sdavgdasf&&",
+    };
+
+    for (int i = 0; i < 8; i++)
+    {
+        TokenType token_type;
+        int result = try_parse_logical_operator(tokens[i], strlen(tokens[i]), &token_type);
+        TEST_ASSERT_EQUAL_INT(TRY_PARSE_LOGICAL_OPERATOR_TOKEN_NOT_FOUND, result);
+    }
+}
+
+void test_try_parse_logical_op____with_null_token____should_return_error()
+{
+    int result = try_parse_logical_operator("&&", 2, NULL);
+    TEST_ASSERT_EQUAL_INT(TRY_PARSE_LOGICAL_OPERATOR_TOKEN_ERROR, result);
+}
+
+void test_try_parse_logical_op____with_null_token_type____should_return_error()
+{
+    int result = try_parse_logical_operator("&&", 2, NULL);
+    TEST_ASSERT_EQUAL_INT(TRY_PARSE_LOGICAL_OPERATOR_TOKEN_ERROR, result);
+}
+
+#pragma endregion
+
 int main(void)
 {
     UNITY_BEGIN();
@@ -674,6 +735,13 @@ int main(void)
     RUN_TEST(test_try_parse_comparison_op____with_invalid_op____should_return_not_found);
     RUN_TEST(test_try_parse_comparison_op____with_null_token____should_return_error);
     RUN_TEST(test_try_parse_comparison_op____with_null_token_type____should_return_error);
+
+
+    // try pase logical operator
+    RUN_TEST(test_try_parse_logical_op____with_valid_op____should_return_sucess);
+    RUN_TEST(test_try_parse_logical_op____with_invalid_op____should_return_not_found);
+    RUN_TEST(test_try_parse_logical_op____with_null_token____should_return_error);
+    RUN_TEST(test_try_parse_logical_op____with_null_token_type____should_return_error);
 
     return UNITY_END();
 }

@@ -350,6 +350,68 @@ void test_try_parse_function_name____with_null_function_name____should_return_er
 }
 
 #pragma endregion
+
+#pragma region try_parse_variable_name
+void test_try_parse_variable_name____with_valid_variable_name____should_return_sucess()
+{
+    const char *varibles[] = {
+        "!foo",
+        "!barBajsjsjs",
+        "!fooBar",
+    };
+
+    for (int i = 0; i < 3; i++)
+    {
+        TokenType token_type;
+        int result = try_parse_variable(varibles[i], strlen(varibles[i]), &token_type);
+        TEST_ASSERT_EQUAL_INT(TRY_PARSE_VARIABLE_TOKEN_SUCCESS, result);
+        TEST_ASSERT_EQUAL_INT(TOKEN_VARIABLE_NAME, token_type);
+    }
+}
+
+void test_try_parse_variable_name____with_invalid_variable_name____should_return_not_found()
+{
+    const char *varibles[] = {
+        "!foo_",
+        "!barBajsjsjs_",
+        "!fooBar_",
+        "_foo",
+        "_barBajsjsjs",
+        "_fooBar",
+        "foo",
+        "barBajsjsjs",
+        "fooBar",
+        "foo_",
+        "!",
+        "",
+        " ",
+        "!Bar",
+    };
+
+    for (int i = 0; i < 3; i++)
+    {
+        TokenType token_type;
+        int result = try_parse_variable(varibles[i], strlen(varibles[i]), &token_type);
+        TEST_ASSERT_EQUAL_INT(TRY_PARSE_VARIABLE_TOKEN_NOT_FOUND, result);
+    }
+}
+
+void test_try_parse_variable_name____with_null_token____should_return_error()
+{
+    int result = try_parse_variable("!foo", 5, NULL);
+    TEST_ASSERT_EQUAL_INT(TRY_PARSE_VARIABLE_TOKEN_ERROR, result);
+}
+
+void test_try_parse_variable_name____with_null_variable_name____should_return_error()
+{
+    TokenType token_type;
+    int result = try_parse_variable(NULL, 0, &token_type);
+    TEST_ASSERT_EQUAL_INT(TRY_PARSE_VARIABLE_TOKEN_ERROR, result);
+}
+
+#pragma endregion
+
+
 int main(void)
 {
     UNITY_BEGIN();
@@ -389,5 +451,13 @@ int main(void)
     RUN_TEST(test_try_parse_function_name____with_invalid_function_name____should_return_not_found);
     RUN_TEST(test_try_parse_function_name____with_null_token____should_return_error);
     RUN_TEST(test_try_parse_function_name____with_null_function_name____should_return_error);
+    
+    
+    // try parse variable name
+    RUN_TEST(test_try_parse_variable_name____with_valid_variable_name____should_return_sucess);
+    RUN_TEST(test_try_parse_variable_name____with_invalid_variable_name____should_return_not_found);
+    RUN_TEST(test_try_parse_variable_name____with_null_token____should_return_error);
+    RUN_TEST(test_try_parse_variable_name____with_null_variable_name____should_return_error);
+
     return UNITY_END();
 }

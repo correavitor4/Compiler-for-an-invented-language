@@ -1,6 +1,7 @@
 # Compiler and flags
 CC = gcc
 
+
 # Define the path to the Unity test framework
 # Ensure that the Unity framework is available in the specified path.
 UNITY_PATH = lib/unity
@@ -40,8 +41,6 @@ TEST_MODULES = memory reader config
 # Find all .c files within the specified module directories for the main build
 MODULE_PATHS = $(patsubst %,$(SRC_DIR)/%,$(SRC_MODULES))
 SOURCES = $(foreach dir,$(MODULE_PATHS),$(shell find $(dir) -name '*.c'))
-
-# Create object file paths in the BUILD_DIR, preserving the subdirectory structure
 OBJECTS = $(patsubst $(SRC_DIR)/%.c,$(BUILD_DIR)/%.o,$(SOURCES))
 
 # Generate dependency files for the main build
@@ -51,10 +50,22 @@ DEPS = $(OBJECTS:.o=.d)
 all: $(BIN_DIR)/$(EXEC)
 
 # Rule to link the main executable
+
 $(BIN_DIR)/$(EXEC): $(OBJECTS)
 	@mkdir -p $(@D)
 	$(CC) $(OBJECTS) -o $@ $(LDFLAGS)
-	@echo "Linking complete. Executable '$(EXEC)' is at $(BIN_DIR)/$(EXEC)"
+	@echo "Linking complete. Executable '$(EXEC)' is at $@"
+
+# --- TEST TARGETS ---
+
+TEST_EXECS = $(patsubst %,$(TEST_BIN_DIR)/test_%,$(TEST_MODULES))
+
+test: $(TEST_EXECS)
+	@echo "--- Running All Tests ---"
+	@echo "Test executables: $(TEST_EXECS)"
+	@$(foreach exec,$(TEST_EXECS), echo "▶️  Running $(exec)"; $(exec) || exit 1;)
+	@echo "✅ --- All Tests Finished Successfully ---"
+
 
 # --- TEST BUILD TARGETS ---
 TEST_BIN_DIR = $(BUILD_DIR)/bin/test

@@ -3,8 +3,6 @@
 
 #include "config/options.h"
 
-#include "config/options.h"
-
 static const char* mock_input = NULL;
 
 char* my_fgets(char* str, int num, FILE* stream) {

@@ -56,4 +56,73 @@ typedef enum
 
 } TokenType;
 
+typedef struct {
+    TokenType type;      // Tipo do token
+    char *literal;       // String literal do token
+    int line;            // Linha onde o token foi encontrado
+} Token;
+
+#pragma region return codes
+//try parse (general)
+#define TRY_PARSE_IS_A_TOKEN_SUCCESS 0
+#define TRY_PARSE_IS_A_NOT_TOKEN 1
+#define TRY_PARSE_IS_A_TOKEN_ERROR -1
+
+// try parse data type
+#define TRY_PARSE_DATA_TYPE_TOKEN_SUCCESS 0
+#define TRY_PARSE_DATA_TYPE_TOKEN_NOT_FOUND 1
+#define TRY_PARSE_DATA_TYPE_TOKEN_ERROR -1
+
+// try parse function
+#define TRY_PARSE_FUNCTION_TOKEN_SUCCESS 0
+#define TRY_PARSE_FUNCTION_TOKEN_NOT_FOUND 1
+#define TRY_PARSE_FUNCTION_TOKEN_ERROR -1
+
+// try parse console operations
+#define TRY_PARSE_CONSOLE_OPS_TOKEN_SUCCESS 0
+#define TRY_PARSE_CONSOLE_OPS_TOKEN_NOT_FOUND 1
+#define TRY_PARSE_CONSOLE_OPS_TOKEN_ERROR -1
+
+// try parse conditional
+#define TRY_PARSE_CONDITIONAL_TOKEN_SUCCESS 0
+#define TRY_PARSE_CONDITIONAL_TOKEN_NOT_FOUND 1
+#define TRY_PARSE_CONDITIONAL_TOKEN_ERROR -1
+
+// try parse for loop
+#define TRY_PARSE_FOR_LOOP_TOKEN_SUCCESS 0
+#define TRY_PARSE_FOR_LOOP_TOKEN_NOT_FOUND 1
+#define TRY_PARSE_FOR_LOOP_TOKEN_ERROR -1
+
+//try parse function name
+#define TRY_PARSE_FUNCTION_NAME_TOKEN_SUCCESS 0
+#define TRY_PARSE_FUNCTION_NAME_TOKEN_NOT_FOUND 1
+#define TRY_PARSE_FUNCTION_NAME_TOKEN_ERROR -1
+
+// try parse variable
+#define TRY_PARSE_VARIABLE_TOKEN_SUCCESS 0
+#define TRY_PARSE_VARIABLE_TOKEN_NOT_FOUND 1
+#define TRY_PARSE_VARIABLE_TOKEN_ERROR -1
+
+// try parse special token
+#define TRY_PARSE_SPECIAL_TOKEN_SUCCESS 0
+#define TRY_PARSE_SPECIAL_TOKEN_NOT_FOUND 1
+#define TRY_PARSE_SPECIAL_TOKEN_ERROR -1
+
+// try parse arithmetic operator
+#define TRY_PARSE_ARITHMETIC_OPERATOR_TOKEN_SUCCESS 0
+#define TRY_PARSE_ARITHMETIC_OPERATOR_TOKEN_NOT_FOUND 1
+#define TRY_PARSE_ARITHMETIC_OPERATOR_TOKEN_ERROR -1
+
+// try parse comparison operator
+#define TRY_PARSE_COMPARISON_OPERATOR_TOKEN_SUCCESS 0
+#define TRY_PARSE_COMPARISON_OPERATOR_TOKEN_NOT_FOUND 1
+#define TRY_PARSE_COMPARISON_OPERATOR_TOKEN_ERROR -1
+
+// try parse logical operator
+#define TRY_PARSE_LOGICAL_OPERATOR_TOKEN_SUCCESS 0
+#define TRY_PARSE_LOGICAL_OPERATOR_TOKEN_NOT_FOUND 1
+#define TRY_PARSE_LOGICAL_OPERATOR_TOKEN_ERROR -1
+
+#pragma endregion
+
 #endif

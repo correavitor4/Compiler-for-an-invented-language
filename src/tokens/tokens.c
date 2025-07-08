@@ -479,7 +479,6 @@ int try_parse_arithmetic_operator(char *operator_string, int operator_string_len
     return TRY_PARSE_ARITHMETIC_OPERATOR_TOKEN_NOT_FOUND;
 }
 
-//TODO: testar
 int try_parse_comparison_operator(char *operator_string, int operator_string_length, TokenType *token_type) {
     #pragma region programação defensiva
     if (token_type == NULL) {
@@ -499,7 +498,7 @@ int try_parse_comparison_operator(char *operator_string, int operator_string_len
     }
 
     // 2. Verifica se é um operador de comparação de diferença
-    if (operator_string_length == 2 && strncmp(operator_string, "!=", 2) == 0) {
+    if (operator_string_length == 2 && strncmp(operator_string, "<>", 2) == 0) {
         *token_type = TOKEN_OPERADOR_COMPARACAO_DIFERENTE;
         return TRY_PARSE_COMPARISON_OPERATOR_TOKEN_SUCCESS;
     }

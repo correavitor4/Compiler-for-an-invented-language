@@ -3,24 +3,24 @@
 
 //TODO: describe each token using comments
 typedef enum {
-    TOKEN_VAR_DATA_TYPE_INT,
-    TOKEN_VAR_DATA_TYPE_DECIMAL,
-    TOKEN_VAR_DATA_TYPE_TEXT,
-    TOKEN_MAIN_FUNCTION,
-    TOKEN_FUNCTION,
-    TOKEN_LEIA,
-    TOKEN_ESCREVA,
-    TOKEN_SE,
-    TOKEN_SENAO,
-    TOKEN_PARA,
-    TOKEN_NOME_FUNCAO,
-    TOKEN_VARIABLE_NAME,
-    TOKEN_PARENTESES_ABRIR,
-    TOKEN_PARENTESES_FECHAR,
-    TOKEN_CHAVE_ABRIR,
-    TOKEN_CHAVE_FECHAR,
-    TOKEN_VIRGULA,
-    TOKEN_PONTO_E_VIRGULA,
+    TOKEN_VAR_DATA_TYPE_INT, // inteiro
+    TOKEN_VAR_DATA_TYPE_DECIMAL, // decimal
+    TOKEN_VAR_DATA_TYPE_TEXT, // texto
+    TOKEN_MAIN_FUNCTION, // principal
+    TOKEN_FUNCTION, // funcao
+    TOKEN_LEIA, // leia
+    TOKEN_ESCREVA, // escreva
+    TOKEN_SE, // se
+    TOKEN_SENAO, // senao
+    TOKEN_PARA, // para
+    TOKEN_NOME_FUNCAO, //__something or __Someting or __someThing
+    TOKEN_VARIABLE_NAME, // !something or !ometing or !someThing
+    TOKEN_PARENTESES_ABRIR, // (
+    TOKEN_PARENTESES_FECHAR, // )
+    TOKEN_CHAVE_ABRIR, // {
+    TOKEN_CHAVE_FECHAR, // }
+    TOKEN_VIRGULA, // ,
+    TOKEN_PONTO_E_VIRGULA, // ;
     TOKEN_COCHETE_ABRIR,
     TOKEN_COCHETE_FECHAR,
     TOKEN_OPERADOR_SOMA,

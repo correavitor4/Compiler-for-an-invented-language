@@ -4,6 +4,9 @@
 #include <ctype.h>  // para isalpha, isdigit
 #include <string.h> // para strncmp
 
+//Lembrando que apenas essa função deve estar disponível para 
+//ser chamada em outros arquivo. Vamos devolver o objeto do tipo Token 
+//pois isso será útil para a futura implementação da parte sintática.
 //TODO: testar
 int try_parse_token(char *token_string, int token_string_length, Token *token)
 {
@@ -134,7 +137,7 @@ int try_parse_token(char *token_string, int token_string_length, Token *token)
     return TRY_PARSE_IS_A_NOT_TOKEN;
 }
 
-int try_parse_data_type(char *variable, TokenType *token_type) {
+__attribute__((weak)) int try_parse_data_type(char *variable, TokenType *token_type){
     if (token_type == NULL) {
         fprintf(stderr, "Erro: ponteiro token_type é NULL.\n");
         return TRY_PARSE_DATA_TYPE_TOKEN_ERROR;
@@ -166,7 +169,7 @@ int try_parse_data_type(char *variable, TokenType *token_type) {
     return TRY_PARSE_DATA_TYPE_TOKEN_NOT_FOUND;
 }
 
-int try_parse_functions(char *function_string, int function_string_length, TokenType *token_type) {
+__attribute__((weak)) int try_parse_functions(char *function_string, int function_string_length, TokenType *token_type) {
     #pragma region programação defensiva
     if (token_type == NULL) {
         fprintf(stderr, "Erro: ponteiro token_type é NULL.\n");
@@ -195,7 +198,7 @@ int try_parse_functions(char *function_string, int function_string_length, Token
     return TRY_PARSE_FUNCTION_TOKEN_NOT_FOUND;
 }
 
-int try_parse_console_ops(char *console_string, int console_string_length, TokenType *token_type) {
+__attribute__((weak)) int try_parse_console_ops(char *console_string, int console_string_length, TokenType *token_type) {
     #pragma region programação defensiva
     if (token_type == NULL) {
         fprintf(stderr, "Erro: ponteiro token_type é NULL.\n");
@@ -224,7 +227,7 @@ int try_parse_console_ops(char *console_string, int console_string_length, Token
     return TRY_PARSE_CONSOLE_OPS_TOKEN_NOT_FOUND;
 }
 
-int try_parse_conditional(char *conditional_string, int conditional_string_length, TokenType *token_type) {
+__attribute__((weak)) int try_parse_conditional(char *conditional_string, int conditional_string_length, TokenType *token_type) {
     #pragma region programação defensiva
     if (token_type == NULL) {
         fprintf(stderr, "Erro: ponteiro token_type é NULL.\n");
@@ -252,7 +255,7 @@ int try_parse_conditional(char *conditional_string, int conditional_string_lengt
     return TRY_PARSE_CONDITIONAL_TOKEN_NOT_FOUND;
 }
 
-int try_parse_para(char *para_string, int para_string_length, TokenType *token_type) {
+__attribute__((weak)) int try_parse_para(char *para_string, int para_string_length, TokenType *token_type) {
     #pragma region programação defensiva
     if (token_type == NULL) {
         fprintf(stderr, "Erro: ponteiro token_type é NULL.\n");
@@ -274,7 +277,7 @@ int try_parse_para(char *para_string, int para_string_length, TokenType *token_t
     return TRY_PARSE_FOR_LOOP_TOKEN_NOT_FOUND;
 }
 
-int try_parse_function_name(char *function_name_string, int function_name_string_length, TokenType *token_type) {
+__attribute__((weak)) int try_parse_function_name(char *function_name_string, int function_name_string_length, TokenType *token_type) {
     #pragma region programação defensiva
     if (token_type == NULL) {
         fprintf(stderr, "Erro: ponteiro token_type é NULL.\n");
@@ -320,7 +323,7 @@ int try_parse_function_name(char *function_name_string, int function_name_string
     return TRY_PARSE_FUNCTION_NAME_TOKEN_SUCCESS;
 }
 
-int try_parse_variable(char *variable_string, int variable_string_length, TokenType *token_type) {
+__attribute__((weak)) int try_parse_variable(char *variable_string, int variable_string_length, TokenType *token_type) {
     #pragma region programação defensiva
     if (token_type == NULL) {
         fprintf(stderr, "Erro: ponteiro token é NULL.\n");
@@ -369,7 +372,7 @@ int try_parse_variable(char *variable_string, int variable_string_length, TokenT
     return TRY_PARSE_VARIABLE_TOKEN_SUCCESS;
 }
 
-int try_parse_special_token(char *token_string, int token_string_length, TokenType *token_type) {
+__attribute__((weak)) int try_parse_special_token(char *token_string, int token_string_length, TokenType *token_type) {
     #pragma region programação defensiva
     if (token_type == NULL) {
         fprintf(stderr, "Erro: ponteiro token_type é NULL.\n");
@@ -433,7 +436,7 @@ int try_parse_special_token(char *token_string, int token_string_length, TokenTy
     return TRY_PARSE_SPECIAL_TOKEN_NOT_FOUND;
 }
 
-int try_parse_arithmetic_operator(char *operator_string, int operator_string_length, TokenType *token_type) {
+__attribute__((weak)) int try_parse_arithmetic_operator(char *operator_string, int operator_string_length, TokenType *token_type) {
     #pragma region programação defensiva
     if (token_type == NULL) {
         fprintf(stderr, "Erro: ponteiro token_type é NULL.\n");
@@ -479,7 +482,7 @@ int try_parse_arithmetic_operator(char *operator_string, int operator_string_len
     return TRY_PARSE_ARITHMETIC_OPERATOR_TOKEN_NOT_FOUND;
 }
 
-int try_parse_comparison_operator(char *operator_string, int operator_string_length, TokenType *token_type) {
+__attribute__((weak)) int try_parse_comparison_operator(char *operator_string, int operator_string_length, TokenType *token_type) {
     #pragma region programação defensiva
     if (token_type == NULL) {
         fprintf(stderr, "Erro: ponteiro token_type é NULL.\n");
@@ -531,7 +534,7 @@ int try_parse_comparison_operator(char *operator_string, int operator_string_len
     return TRY_PARSE_COMPARISON_OPERATOR_TOKEN_NOT_FOUND;
 }
 
-int try_parse_logical_operator(char *operator_string, int operator_string_length, TokenType *token_type) {
+__attribute__((weak)) int try_parse_logical_operator(char *operator_string, int operator_string_length, TokenType *token_type) {
     #pragma region programação defensiva
     if (token_type == NULL) {
         fprintf(stderr, "Erro: ponteiro token_type é NULL.\n");

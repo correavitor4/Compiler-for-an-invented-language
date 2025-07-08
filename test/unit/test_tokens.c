@@ -16,6 +16,10 @@ void tearDown(void)
     // Executado depois de cada teste
 }
 
+#pragma region try_parse_token
+#pragma endregion
+
+
 #pragma region try_parse_data_type
 void test_try_parse_data_type____with_valid_data_type____should_return_sucess()
 {

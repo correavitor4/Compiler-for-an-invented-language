@@ -25,6 +25,9 @@ LDFLAGS =
 # Define the main module, which determines the final executable name.
 MAIN_MODULE = core
 
+SRC_MODULES = hash memory reader lex core
+TEST_MODULES = hash memory reader lex #config tokens tokenstryparsemain # Adicione 'options' se tiver testes para ele
+
 # List the names of the folders inside 'src' that you want to build.
 # WARNING: Must be in order of dependencies!
 SRC_MODULES = memory reader config core
@@ -40,7 +43,8 @@ SOURCES = $(foreach dir,$(MODULE_PATHS),$(shell find $(dir) -name '*.c'))
 
 # Create object file paths in the BUILD_DIR, preserving the subdirectory structure
 OBJECTS = $(patsubst $(SRC_DIR)/%.c,$(BUILD_DIR)/%.o,$(SOURCES))
-# Create dependency file paths (.d) for the main build
+
+# Generate dependency files for the main build
 DEPS = $(OBJECTS:.o=.d)
 
 # Default target: builds the main executable
@@ -90,17 +94,7 @@ test: $(TEST_EXECS)
 	@$(foreach exec,$(TEST_EXECS), echo "▶️  Running $$exec"; ./$(exec) || exit 1;)
 	@echo "✅ --- All Tests Finished Successfully ---"
 
-# --- Generic Rule to Link Any Test Executable ---
-# This pattern rule links a test runner object (e.g., test_memory.o) with ALL compiled library objects.
-# $^ refers to all prerequisites.
-# MODIFIED: Add $(UNITY_OBJ) as a dependency for linking
-$(TEST_BIN_DIR)/test_%: $(TEST_BIN_DIR)/test_%.o $(TEST_LIB_OBJECTS) $(UNITY_OBJ)
-	@mkdir -p $(@D)
-	$(CC) $^ -o $@ $(LDFLAGS)
-	@echo "Linking test executable '$@'"
-
-# --- GENERIC COMPILATION RULES ---
-# Rule to compile 'src' files for the main build
+# --- COMPILATION RULES ---
 $(BUILD_DIR)/%.o: $(SRC_DIR)/%.c
 	@mkdir -p $(@D)
 	$(CC) $(CFLAGS) -c $< -o $@
@@ -125,7 +119,6 @@ $(UNITY_OBJ): $(UNITY_SRC)
 	@echo "Compiled Test Framework $< into $@"
 
 # --- HOUSEKEEPING ---
-# Clean up all build artifacts
 clean:
 	@echo "Cleaning up build files..."
 	rm -rf $(BUILD_DIR)

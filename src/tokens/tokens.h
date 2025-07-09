@@ -56,12 +56,6 @@ typedef enum
 
 } TokenType;
 
-typedef struct {
-    TokenType type;      // Tipo do token
-    char *literal;       // String literal do token
-    int line;            // Linha onde o token foi encontrado
-} Token;
-
 #pragma region return codes
 //try parse (general)
 #define TRY_PARSE_IS_A_TOKEN_SUCCESS 0

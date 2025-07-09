@@ -511,6 +511,21 @@ void _load_line_impl(Lexer *l, const char *line, int line_num)
     read(l);
 }
 
+void _destroy_impl(Lexer *l)
+{
+    if (l == NULL)
+        return;
+
+    // Free the current line if it was dynamically allocated
+    if (l->current_line != NULL)
+    {
+        free_memory((void *)l->current_line);
+    }
+
+    // Free the lexer structure itself
+    free_memory(l);
+}
+
 /**
  * @brief Global instance of the lexer API.
  *
@@ -521,5 +536,6 @@ void _load_line_impl(Lexer *l, const char *line, int line_num)
 const LEXER_API LEXER = {
     .next_token = _next_token_impl,
     .new = _new_impl,
-    .load_line = _load_line_impl
+    .load_line = _load_line_impl,
+    .destroy = _destroy_impl
 };

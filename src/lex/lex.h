@@ -4,7 +4,6 @@
 
 #include "tokens/tokens.h"
 
-
 typedef struct
 {
     TokenType type; // Tipo do token
@@ -26,6 +25,7 @@ typedef struct
     Token (*next_token)(Lexer *l);                               // Função para obter o próximo token
     Lexer *(*new)(const char *input);                            // Função para criar um novo Lexer
     void (*load_line)(Lexer *l, const char *line, int line_num); // Função para carregar uma linha no Lexer
+    void (*destroy)(Lexer *l);                                   // Função para destruir o Lexer
 } LEXER_API;
 
 extern const LEXER_API LEXER;

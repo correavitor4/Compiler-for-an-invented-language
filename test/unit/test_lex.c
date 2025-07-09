@@ -53,22 +53,45 @@ void test_keywords_and_identifiers(void) {
     t = LEXER.next_token(l); assert_static_token(t, TOKEN_TEXT, "texto", 1);
 }
 
+void test_keywords_and_identifiers_invalid(void) {
+    LEXER.load_line(l, "s sen p para123 leia_123 escrva fncao princial iteiro deimal teto", 2);
+
+    Token t;
+
+    t = LEXER.next_token(l); assert_static_token(t, TOKEN_ILLEGAL, "s", 2);
+    t = LEXER.next_token(l); assert_static_token(t, TOKEN_ILLEGAL, "sen", 2);
+    t = LEXER.next_token(l); assert_static_token(t, TOKEN_ILLEGAL, "p", 2);
+    t = LEXER.next_token(l); assert_static_token(t, TOKEN_ILLEGAL, "para123", 2);
+    t = LEXER.next_token(l); assert_static_token(t, TOKEN_ILLEGAL, "leia_123", 2);
+    t = LEXER.next_token(l); assert_static_token(t, TOKEN_ILLEGAL, "escrva", 2);
+    t = LEXER.next_token(l); assert_static_token(t, TOKEN_ILLEGAL, "fncao", 2);
+    t = LEXER.next_token(l); assert_static_token(t, TOKEN_ILLEGAL, "princial", 2);
+    t = LEXER.next_token(l); assert_static_token(t, TOKEN_ILLEGAL, "iteiro", 2);
+    t = LEXER.next_token(l); assert_static_token(t, TOKEN_ILLEGAL, "deimal", 2);
+    t = LEXER.next_token(l); assert_static_token(t, TOKEN_ILLEGAL, "teto", 2);
+}
+
 // Variable/function identifiers are dynamic and must be freed.
 void test_ident_var_and_func(void) {
-    LEXER.load_line(l, "!var __func", 2);
+    LEXER.load_line(l, "!var __func !vAr __fUnc", 2);
 
     Token t;
     t = LEXER.next_token(l); assert_dynamic_token(t, TOKEN_IDENT_VAR, "!var", 2);
     t = LEXER.next_token(l); assert_dynamic_token(t, TOKEN_IDENT_FUNC, "__func", 2);
+    t = LEXER.next_token(l); assert_dynamic_token(t, TOKEN_IDENT_VAR, "!vAr", 2);
+    t = LEXER.next_token(l); assert_dynamic_token(t, TOKEN_IDENT_FUNC, "__fUnc", 2);
 }
 
 void test_ident_var_and_func_invalid(void) {
-    LEXER.load_line(l, "!var123 __func_123", 2);
+    LEXER.load_line(l, "!var123 __func_123 !Var __Func", 2);
 
     Token t;
     t = LEXER.next_token(l); assert_dynamic_token(t, TOKEN_IDENT_VAR, "!var123", 2);
     t = LEXER.next_token(l); assert_dynamic_token(t, TOKEN_IDENT_FUNC, "__func_123", 2);
+    t = LEXER.next_token(l); assert_dynamic_token(t, TOKEN_IDENT_VAR, "!Var", 2);
+    t = LEXER.next_token(l); assert_dynamic_token(t, TOKEN_IDENT_FUNC, "__Func", 2);
 }
+
 
 // Numbers are parsed into new strings, so they are dynamic.
 void test_numbers(void) {
@@ -146,6 +169,7 @@ void test_eol_token(void) {
 int main(void) {
     UNITY_BEGIN();
     RUN_TEST(test_keywords_and_identifiers);
+    RUN_TEST(test_keywords_and_identifiers_invalid);
     RUN_TEST(test_ident_var_and_func);
     RUN_TEST(test_ident_var_and_func_invalid);
     RUN_TEST(test_numbers);

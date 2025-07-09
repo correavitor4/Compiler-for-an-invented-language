@@ -49,11 +49,15 @@ int main(int argc, char *argv[])
             if (tok.type == TOKEN_TEXT_INVALID) {
                 fprintf(stderr, "[ERROR]: Texto sem fechamento na linha %lu:%d\n", line_counter, lexer->position);
                 free_memory(tok.literal);
+                LEXER.destroy(lexer);
+                file_reader_destroy(fr);
                 return 1; // Retorna erro
             }
             if (tok.type == TOKEN_ILLEGAL) {
                 fprintf(stderr, "[ERROR]: Caractere ilegal '%s' na linha %lu:%d\n", tok.literal, line_counter, lexer->position);
                 free_memory(tok.literal);
+                LEXER.destroy(lexer);
+                file_reader_destroy(fr);
                 return 1; // Retorna erro
             }
 
@@ -74,6 +78,7 @@ int main(int argc, char *argv[])
         line_counter++;
     }
 
+    LEXER.destroy(lexer);
     file_reader_destroy(fr);
 
     return 0;

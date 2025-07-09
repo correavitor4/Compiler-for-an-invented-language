@@ -1,7 +1,7 @@
 #include "unity.h"
 #include <string.h>  // Inclua para strncpy
-#include "config/config.h"
 
+#include "config/options.h"
 
 static const char* mock_input = NULL;
 

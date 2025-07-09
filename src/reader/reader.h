@@ -24,6 +24,7 @@ FileReader *file_reader_create(const char *filename);
 char *file_reader_get_next_line(FileReader *fr);
 void file_reader_free_line(char *line);
 void file_reader_destroy(FileReader *fr);
+int reset_buffer_size(FileReader *fr);
 
 
 #endif // READER_H

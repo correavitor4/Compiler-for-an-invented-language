@@ -1,67 +1,146 @@
-# Compilador e flags
+# Compiler and flags
 CC = gcc
-CFLAGS = -Wall -Wextra -g -std=c11
-
-# Diretórios
-SRC_DIR = .
-CONFIG_DIR = config
-READER_DIR = reader
-MEMORY_CONTROLLER_DIR = memory
-TESTS_DIR = tests
-UNITY_DIR = $(TESTS_DIR)/libs/unity/src
-OPTIONS_TESTS_DIR = $(TESTS_DIR)/unit/options
-MEMORY_TESTS_DIR = $(TESTS_DIR)/unit/memory
-READER_TESTS_DIR = $(TESTS_DIR)/unit/reader
-READER_TEST_FILES = $(READER_TESTS_DIR)/reader_tests.c
-READER_SRC_FILE = $(READER_DIR)/reader.c
-READER_TEST_EXE = test_reader
 
 
-# Fontes principais do programa
-SRC_FILES = $(SRC_DIR)/main.c \
-            $(CONFIG_DIR)/options.c \
-            $(READER_DIR)/reader.c
+# Define the path to the Unity test framework
+# Ensure that the Unity framework is available in the specified path.
+UNITY_PATH = lib/unity
 
-# Arquivos de teste unitário
-OPTIONS_TEST_FILES = $(OPTIONS_TESTS_DIR)/options_unit_tests.c
-MEMORY_TEST_FILES = $(MEMORY_TESTS_DIR)/memory_controller_tests.c
+# --- DIRECTORIES ---
+EXEC = $(MAIN_MODULE)
+BUILD_DIR = build
+BIN_DIR = $(BUILD_DIR)/bin
+SRC_DIR = src
+INCLUDE_DIR = include
+TEST_DIR = test/unit
+TEST_BIN_DIR = $(BUILD_DIR)/bin/test
 
-# Arquivo Unity
-UNITY_SRC = $(UNITY_DIR)/unity.c
+# --- COMPILER FLAGS ---
+CFLAGS = -g -Wall -std=c11 -I$(INCLUDE_DIR) -I$(SRC_DIR) -I$(UNITY_PATH)/src -MMD -MP
+CFLAGS_TEST = $(CFLAGS) -DTESTING
 
-# Executáveis
-MAIN_EXE = main
-OPTIONS_TEST_EXE = test_options
-MEMORY_TEST_EXE = test_memory_controller
+LDFLAGS =
 
-.PHONY: all build test test_options test_memory clean
+# --- PROJECT MODULES ---
+MAIN_MODULE = core
+SRC_MODULES = hash memory reader lex config core
+TEST_MODULES = hash memory reader lex
 
-all: build
+# --- SOURCES & OBJECTS ---
 
-build: $(SRC_FILES)
-	$(CC) $(CFLAGS) -o $(MAIN_EXE) $(SRC_FILES)
+# Main source files and objects
+MODULE_PATHS = $(patsubst %,$(SRC_DIR)/%,$(SRC_MODULES))
+SOURCES = $(foreach dir,$(MODULE_PATHS),$(shell find $(dir) -name '*.c'))
+OBJECTS = $(patsubst $(SRC_DIR)/%.c,$(BUILD_DIR)/%.o,$(SOURCES))
+DEPS = $(OBJECTS:.o=.d)
 
-# Regra principal para rodar todos os testes
-test: test_options test_memory test_reader
+# Default target: builds the main executable
+all: $(BIN_DIR)/$(EXEC)
 
-# Testes do módulo options
-test_options: $(OPTIONS_TEST_FILES) $(CONFIG_DIR)/options.c $(UNITY_SRC)
-	@echo "Compilando e executando testes do módulo options..."
-	$(CC) $(CFLAGS) -DTESTING -I$(UNITY_DIR) -I$(CONFIG_DIR) -o $(OPTIONS_TEST_EXE) $(OPTIONS_TEST_FILES) $(CONFIG_DIR)/options.c $(UNITY_SRC)
-	./$(OPTIONS_TEST_EXE)
+# Rule to link the main executable
 
-# Testes do módulo memory_controller
-test_memory: $(MEMORY_TEST_FILES) $(MEMORY_CONTROLLER_DIR)/memory_controller.c $(UNITY_SRC)
-	@echo "Compilando e executando testes do módulo memory_controller..."
-	$(CC) $(CFLAGS) -DTESTING -I$(UNITY_DIR) -I$(MEMORY_CONTROLLER_DIR) -o $(MEMORY_TEST_EXE) $(MEMORY_TEST_FILES) $(MEMORY_CONTROLLER_DIR)/memory_controller.c $(UNITY_SRC)
-	./$(MEMORY_TEST_EXE)
+$(BIN_DIR)/$(EXEC): $(OBJECTS)
+	@mkdir -p $(@D)
+	$(CC) $(OBJECTS) -o $@ $(LDFLAGS)
+	@echo "Linking complete. Executable '$(EXEC)' is at $@"
 
-# Testes do módulo reader
-test_reader: $(READER_TEST_FILES) $(READER_SRC_FILE) $(MEMORY_CONTROLLER_DIR)/memory_controller.c $(UNITY_SRC)
-	$(CC) $(CFLAGS) -DTESTING -I$(UNITY_DIR) -I$(READER_DIR) -I$(MEMORY_CONTROLLER_DIR) -o $(READER_TEST_EXE) \
-		$(READER_TEST_FILES) $(READER_SRC_FILE) $(MEMORY_CONTROLLER_DIR)/memory_controller.c $(UNITY_SRC)
-	./$(READER_TEST_EXE)
+# --- TEST TARGETS ---
+
+TEST_EXECS = $(patsubst %,$(TEST_BIN_DIR)/test_%,$(TEST_MODULES))
+
+test: $(TEST_EXECS)
+	@echo "--- Running All Tests ---"
+	@echo "Test executables: $(TEST_EXECS)"
+	@$(foreach exec,$(TEST_EXECS), echo "▶️  Running $(exec)"; $(exec) || exit 1;)
+	@echo "✅ --- All Tests Finished Successfully ---"
+
+
+# --- TEST BUILD TARGETS ---
+TEST_BIN_DIR = $(BUILD_DIR)/bin/test
+
+# --- Unity Framework Objects ---
+UNITY_SRC = $(UNITY_PATH)/src/unity.c
+UNITY_OBJ = $(TEST_BIN_DIR)/unity.o
+
+# --- Define Test Executables ---
+# Create a list of all test executables based on TEST_MODULES
+# e.g., build/bin/test/test_memory, build/bin/test/test_options, ...
+TEST_EXECS = $(patsubst %,$(TEST_BIN_DIR)/test_%,$(TEST_MODULES))
+
+# --- Sources & Objects for Test Libraries ---
+# Find all .c files for the modules required by the tests (e.g., memory.c)
+TEST_LIB_PATHS = $(patsubst %,$(SRC_DIR)/%,$(TEST_MODULES))
+TEST_LIB_SOURCES = $(foreach dir,$(TEST_LIB_PATHS),$(shell find $(dir) -name '*.c'))
+TEST_LIB_OBJECTS = $(patsubst $(SRC_DIR)/%.c,$(TEST_BIN_DIR)/%.o,$(TEST_LIB_SOURCES))
+
+TEST_RUNNER_SRCS = $(patsubst %,$(TEST_DIR)/test_%.c,$(TEST_MODULES))
+TEST_RUNNER_OBJS = $(patsubst $(TEST_DIR)/%.c,$(TEST_BIN_DIR)/%.o,$(TEST_RUNNER_SRCS))
+
+UNITY_SRC = $(UNITY_PATH)/src/unity.c
+UNITY_OBJ = $(TEST_BIN_DIR)/unity.o
+
+TEST_ALL_OBJECTS = $(TEST_RUNNER_OBJS) $(TEST_LIB_OBJECTS)
+TEST_DEPS = $(TEST_ALL_OBJECTS:.o=.d) $(UNITY_OBJ:.o=.d)
+
+# --- DEFAULT TARGETS ---
+
+all: $(BIN_DIR)/$(EXEC)
+
+$(BIN_DIR)/$(EXEC): $(OBJECTS)
+	@mkdir -p $(@D)
+	$(CC) $(OBJECTS) -o $@ $(LDFLAGS)
+	@echo "Linking complete. Executable '$(EXEC)' is at $@"
+
+# --- TEST TARGETS ---
+
+TEST_EXECS = $(patsubst %,$(TEST_BIN_DIR)/test_%,$(TEST_MODULES))
+
+test: $(TEST_EXECS)
+	@echo "--- Running All Tests ---"
+	@echo "Test executables: $(TEST_EXECS)"
+	@$(foreach exec,$(TEST_EXECS), echo "▶️  Running $(exec)"; $(exec) || exit 1;)
+	@echo "✅ --- All Tests Finished Successfully ---"
+
+# --- COMPILATION RULES ---
+
+# Compile main sources
+$(BUILD_DIR)/%.o: $(SRC_DIR)/%.c
+	@mkdir -p $(@D)
+	$(CC) $(CFLAGS) -c $< -o $@
+	@echo "Compiled $< into $@"
+
+# Compile test library sources with TESTING flag
+$(TEST_BIN_DIR)/%.o: $(SRC_DIR)/%.c
+	@mkdir -p $(@D)
+	$(CC) $(CFLAGS_TEST) -c $< -o $@
+	@echo "Compiled Test Lib $< into $@"
+
+# Compile test runner sources with TESTING flag
+$(TEST_BIN_DIR)/%.o: $(TEST_DIR)/%.c
+	@mkdir -p $(@D)
+	$(CC) $(CFLAGS_TEST) -c $< -o $@
+	@echo "Compiled Test Runner $< into $@"
+
+# Compile Unity framework
+$(UNITY_OBJ): $(UNITY_SRC)
+	@mkdir -p $(@D)
+	$(CC) $(CFLAGS) -c $< -o $@
+	@echo "Compiled Unity Framework $< into $@"
+
+# --- LINKING TEST EXECUTABLES ---
+
+$(TEST_BIN_DIR)/test_%: $(TEST_BIN_DIR)/test_%.o $(TEST_LIB_OBJECTS) $(UNITY_OBJ)
+	@mkdir -p $(@D)
+	$(CC) $^ -o $@ $(LDFLAGS)
+	@echo "Linked test executable $@"
+
+# --- HOUSEKEEPING ---
 
 clean:
-	@echo "Removendo executáveis..."
-	rm -f $(MAIN_EXE) $(OPTIONS_TEST_EXE) $(MEMORY_TEST_EXE) $(READER_TEST_EXE)
+	@echo "Cleaning up build files..."
+	rm -rf $(BUILD_DIR)
+
+.PHONY: all clean test
+
+# Include dependency files
+-include $(DEPS) $(TEST_DEPS)

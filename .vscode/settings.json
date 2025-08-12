@@ -28,6 +28,8 @@
         "string": "c",
         "system_error": "c",
         "typeinfo": "c",
-        "utility": "c"
+        "utility": "c",
+        "stdio.h": "c",
+        "ctype.h": "c"
     }
 }

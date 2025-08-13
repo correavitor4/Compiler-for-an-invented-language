@@ -31,8 +31,16 @@ int main(int argc, char *argv[])
     char *line;
 
     // Inicializa o lexer
-
     unsigned long line_counter = 0;
+
+    // Vetor para armazenar tokens
+    Token *tokens_vector = allocate_memory(sizeof(Token) *0);
+    if (!tokens_vector) {
+        fprintf(stderr, "Erro ao alocar memória para tokens.\n");
+        return 1;
+    }
+
+    int tokens_count = 0;
 
     Lexer *lexer = LEXER.new(fr->buffer);
     while ((line = file_reader_get_next_line(fr)) != NULL)
@@ -63,8 +71,19 @@ int main(int argc, char *argv[])
 
             printf("Token { Linha: %d, Tipo: %d, Literal: \"%s\" }\n", tok.line_num, tok.type, tok.literal);
             
+            // Armazena o token no vetor
+            tokens_count++;
+            tokens_vector = reallocate_memory(tokens_vector, sizeof(Token) * tokens_count);
+            if (!tokens_vector) {
+                fprintf(stderr, "Erro ao alocar memória para tokens.\n");
+                free_memory(tok.literal);
+                LEXER.destroy(lexer);
+                file_reader_destroy(fr);
+                return 1; // Retorna erro
+            }
+            tokens_vector[tokens_count - 1] = tok;
+
             TokenType type = tok.type;
-            free_memory(tok.literal);
 
             if (type == TOKEN_EOL) {
                 break; // Passa para a próxima linha

@@ -11,6 +11,5 @@ typedef struct
     int child_count;
 } ParseTreeNode;
 
-ParseTreeNode *ParseTree(const char *file_name);
-
+ParseTreeNode *ParseTree(Token *token_vector, int token_count);
 #endif

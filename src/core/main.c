@@ -100,5 +100,10 @@ int main(int argc, char *argv[])
     LEXER.destroy(lexer);
     file_reader_destroy(fr);
 
+
+    // Syntax analysis
+    printf("Análise sintática:\n");
+    
+
     return 0;
 }

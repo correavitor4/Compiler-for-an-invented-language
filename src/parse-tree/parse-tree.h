@@ -9,6 +9,7 @@ typedef struct
     char *literal;
     struct ParseTreeNode **children; // Ponteiro para um array de filhos
     int child_count;
+    int line_num;
 } ParseTreeNode;
 
 ParseTreeNode *ParseTree(Token *token_vector, int token_count);

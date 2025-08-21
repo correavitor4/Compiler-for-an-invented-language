@@ -1,35 +1,52 @@
-// parser/parser.c
-
 #include <stdio.h>
 #include <stdlib.h>
 #include "parser.h"
 
-// A estrutura interna do parser
 struct Parser {
     Token *tokens;
     int token_count;
     int current_pos;
 };
 
-// --- Funções Auxiliares Internas ---
-
-// Retorna o token atual sem avançar
+/**
+ * @brief Retrieves the current token from the parser.
+ *
+ * This function returns the token that the parser is currently processing.
+ *
+ * @param p Pointer to the Parser instance.
+ * @return The current Token being processed.
+ */
 static Token current_token(Parser *p) {
     if (p->current_pos < p->token_count)
         return p->tokens[p->current_pos];
-    // Se estivermos fora dos limites, retorna o último token (deve ser EOF)
+    
     return p->tokens[p->token_count - 1];
 }
 
-// Avança para o próximo token
+/**
+ * @brief Advances the parser to the next token in the input stream.
+ *
+ * This function updates the internal state of the parser to point to the next token,
+ * typically used during parsing to consume tokens sequentially.
+ *
+ * @param p Pointer to the Parser structure whose token stream is being advanced.
+ */
 static void advance_token(Parser *p) {
     if (p->current_pos < p->token_count) {
         p->current_pos++;
     }
 }
 
-// Verifica se o token atual é do tipo esperado.
-// Se for, avança. Se não, imprime um erro e encerra.
+/**
+ * @brief Expects the next token in the parser to be of a specific type.
+ *
+ * Checks if the current token in the parser matches the expected token type.
+ * If the token does not match, reports an error using the provided error message.
+ *
+ * @param p Pointer to the Parser instance.
+ * @param type The expected TokenType.
+ * @param error_msg Error message to display if the token does not match.
+ */
 static void expect_token(Parser *p, TokenType type, const char *error_msg) {
     Token tok = current_token(p);
     if (tok.type == type) {
@@ -41,20 +58,33 @@ static void expect_token(Parser *p, TokenType type, const char *error_msg) {
     }
 }
 
-// Pula todos os tokens EOL (fim de linha) que encontrar
+/**
+ * @brief Skips end-of-line (EOL) characters in the parser input.
+ *
+ * Advances the parser position past any consecutive EOL characters,
+ * allowing parsing to continue at the next non-EOL character.
+ *
+ * @param p Pointer to the Parser structure.
+ */
 static void skip_eols(Parser *p) {
     while (current_token(p).type == TOKEN_EOL) {
         advance_token(p);
     }
 }
 
-// --- Funções de Análise da Gramática (Protótipos) ---
+// TODO: To be implemented
 static void parse_statement(Parser *p);
 static void parse_expression(Parser *p);
 
-// --- Implementação das Funções de Análise ---
-
-// Analisa um bloco de código entre chaves {}
+/**
+ * @brief Parses a block of code using the given parser.
+ *
+ * This function processes a block structure in the source code,
+ * updating the parser state as necessary. It is intended for internal
+ * use within the parser implementation.
+ *
+ * @param p Pointer to the Parser instance used for parsing.
+ */
 static void parse_block(Parser *p) {
     expect_token(p, TOKEN_LBRACE, "Esperado '{' para iniciar um bloco");
     skip_eols(p);
@@ -65,9 +95,16 @@ static void parse_block(Parser *p) {
     expect_token(p, TOKEN_RBRACE, "Esperado '}' para fechar um bloco");
 }
 
-// Analisa uma expressão simples
+/**
+ * @brief Parses an expression from the input using the given parser.
+ *
+ * This function processes the current tokens in the parser to construct
+ * an expression node or structure, updating the parser's state accordingly.
+ *
+ * @param p Pointer to the Parser structure containing the parsing context.
+ */
 static void parse_expression(Parser *p) {
-    // Apenas consome tokens até um delimitador
+    
     while (current_token(p).type != TOKEN_SEMICOLON &&
            current_token(p).type != TOKEN_RPAREN &&
            current_token(p).type != TOKEN_COMMA &&
@@ -77,7 +114,14 @@ static void parse_expression(Parser *p) {
     }
 }
 
-// Analisa uma lista de argumentos (ex: em 'escreva("ola", !a)')
+/**
+ * @brief Parses a list of arguments in the current parser context.
+ *
+ * This function processes the argument list according to the parser's
+ * current state, updating internal structures as needed.
+ *
+ * @param p Pointer to the Parser instance.
+ */
 static void parse_argument_list(Parser *p) {
     expect_token(p, TOKEN_LPAREN, "Esperado '(' antes da lista de argumentos");
     if (current_token(p).type != TOKEN_RPAREN) {
@@ -90,47 +134,57 @@ static void parse_argument_list(Parser *p) {
     expect_token(p, TOKEN_RPAREN, "Esperado ')' após a lista de argumentos");
 }
 
-// Analisa uma declaração de variável (ex: inteiro !a, !b=7;)
+/**
+ * @brief Parses a variable declaration in the source code.
+ *
+ * This function analyzes the current token stream in the parser context
+ * and processes a variable declaration, updating the parser state as needed.
+ *
+ * @param p Pointer to the Parser structure containing parsing context and state.
+ */
 static void parse_variable_declaration(Parser *p) {
-    // Guarda o tipo da variável que está sendo declarada
+    
     TokenType declaration_type = current_token(p).type;
-    advance_token(p); // Consome o token de tipo (ex: TOKEN_INT_TYPE)
-
-    // Loop para permitir múltiplas declarações na mesma linha (ex: inteiro !a, !b;)
+    advance_token(p); 
+   
     while (1) {
         expect_token(p, TOKEN_IDENT_VAR, "Esperado um identificador de variável (iniciado com '!')");
 
-        // MODIFICADO: Usa os novos tokens de tipo
+        
         if (declaration_type == TOKEN_DEC_TYPE && current_token(p).type == TOKEN_LBRACKET) {
             expect_token(p, TOKEN_LBRACKET, "Esperado '[' para iniciar o especificador de formato decimal");
             expect_token(p, TOKEN_DECIMAL, "Esperado um NÚMERO DECIMAL como limitador de valor");
             expect_token(p, TOKEN_RBRACKET, "Esperado ']' para fechar o especificador de formato decimal");
         }
         else if (declaration_type == TOKEN_INT_TYPE && current_token(p).type == TOKEN_LBRACKET) {
-            advance_token(p); // Consome '['
+            advance_token(p); 
             expect_token(p, TOKEN_INT, "Tamanho do vetor deve ser um inteiro");
             expect_token(p, TOKEN_RBRACKET, "Esperado ']' para fechar a declaração de vetor");
         }
-
-        // Após a variável e seu possível especificador, pode haver uma atribuição.
+       
         if (current_token(p).type == TOKEN_ASSIGN) {
-            advance_token(p); // Consome '='
+            advance_token(p); 
             parse_expression(p);
         }
-
-        // Se não houver uma vírgula, a declaração terminou. Saia do loop.
+        
         if (current_token(p).type != TOKEN_COMMA) {
             break;
         }
         
-        advance_token(p); // Consome a vírgula para a próxima declaração na mesma linha.
+        advance_token(p); 
     }
     
-    // Toda declaração deve terminar com ponto e vírgula.
     expect_token(p, TOKEN_SEMICOLON, "Esperado ';' no final da declaração de variável");
 }
 
-// Analisa uma atribuição (ex: !b2 = !a;)
+/**
+ * @brief Parses an assignment statement in the source code.
+ *
+ * This function analyzes the current tokens in the parser and processes
+ * an assignment statement, updating the parser state accordingly.
+ *
+ * @param p Pointer to the Parser structure containing parsing context.
+ */
 static void parse_assignment_statement(Parser *p) {
     expect_token(p, TOKEN_IDENT_VAR, "Esperado uma variável para atribuição");
     expect_token(p, TOKEN_ASSIGN, "Esperado '=' em uma atribuição");
@@ -138,10 +192,16 @@ static void parse_assignment_statement(Parser *p) {
     expect_token(p, TOKEN_SEMICOLON, "Esperado ';' no final da atribuição");
 }
 
-// Analisa os comandos 'leia' ou 'escreva'
+/**
+ * @brief Parses an I/O statement in the given parser context.
+ *
+ * This function processes input/output statements encountered during parsing.
+ *
+ * @param p Pointer to the Parser structure containing the current parsing state.
+ */
 static void parse_io_statement(Parser *p) {
     TokenType type = current_token(p).type;
-    advance_token(p); // Consome 'leia' ou 'escreva'
+    advance_token(p); 
     parse_argument_list(p);
     if (type == TOKEN_READ)
       expect_token(p, TOKEN_SEMICOLON, "Esperado ';' no final da chamada 'leia'");
@@ -149,9 +209,17 @@ static void parse_io_statement(Parser *p) {
       expect_token(p, TOKEN_SEMICOLON, "Esperado ';' no final da chamada 'escreva'");
 }
 
-// Analisa um comando 'se'/'senao'
+
+/**
+ * @brief Parses an 'if' statement in the source code.
+ *
+ * This function analyzes the current token stream in the parser to identify and
+ * process an 'if' statement, including its condition and associated statement blocks.
+ *
+ * @param p Pointer to the Parser structure containing the current parsing state.
+ */
 static void parse_if_statement(Parser *p) {
-    advance_token(p); // Consome 'se'
+    advance_token(p); 
     expect_token(p, TOKEN_LPAREN, "Esperado '(' após 'se'");
     parse_expression(p);
     expect_token(p, TOKEN_RPAREN, "Esperado ')' após a condição do 'se'");
@@ -162,46 +230,44 @@ static void parse_if_statement(Parser *p) {
 
     skip_eols(p);
     if (current_token(p).type == TOKEN_ELSE) {
-        advance_token(p); // Consome 'senao'
+        advance_token(p); 
         skip_eols(p);
         if (current_token(p).type == TOKEN_LBRACE) parse_block(p);
         else parse_statement(p);
     }
 }
 
+/**
+ * @brief Parses a 'for' statement in the source code.
+ *
+ * This function analyzes the tokens provided by the parser to identify and process
+ * a 'for' loop construct. It updates the parser state accordingly and generates
+ * the necessary intermediate representation or AST nodes for the 'for' statement.
+ *
+ * @param p Pointer to the Parser structure containing the current parsing context.
+ */
 static void parse_for_statement(Parser *p) {
-    // 1. Consome a palavra-chave 'para'
+    
     expect_token(p, TOKEN_FOR, "Esperado 'para' para iniciar um loop");
-
-    // 2. Consome o parêntese de abertura '('
     expect_token(p, TOKEN_LPAREN, "Esperado '(' após a palavra-chave 'para'");
-
-    // 3. Analisa a seção de INICIALIZAÇÃO
-    // A inicialização é opcional, mas se existir, deve ser uma atribuição.
+ 
     if (current_token(p).type != TOKEN_SEMICOLON) {
-        parse_assignment_statement(p); // Esta função já espera um ';' no final
+        parse_assignment_statement(p); 
     } else {
         expect_token(p, TOKEN_SEMICOLON, "Esperado ';' após a inicialização (vazia) do loop 'para'");
     }
-
-    // 4. Analisa a seção de CONDIÇÃO
-    // A condição é opcional. Se estiver vazia, o loop é infinito.
+ 
     if (current_token(p).type != TOKEN_SEMICOLON) {
         parse_expression(p);
     }
     expect_token(p, TOKEN_SEMICOLON, "Esperado ';' após a condição do loop 'para'");
 
-    // 5. Analisa a seção de INCREMENTO
-    // O incremento também é opcional.
     if (current_token(p).type != TOKEN_RPAREN) {
         parse_expression(p);
     }
-
-    // 6. Consome o parêntese de fechamento ')'
     expect_token(p, TOKEN_RPAREN, "Esperado ')' para fechar a declaração do loop 'para'");
     skip_eols(p);
 
-    // 7. Analisa o CORPO do loop (pode ser um bloco {} ou um único comando)
     if (current_token(p).type == TOKEN_LBRACE) {
         parse_block(p);
     } else {
@@ -209,18 +275,34 @@ static void parse_for_statement(Parser *p) {
     }
 }
 
-// Analisa a função 'principal'
+/**
+ * @brief Parses the main function in the source code.
+ *
+ * This function analyzes the tokens provided by the parser to identify and process
+ * the main function definition. It updates the parser state accordingly.
+ *
+ * @param p Pointer to the Parser structure containing parsing context and state.
+ */
 static void parse_main_function(Parser *p) {
-    advance_token(p); // Consome 'principal'
+    advance_token(p); 
     expect_token(p, TOKEN_LPAREN, "Esperado '(' na função principal");
     expect_token(p, TOKEN_RPAREN, "Esperado ')' na função principal");
     skip_eols(p);
     parse_block(p);
 }
 
+/**
+ * @brief Parses a single statement from the input using the provided parser.
+ *
+ * This function analyzes the current position of the parser and processes
+ * a statement according to the language grammar. It updates the parser's
+ * internal state as necessary.
+ *
+ * @param p Pointer to the Parser structure containing parsing context and state.
+ */
 static void parse_statement(Parser *p) {
     switch (current_token(p).type) {
-        // MODIFICADO: Casos atualizados para os novos tokens _TYPE
+        
         case TOKEN_INT_TYPE:
         case TOKEN_DEC_TYPE:
         case TOKEN_TEXT_TYPE:
@@ -249,7 +331,15 @@ static void parse_statement(Parser *p) {
     }
 }
 
-// Ponto de entrada do programa
+/**
+ * @brief Parses the entire program using the given parser.
+ *
+ * This function processes the input according to the program's grammar rules,
+ * updating the parser state as necessary. It is typically the entry point for
+ * parsing a complete source file or code block.
+ *
+ * @param p Pointer to the Parser structure containing parsing state and input.
+ */
 static void parse_program(Parser *p) {
     skip_eols(p);
     while (current_token(p).type != TOKEN_EOF) {
@@ -258,20 +348,22 @@ static void parse_program(Parser *p) {
     }
 }
 
-
-// --- Função Pública da API ---
-
+/**
+ * Parses the provided source code tokens.
+ *
+ * @param tokens       Pointer to an array of Token structures representing the source code.
+ * @param token_count  The number of tokens in the array.
+ * @return             An integer status code indicating the result of parsing.
+ */
 int parse_source_code(Token *tokens, int token_count) {
-    // 1. Cria e inicializa a estrutura do Parser
+    
     Parser p = {
         .tokens = tokens,
         .token_count = token_count,
         .current_pos = 0
     };
 
-    // 2. Inicia a análise a partir da regra principal da gramática
     parse_program(&p);
 
-    // 3. Se chegou aqui, a análise foi bem-sucedida
-    return 0; // Sucesso
+    return 0; 
 }

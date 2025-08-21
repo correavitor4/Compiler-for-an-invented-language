@@ -23,7 +23,7 @@ LDFLAGS =
 
 # --- PROJECT MODULES ---
 MAIN_MODULE = core
-SRC_MODULES = hash memory reader lex config core
+SRC_MODULES = hash memory reader lex parser config core
 TEST_MODULES = hash memory reader lex
 
 # --- SOURCES & OBJECTS ---

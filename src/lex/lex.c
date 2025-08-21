@@ -224,19 +224,19 @@ TokenType lookup(const char *ident)
     // case hash("inteiro"):
     case 229469892003903UL:
         if (strcmp(ident, "inteiro") == 0)
-            return TOKEN_INT;
+            return TOKEN_INT_TYPE;
         break;
 
     // case hash("decimal"):
     case 229463062432404UL:
         if (strcmp(ident, "decimal") == 0)
-            return TOKEN_DECIMAL;
+            return TOKEN_DEC_TYPE;
         break;
 
     // case hash("texto"):
     case 210728880825UL:
         if (strcmp(ident, "texto") == 0)
-            return TOKEN_TEXT;
+            return TOKEN_TEXT_TYPE;
         break;
     }
     // No match found, return TOKEN_ILLEGAL
@@ -258,6 +258,7 @@ Token _next_token_impl(Lexer *l)
     tok.literal = NULL;
 
     tok.line_num = l->line_num;
+    tok.position = l->position;
 
     skip_whitespace(l);
 
@@ -515,12 +516,6 @@ void _destroy_impl(Lexer *l)
 {
     if (l == NULL)
         return;
-
-    // Free the current line if it was dynamically allocated
-    if (l->current_line != NULL)
-    {
-        free_memory((void *)l->current_line);
-    }
 
     // Free the lexer structure itself
     free_memory(l);

@@ -219,6 +219,11 @@ TokenType lookup(const char *ident)
         if (strcmp(ident, "principal") == 0)
             return TOKEN_MAIN;
         break;
+    // case hash("retorno"):
+    case 229481163366126UL:
+        if (strcmp(ident, "retorno") == 0)
+            return TOKEN_RETURN;
+        break;
 
     // --- TYPES ---
     // case hash("inteiro"):

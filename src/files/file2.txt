@@ -7,7 +7,7 @@ escreva("Escreva um número ");
 leia (!a);
 se (!a <= !b2)
 escreva(" A é maior", !a);
-senao escreva("B é maior", !b);
+senao escreva("B é maior", !b2);
 para (!d = 1; !d<=100; !d=!d+2){
 escreva("D", !d);
 }

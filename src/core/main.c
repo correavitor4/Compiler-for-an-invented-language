@@ -3,6 +3,7 @@
 // #include "../config/options.h"
 
 #include "hash/hash.h"
+#include "symbol_table/symbol_table.h"
 #include "memory/memory_controller.h"
 #include "reader/reader.h"
 #include "lex/lex.h"
@@ -70,7 +71,7 @@ int main(int argc, char *argv[])
                 return 1; // Retorna erro
             }
 
-            printf("Token { Linha: %d, Tipo: %d, Literal: \"%s\", Posição: %d }\n", tok.line_num, tok.type, tok.literal, tok.position);
+            printf("Token { Linha: %lu, Tipo: %d, Literal: \"%s\", Posição: %lu }\n", tok.line_num, tok.type, tok.literal, tok.position);
 
             // Armazena o token no vetor
             tokens_count++;
@@ -124,9 +125,19 @@ int main(int argc, char *argv[])
     LEXER.destroy(lexer);
     file_reader_destroy(fr);
 
+    ScopeManager *sm = scope_manager_create();
+    if (!sm) {
+        fprintf(stderr, "Erro fatal: não foi possível criar o gestor de escopos.\n");
+        return 1;
+    }
+
+    scope_manager_insert(sm, "leia", KIND_FUNC, TOKEN_READ);
+    scope_manager_insert(sm, "escreva", KIND_FUNC, TOKEN_PRINT);
+    scope_manager_insert(sm, "principal", KIND_FUNC, TOKEN_MAIN);
+
     printf("--- Iniciando Análise Sintática ---\n");
-    
-    if (parse_source_code(tokens_vector, tokens_count) == 0) {
+
+    if (parse_source_code(tokens_vector, tokens_count, sm) == 0) {
         printf("Análise sintática concluída com sucesso!\n");
     } else {
         // A função do parser já imprime o erro detalhado e encerra,

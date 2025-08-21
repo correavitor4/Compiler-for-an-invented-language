@@ -1,12 +1,18 @@
 #include <stdio.h>
 #include <stdlib.h>
+
 #include "parser.h"
+#include "symbol_table/symbol_table.h"
 
 struct Parser {
     Token *tokens;
     int token_count;
     int current_pos;
+    ScopeManager *sm;
 };
+
+/* PROTOTYPES */
+static void parse_function_call(Parser *p);
 
 /**
  * @brief Retrieves the current token from the parser.
@@ -52,7 +58,7 @@ static void expect_token(Parser *p, TokenType type, const char *error_msg) {
     if (tok.type == type) {
         advance_token(p);
     } else {
-        fprintf(stderr, "[Erro Sintático] Linha %lu: %s. Esperado token do tipo %d, mas encontrado %d ('%s').\n",
+        fprintf(stderr, "[ERROR|Syntax] Linha %lu: %s. Esperado token do tipo %d, mas encontrado %d ('%s').\n",
                 tok.line_num, error_msg, type, tok.type, tok.literal);
         exit(EXIT_FAILURE);
     }
@@ -71,10 +77,6 @@ static void skip_eols(Parser *p) {
         advance_token(p);
     }
 }
-
-// TODO: To be implemented
-static void parse_statement(Parser *p);
-static void parse_expression(Parser *p);
 
 /**
  * @brief Parses a block of code using the given parser.
@@ -96,21 +98,62 @@ static void parse_block(Parser *p) {
 }
 
 /**
+ * @brief Parses a term in the input stream using the given parser.
+ *
+ * This function processes the current token or sequence of tokens as a "term"
+ * according to the grammar rules defined for the parser. It advances the parser
+ * state as necessary and may handle errors or update internal structures.
+ *
+ * @param p Pointer to the Parser instance used for parsing.
+ */
+static void parse_term(Parser *p) {
+    Token tok = current_token(p);
+    switch (tok.type) {
+        case TOKEN_INT:
+        case TOKEN_DECIMAL:
+        case TOKEN_TEXT:
+        case TOKEN_IDENT_VAR:
+            if (tok.type == TOKEN_IDENT_VAR) {
+                if (scope_manager_lookup(p->sm, tok.literal) == NULL) {
+                    fprintf(stderr, "[Erro Semântico] Linha %lu: A variável '%s' não foi declarada.\n",
+                            tok.line_num, tok.literal);
+                    exit(EXIT_FAILURE);
+                }
+            }
+            advance_token(p);
+            break;
+        case TOKEN_IDENT_FUNC:
+            parse_function_call(p);
+            break;
+        default:
+            fprintf(stderr, "[Erro Sintático] Linha %lu: Token inesperado '%s' numa expressão. Esperado um valor, variável ou chamada de função.\n",
+                    tok.line_num, tok.literal);
+            exit(EXIT_FAILURE);
+    }
+}
+
+/**
  * @brief Parses an expression from the input using the given parser.
  *
- * This function processes the current tokens in the parser to construct
- * an expression node or structure, updating the parser's state accordingly.
+ * This function processes the current state of the parser to interpret
+ * and construct an expression node or structure as defined by the grammar.
  *
- * @param p Pointer to the Parser structure containing the parsing context.
+ * @param p Pointer to the Parser structure containing the parsing state and input.
  */
 static void parse_expression(Parser *p) {
     
-    while (current_token(p).type != TOKEN_SEMICOLON &&
-           current_token(p).type != TOKEN_RPAREN &&
-           current_token(p).type != TOKEN_COMMA &&
-           current_token(p).type != TOKEN_EOL &&
-           current_token(p).type != TOKEN_EOF) {
+    parse_term(p);
+ 
+    while (current_token(p).type == TOKEN_PLUS || current_token(p).type == TOKEN_MINUS ||
+           current_token(p).type == TOKEN_ASTERISK || current_token(p).type == TOKEN_SLASH ||
+           current_token(p).type == TOKEN_LT || current_token(p).type == TOKEN_GT ||
+           current_token(p).type == TOKEN_EQ || current_token(p).type == TOKEN_NOT_EQ ||
+           current_token(p).type == TOKEN_LTE || current_token(p).type == TOKEN_GTE ||
+           current_token(p).type == TOKEN_AND || current_token(p).type == TOKEN_OR ||
+           current_token(p).type == TOKEN_ASSIGN) 
+    {
         advance_token(p);
+        parse_term(p);
     }
 }
 
@@ -134,68 +177,36 @@ static void parse_argument_list(Parser *p) {
     expect_token(p, TOKEN_RPAREN, "Esperado ')' após a lista de argumentos");
 }
 
-/**
- * @brief Parses a variable declaration in the source code.
- *
- * This function analyzes the current token stream in the parser context
- * and processes a variable declaration, updating the parser state as needed.
- *
- * @param p Pointer to the Parser structure containing parsing context and state.
- */
-static void parse_variable_declaration(Parser *p) {
-    
-    TokenType declaration_type = current_token(p).type;
-    advance_token(p); 
-   
-    while (1) {
-        expect_token(p, TOKEN_IDENT_VAR, "Esperado um identificador de variável (iniciado com '!')");
-
-        
-        if (declaration_type == TOKEN_DEC_TYPE && current_token(p).type == TOKEN_LBRACKET) {
-            expect_token(p, TOKEN_LBRACKET, "Esperado '[' para iniciar o especificador de formato decimal");
-            expect_token(p, TOKEN_DECIMAL, "Esperado um NÚMERO DECIMAL como limitador de valor");
-            expect_token(p, TOKEN_RBRACKET, "Esperado ']' para fechar o especificador de formato decimal");
-        }
-        else if (declaration_type == TOKEN_INT_TYPE && current_token(p).type == TOKEN_LBRACKET) {
+static void parse_parameter_list(Parser *p) {
+    expect_token(p, TOKEN_LPAREN, "Esperado '(' para a lista de parâmetros da função");
+    if (current_token(p).type != TOKEN_RPAREN) {
+        while (1) {
+            Token param_token = current_token(p);
+            expect_token(p, TOKEN_IDENT_VAR, "Esperado um nome de parâmetro (variável)");
+            
+            if (!scope_manager_insert(p->sm, param_token.literal, KIND_VAR, TOKEN_ILLEGAL)) { 
+                fprintf(stderr, "[Erro Semântico] Linha %lu: Parâmetro '%s' redeclarado.\n", param_token.line_num, param_token.literal);
+                exit(EXIT_FAILURE);
+            }
+            if (current_token(p).type != TOKEN_COMMA) break;
             advance_token(p); 
-            expect_token(p, TOKEN_INT, "Tamanho do vetor deve ser um inteiro");
-            expect_token(p, TOKEN_RBRACKET, "Esperado ']' para fechar a declaração de vetor");
         }
-       
-        if (current_token(p).type == TOKEN_ASSIGN) {
-            advance_token(p); 
-            parse_expression(p);
-        }
-        
-        if (current_token(p).type != TOKEN_COMMA) {
-            break;
-        }
-        
-        advance_token(p); 
     }
-    
-    expect_token(p, TOKEN_SEMICOLON, "Esperado ';' no final da declaração de variável");
+    expect_token(p, TOKEN_RPAREN, "Esperado ')' para fechar a lista de parâmetros");
+}
+
+static void parse_decimal_specifier(Parser *p) {
+    expect_token(p, TOKEN_LBRACKET, "Esperado '[' para iniciar o especificador de formato decimal");
+    expect_token(p, TOKEN_DECIMAL, "Esperado um NÚMERO DECIMAL como limitador de valor");
+    expect_token(p, TOKEN_RBRACKET, "Esperado ']' para fechar o especificador de formato decimal");
 }
 
 /**
- * @brief Parses an assignment statement in the source code.
+ * @brief Parses a function call expression in the source code.
  *
- * This function analyzes the current tokens in the parser and processes
- * an assignment statement, updating the parser state accordingly.
- *
- * @param p Pointer to the Parser structure containing parsing context.
- */
-static void parse_assignment_statement(Parser *p) {
-    expect_token(p, TOKEN_IDENT_VAR, "Esperado uma variável para atribuição");
-    expect_token(p, TOKEN_ASSIGN, "Esperado '=' em uma atribuição");
-    parse_expression(p);
-    expect_token(p, TOKEN_SEMICOLON, "Esperado ';' no final da atribuição");
-}
-
-/**
- * @brief Parses an I/O statement in the given parser context.
- *
- * This function processes input/output statements encountered during parsing.
+ * This function analyzes the current token stream in the parser to identify
+ * and process a function call, extracting relevant information such as the
+ * function name and its arguments.
  *
  * @param p Pointer to the Parser structure containing the current parsing state.
  */
@@ -208,7 +219,6 @@ static void parse_io_statement(Parser *p) {
     else
       expect_token(p, TOKEN_SEMICOLON, "Esperado ';' no final da chamada 'escreva'");
 }
-
 
 /**
  * @brief Parses an 'if' statement in the source code.
@@ -311,6 +321,12 @@ static void parse_statement(Parser *p) {
         case TOKEN_IDENT_VAR:
             parse_assignment_statement(p);
             break;
+        case TOKEN_FUNCTION:
+            parse_function_declaration(p);
+            break;
+        case TOKEN_RETURN:
+            parse_return_statement(p);
+            break;
         case TOKEN_IF:
             parse_if_statement(p);
             break;
@@ -325,7 +341,7 @@ static void parse_statement(Parser *p) {
             parse_main_function(p);
             break;
         default:
-            fprintf(stderr, "[Erro Sintático] Linha %lu: Comando inesperado iniciado com token '%s' (Tipo: %d).\n",
+            fprintf(stderr, "[ERROR|Syntax] Linha %lu: Comando inesperado iniciado com token '%s' (Tipo: %d).\n",
                     current_token(p).line_num, current_token(p).literal, current_token(p).type);
             exit(EXIT_FAILURE);
     }
@@ -348,19 +364,22 @@ static void parse_program(Parser *p) {
     }
 }
 
+
 /**
- * Parses the provided source code tokens.
+ * Parses the provided source code tokens and manages scopes.
  *
- * @param tokens       Pointer to an array of Token structures representing the source code.
- * @param token_count  The number of tokens in the array.
- * @return             An integer status code indicating the result of parsing.
+ * @param tokens        Array of tokens representing the source code.
+ * @param token_count   Number of tokens in the array.
+ * @param sm            Pointer to the ScopeManager for handling scope information.
+ * @return              Status code indicating success or failure of parsing.
  */
-int parse_source_code(Token *tokens, int token_count) {
-    
+int parse_source_code(Token *tokens, int token_count, ScopeManager *sm) {
+
     Parser p = {
         .tokens = tokens,
         .token_count = token_count,
-        .current_pos = 0
+        .current_pos = 0,
+        .sm = sm
     };
 
     parse_program(&p);

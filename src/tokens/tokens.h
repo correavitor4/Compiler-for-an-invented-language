@@ -6,6 +6,7 @@ typedef enum
     // --- Tokens de Controle ---
     TOKEN_ILLEGAL, // Token/caractere desconhecido
     TOKEN_TEXT_INVALID, // Texto inválido (ex: "texto sem fechamento)
+    TOKEN_RETURN,   // Retorno de função (ex: returno 0;)
     TOKEN_EOL,     // End of Line (Fim de Linha)
     TOKEN_EOF,     // End of File (Fim de Arquivo)
 

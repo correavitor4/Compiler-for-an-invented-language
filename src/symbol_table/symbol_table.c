@@ -14,7 +14,6 @@ typedef struct SymbolTable {
     Symbol *table[SYMBOL_TABLE_SIZE];
 } SymbolTable;
 
-
 struct ScopeManager {
     SymbolTable *scope_stack[MAX_SCOPE_DEPTH];
     int current_scope_level;

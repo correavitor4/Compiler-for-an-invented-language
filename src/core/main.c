@@ -8,6 +8,8 @@
 #include "reader/reader.h"
 #include "lex/lex.h"
 #include "parser/parser.h"
+#include <stdbool.h>
+#include "ast/ast-dot-file-generator.h"
 
 int main(int argc, char *argv[])
 {
@@ -145,6 +147,9 @@ int main(int argc, char *argv[])
         fprintf(stderr, "Falha na análise sintática.\n");
     }
 
+    ASTNode* ast = get_ast();
+
+    generate_dot_file(ast);
 
     // Syntax analysis
     printf("Análise sintática:\n");

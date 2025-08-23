@@ -1,0 +1,30 @@
+digraph AST {
+  node [shape=box, style=filled, color="#E0E0E0"];
+  "0x555555563608" [label="NULL\nType: Root Node\nLine: 0"];
+  "0x555555563608" -> "0x5555555646b8";
+  "0x5555555646b8" [label="!a\nType: Text Variable Declaration Node\nLine: 1"];
+  "0x555555563608" -> "0x555555564758";
+  "0x555555564758" [label="!cc\nType: Int Variable Declaration Node\nLine: 2"];
+  "0x555555563608" -> "0x5555555647c8";
+  "0x5555555647c8" [label="!d\nType: Text Variable Declaration Node\nLine: 3"];
+  "0x555555563608" -> "0x555555564868";
+  "0x555555564868" [label="!a\nType: Variable Reference Node\nLine: 4"];
+  "0x555555563608" -> "0x5555555648a8";
+  "0x5555555648a8" [label="!a\nType: Variable Reference Node\nLine: 6"];
+  "0x555555563608" -> "0x555555564928";
+  "0x555555564928" [label="!a\nType: Variable Reference Node\nLine: 7"];
+  "0x555555563608" -> "0x555555564968";
+  "0x555555564968" [label="!b2\nType: Variable Reference Node\nLine: 7"];
+  "0x555555563608" -> "0x5555555648e8";
+  "0x5555555648e8" [label="!a\nType: Variable Reference Node\nLine: 8"];
+  "0x555555563608" -> "0x5555555649f8";
+  "0x5555555649f8" [label="!b2\nType: Variable Reference Node\nLine: 9"];
+  "0x555555563608" -> "0x555555564a98";
+  "0x555555564a98" [label="!d\nType: Variable Reference Node\nLine: 10"];
+  "0x555555563608" -> "0x555555565738";
+  "0x555555565738" [label="!d\nType: Variable Reference Node\nLine: 10"];
+  "0x555555563608" -> "0x5555555657e8";
+  "0x5555555657e8" [label="!d\nType: Variable Reference Node\nLine: 10"];
+  "0x555555563608" -> "0x555555565828";
+  "0x555555565828" [label="!d\nType: Variable Reference Node\nLine: 11"];
+}

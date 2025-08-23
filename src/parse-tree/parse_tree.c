@@ -10,6 +10,7 @@ const int PARSE_TRUE = 0;
 const int PARSE_ERROR = -1;
 
 bool has_main_function_declared = false;
+//TODO: check if parse tree can be removed
 
 ParseTreeNode *ParseTree(Token *token_vector, int token_count)
 {

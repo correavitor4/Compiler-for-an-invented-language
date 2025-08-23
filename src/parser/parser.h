@@ -6,6 +6,7 @@
 #include "lex/lex.h"
 #include "memory/memory_controller.h"
 #include "symbol_table/symbol_table.h"
+#include "ast/ast.h"
 
 typedef struct Parser Parser;
 
@@ -16,5 +17,11 @@ typedef struct Parser Parser;
  * @return int Retorna 0 em caso de sucesso e um valor diferente de 0 em caso de erro.
  */
 int parse_source_code(Token *tokens, int token_count, ScopeManager *sm);
+
+/**
+ * @brief Obtem o AST gerado pela análise sintática.
+ * @return ASTNode* O AST gerado pela análise sintática.
+ */
+ASTNode* get_ast();
 
 #endif // PARSER_H

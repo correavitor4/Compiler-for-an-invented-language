@@ -4,6 +4,8 @@
 #include "parser.h"
 #include "symbol_table/symbol_table.h"
 
+ASTNode* ast_root_node = NULL;
+
 struct Parser
 {
     Token *tokens;
@@ -13,8 +15,8 @@ struct Parser
 };
 
 /* PROTOTYPES */
-static void parse_function_call(Parser *p);
-static void parse_statement(Parser *p);
+static void parse_function_call(Parser *p, ASTNode* parent);
+static void parse_statement(Parser *p, ASTNode* parent);
 
 /**
  * @brief Retrieves the current token from the parser.
@@ -98,19 +100,19 @@ static void skip_eols(Parser *p)
  *
  * @param p Pointer to the Parser instance used for parsing.
  */
-static void parse_block(Parser *p)
+static void parse_block(Parser *p, ASTNode* parent)
 {
     expect_token(p, TOKEN_LBRACE, "Esperado '{' para iniciar um bloco");
     skip_eols(p);
     while (current_token(p).type != TOKEN_RBRACE && current_token(p).type != TOKEN_EOF)
     {
-        parse_statement(p);
+        parse_statement(p, parent);
         skip_eols(p);
     }
     expect_token(p, TOKEN_RBRACE, "Esperado '}' para fechar um bloco");
 }
 
-static void parse_term(Parser *p)
+static void parse_term(Parser *p, ASTNode* parent)
 {
     Token tok = current_token(p);
     switch (tok.type)
@@ -127,11 +129,13 @@ static void parse_term(Parser *p)
                         tok.line_num, tok.literal);
                 exit(EXIT_FAILURE);
             }
+            
+            ast_add_child(parent, AST_VARIABLE_REF_NODE, tok.literal, tok.line_num);
         }
         advance_token(p);
         break;
     case TOKEN_IDENT_FUNC:
-        parse_function_call(p);
+        parse_function_call(p, parent);
         break;
     default:
         fprintf(stderr, "[Erro Sintático] Linha %lu: Token inesperado '%s' numa expressão. Esperado um valor, variável ou chamada de função.\n",
@@ -140,10 +144,10 @@ static void parse_term(Parser *p)
     }
 }
 
-static void parse_expression(Parser *p)
+static void parse_expression(Parser *p, ASTNode* parent)
 {
 
-    parse_term(p);
+    parse_term(p, parent);
 
     while (current_token(p).type == TOKEN_PLUS || current_token(p).type == TOKEN_MINUS ||
            current_token(p).type == TOKEN_ASTERISK || current_token(p).type == TOKEN_SLASH ||
@@ -154,7 +158,7 @@ static void parse_expression(Parser *p)
            current_token(p).type == TOKEN_ASSIGN)
     {
         advance_token(p);
-        parse_term(p);
+        parse_term(p, parent);
     }
 }
 
@@ -166,16 +170,16 @@ static void parse_expression(Parser *p)
  *
  * @param p Pointer to the Parser instance.
  */
-static void parse_argument_list(Parser *p)
+static void parse_argument_list(Parser *p, ASTNode* parent)
 {
     expect_token(p, TOKEN_LPAREN, "Esperado '(' antes da lista de argumentos");
     if (current_token(p).type != TOKEN_RPAREN)
     {
-        parse_expression(p);
+        parse_expression(p, parent);
         while (current_token(p).type == TOKEN_COMMA)
         {
             advance_token(p);
-            parse_expression(p);
+            parse_expression(p, parent);
         }
     }
     expect_token(p, TOKEN_RPAREN, "Esperado ')' após a lista de argumentos");
@@ -211,7 +215,7 @@ static void parse_decimal_specifier(Parser *p)
     expect_token(p, TOKEN_RBRACKET, "Esperado ']' para fechar o especificador de formato decimal");
 }
 
-static void parse_function_call(Parser *p)
+static void parse_function_call(Parser *p, ASTNode* parent)
 {
     Token func_token = current_token(p);
 
@@ -229,12 +233,14 @@ static void parse_function_call(Parser *p)
         exit(EXIT_FAILURE);
     }
 
+    ast_add_child(parent, AST_FUNCTION_CALL_NODE, func_token.literal, func_token.line_num);
+
     advance_token(p);
 
-    parse_argument_list(p);
+    parse_argument_list(p, parent   );
 }
 
-static void parse_function_declaration(Parser *p)
+static void parse_function_declaration(Parser *p, ASTNode* parent)
 {
     advance_token(p);
     Token func_token = current_token(p);
@@ -246,15 +252,15 @@ static void parse_function_declaration(Parser *p)
 
     parse_parameter_list(p);
     skip_eols(p);
-    parse_block(p);
+    parse_block(p, parent);
 
     scope_manager_exit_scope(p->sm);
 }
 
-static void parse_return_statement(Parser *p)
+static void parse_return_statement(Parser *p, ASTNode* parent)
 {
     advance_token(p);
-    parse_expression(p);
+    parse_expression(p, parent);
     expect_token(p, TOKEN_SEMICOLON, "Esperado ';' após a expressão de retorno");
 }
 
@@ -266,12 +272,15 @@ static void parse_return_statement(Parser *p)
  * may add the declared variable to the symbol table.
  *
  * @param p Pointer to the Parser structure containing parsing state and context.
+ * @param parent Pointer to the parent node in the AST.
  */
-static void parse_variable_declaration(Parser *p)
+static void parse_variable_declaration(Parser *p, ASTNode* parent)
 {
 
     TokenType declaration_type = current_token(p).type;
     advance_token(p);
+
+    ASTNode *current_node = ast_add_child(parent, AST_TEXT_VARIABLE_DECLARATION_NODE, current_token(p).literal, current_token(p).line_num);
 
     while (1)
     {
@@ -287,11 +296,14 @@ static void parse_variable_declaration(Parser *p)
         }
 
         if (declaration_type == TOKEN_DEC_TYPE && current_token(p).type == TOKEN_LBRACKET)
-        {
+        {   
+            current_node->type = AST_INT_VARIABLE_DECLARATION_NODE;
             parse_decimal_specifier(p);
         }
         else if (declaration_type == TOKEN_INT_TYPE && current_token(p).type == TOKEN_LBRACKET)
         {
+            current_node->type = AST_INT_VARIABLE_DECLARATION_NODE;
+
             advance_token(p);
 
             expect_token(p, TOKEN_INT, "Tamanho do vetor deve ser um inteiro");
@@ -302,7 +314,7 @@ static void parse_variable_declaration(Parser *p)
         {
             advance_token(p);
 
-            parse_expression(p);
+            parse_expression(p, current_node);
         }
 
         if (current_token(p).type != TOKEN_COMMA)
@@ -324,7 +336,7 @@ static void parse_variable_declaration(Parser *p)
  *
  * @param p Pointer to the Parser structure containing parsing context.
  */
-static void parse_assignment_statement(Parser *p)
+static void parse_assignment_statement(Parser *p, ASTNode* parent)
 {
     Token var_token = current_token(p);
 
@@ -337,7 +349,7 @@ static void parse_assignment_statement(Parser *p)
 
     expect_token(p, TOKEN_IDENT_VAR, "Esperado uma variável para atribuição");
     expect_token(p, TOKEN_ASSIGN, "Esperado '=' em uma atribuição");
-    parse_expression(p);
+    parse_expression(p, parent);
     expect_token(p, TOKEN_SEMICOLON, "Esperado ';' no final da atribuição");
 }
 
@@ -348,11 +360,11 @@ static void parse_assignment_statement(Parser *p)
  *
  * @param p Pointer to the Parser structure containing the current parsing state.
  */
-static void parse_io_statement(Parser *p)
+static void parse_io_statement(Parser *p, ASTNode* parent)
 {
     TokenType type = current_token(p).type;
     advance_token(p);
-    parse_argument_list(p);
+    parse_argument_list(p, parent);
     if (type == TOKEN_READ)
         expect_token(p, TOKEN_SEMICOLON, "Esperado ';' no final da chamada 'leia'");
     else
@@ -367,18 +379,18 @@ static void parse_io_statement(Parser *p)
  *
  * @param p Pointer to the Parser structure containing the current parsing state.
  */
-static void parse_if_statement(Parser *p)
+static void parse_if_statement(Parser *p, ASTNode* parent)
 {
     advance_token(p);
     expect_token(p, TOKEN_LPAREN, "Esperado '(' após 'se'");
-    parse_expression(p);
+    parse_expression(p, parent);
     expect_token(p, TOKEN_RPAREN, "Esperado ')' após a condição do 'se'");
     skip_eols(p);
 
     if (current_token(p).type == TOKEN_LBRACE)
-        parse_block(p);
+        parse_block(p, parent);
     else
-        parse_statement(p);
+        parse_statement(p, parent);
 
     skip_eols(p);
     if (current_token(p).type == TOKEN_ELSE)
@@ -386,9 +398,9 @@ static void parse_if_statement(Parser *p)
         advance_token(p);
         skip_eols(p);
         if (current_token(p).type == TOKEN_LBRACE)
-            parse_block(p);
+            parse_block(p, parent);
         else
-            parse_statement(p);
+            parse_statement(p, parent);
     }
 }
 
@@ -401,7 +413,7 @@ static void parse_if_statement(Parser *p)
  *
  * @param p Pointer to the Parser structure containing the current parsing context.
  */
-static void parse_for_statement(Parser *p)
+static void parse_for_statement(Parser *p, ASTNode* parent)
 {
 
     expect_token(p, TOKEN_FOR, "Esperado 'para' para iniciar um loop");
@@ -409,7 +421,7 @@ static void parse_for_statement(Parser *p)
 
     if (current_token(p).type != TOKEN_SEMICOLON)
     {
-        parse_assignment_statement(p);
+        parse_assignment_statement(p, parent);
     }
     else
     {
@@ -418,24 +430,24 @@ static void parse_for_statement(Parser *p)
 
     if (current_token(p).type != TOKEN_SEMICOLON)
     {
-        parse_expression(p);
+        parse_expression(p, parent);
     }
     expect_token(p, TOKEN_SEMICOLON, "Esperado ';' após a condição do loop 'para'");
 
     if (current_token(p).type != TOKEN_RPAREN)
     {
-        parse_expression(p);
+        parse_expression(p, parent);
     }
     expect_token(p, TOKEN_RPAREN, "Esperado ')' para fechar a declaração do loop 'para'");
     skip_eols(p);
 
     if (current_token(p).type == TOKEN_LBRACE)
     {
-        parse_block(p);
+        parse_block(p, parent);
     }
     else
     {
-        parse_statement(p);
+        parse_statement(p, parent);
     }
 }
 
@@ -447,13 +459,13 @@ static void parse_for_statement(Parser *p)
  *
  * @param p Pointer to the Parser structure containing parsing context and state.
  */
-static void parse_main_function(Parser *p)
+static void parse_main_function(Parser *p, ASTNode* parent)
 {
     advance_token(p);
     expect_token(p, TOKEN_LPAREN, "Esperado '(' na função principal");
     expect_token(p, TOKEN_RPAREN, "Esperado ')' na função principal");
     skip_eols(p);
-    parse_block(p);
+    parse_block(p, parent);
 }
 
 /**
@@ -465,7 +477,7 @@ static void parse_main_function(Parser *p)
  *
  * @param p Pointer to the Parser structure containing parsing context and state.
  */
-static void parse_statement(Parser *p)
+static void parse_statement(Parser *p, ASTNode* parent)
 {
     switch (current_token(p).type)
     {
@@ -473,29 +485,36 @@ static void parse_statement(Parser *p)
     case TOKEN_INT_TYPE:
     case TOKEN_DEC_TYPE:
     case TOKEN_TEXT_TYPE:
-        parse_variable_declaration(p);
+        parse_variable_declaration(p, parent);
         break;
     case TOKEN_IDENT_VAR:
-        parse_assignment_statement(p);
+        //TODO: implement ast
+        parse_assignment_statement(p, parent);
         break;
     case TOKEN_FUNCTION:
-        parse_function_declaration(p);
+        //TODO: implement ast
+        parse_function_declaration(p, parent);
         break;
     case TOKEN_RETURN:
-        parse_return_statement(p);
+        //TODO: implement ast
+        parse_return_statement(p, parent);
         break;
     case TOKEN_IF:
-        parse_if_statement(p);
+        //TODO: implement ast
+        parse_if_statement(p, parent);
         break;
     case TOKEN_FOR:
-        parse_for_statement(p);
+        //TODO: implement ast
+        parse_for_statement(p, parent);
         break;
     case TOKEN_READ:
     case TOKEN_PRINT:
-        parse_io_statement(p);
+        //TODO: implement ast
+        parse_io_statement(p, parent);
         break;
     case TOKEN_MAIN:
-        parse_main_function(p);
+        //TODO: implement ast
+        parse_main_function(p, parent);
         break;
     default:
         fprintf(stderr, "[ERROR|Syntax] Linha %lu: Comando inesperado iniciado com token '%s' (Tipo: %d).\n",
@@ -513,12 +532,12 @@ static void parse_statement(Parser *p)
  *
  * @param p Pointer to the Parser structure containing parsing state and input.
  */
-static void parse_program(Parser *p)
+static void parse_program(Parser *p, ASTNode* parent)
 {
     skip_eols(p);
     while (current_token(p).type != TOKEN_EOF)
     {
-        parse_statement(p);
+        parse_statement(p, parent);
         skip_eols(p);
     }
 }
@@ -533,6 +552,7 @@ static void parse_program(Parser *p)
  */
 int parse_source_code(Token *tokens, int token_count, ScopeManager *sm)
 {
+    ast_root_node = ast_generate_root();
 
     Parser p = {
         .tokens = tokens,
@@ -540,7 +560,12 @@ int parse_source_code(Token *tokens, int token_count, ScopeManager *sm)
         .current_pos = 0,
         .sm = sm};
 
-    parse_program(&p);
+    parse_program(&p, ast_root_node);
 
     return 0;
+}
+
+ASTNode* get_ast()
+{
+    return ast_root_node;
 }

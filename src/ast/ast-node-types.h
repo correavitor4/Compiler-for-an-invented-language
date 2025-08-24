@@ -9,6 +9,11 @@ typedef enum {
     AST_TEXT_VARIABLE_DECLARATION_NODE,
     AST_VARIABLE_REF_NODE,
     AST_FUNCTION_CALL_NODE,
+    AST_ASSIGNMENT_NODE,
+    AST_INT_LITERAL_NODE,
+    AST_DECIMAL_LITERAL_NODE,
+    AST_TEXT_LITERAL_NODE,
+    AST_ASSIGNMENT_TEMPORARY_NODE, // New node type for temporary assignment (can be used for multi-assignments)
 } ASTNodeType;
 
 static const char *ASTNodeTypeStrings[] = {
@@ -18,7 +23,12 @@ static const char *ASTNodeTypeStrings[] = {
     "Int Variable Declaration Node",
     "Text Variable Declaration Node",
     "Variable Reference Node",
-    "Function Call Node"
+    "Function Call Node",
+    "Assignment Node",
+    "Int Literal Node",
+    "Decimal Literal Node",
+    "Text Literal Node",
+    "Assignment Temporary Node"
 };
 
 

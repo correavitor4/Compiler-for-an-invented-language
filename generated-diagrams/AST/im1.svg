@@ -1,0 +1,463 @@
+<?xml version="1.0" standalone="no"?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="3401pt" height="350pt" viewBox="0.00 0.00 3400.64 349.60">
+<g id="graph0" class="graph" transform="translate(1040.4239222684012,631.8263036074909) scale(4.4691485522888765)" data-name="AST">
+
+<polygon fill="white" stroke="none" points="-4,4 -4,-345.6 3396.64,-345.6 3396.64,4 -4,4" style=""/>
+<!-- 0x555555564608 -->
+<g id="node1" class="node" pointer-events="visible" data-name="0x555555564608">
+
+<polygon fill="#e0e0e0" stroke="#e0e0e0" points="1670.14,-341.8 1556.73,-341.8 1556.73,-283 1670.14,-283 1670.14,-341.8" style=""/>
+<text text-anchor="middle" x="1613.43" y="-325" font-family="Times,serif" font-size="14.00" style="">NULL</text>
+<text text-anchor="middle" x="1613.43" y="-308.2" font-family="Times,serif" font-size="14.00" style="">Type: Root Node</text>
+<text text-anchor="middle" x="1613.43" y="-291.4" font-family="Times,serif" font-size="14.00" style="">Line: 0</text>
+</g>
+<!-- 0x5555555656e8 -->
+<g id="node2" class="node" pointer-events="visible" data-name="0x5555555656e8">
+
+<polygon fill="#e0e0e0" stroke="#e0e0e0" points="152.8,-247.4 0.07,-247.4 0.07,-188.6 152.8,-188.6 152.8,-247.4" style=""/>
+<text text-anchor="middle" x="76.43" y="-230.6" font-family="Times,serif" font-size="14.00" style="">!a</text>
+<text text-anchor="middle" x="76.43" y="-213.8" font-family="Times,serif" font-size="14.00" style="">Type: Assignment Node</text>
+<text text-anchor="middle" x="76.43" y="-197" font-family="Times,serif" font-size="14.00" style="">Line: 1</text>
+</g>
+<!-- 0x555555564608&#45;&gt;0x5555555656e8 -->
+<g id="edge1" class="edge" data-name="0x555555564608-&gt;0x5555555656e8">
+
+<path fill="none" stroke="black" d="M1556.45,-310.95C1325.71,-308.81 459.54,-297.63 164.17,-247.24" style=""/>
+<polygon fill="black" stroke="black" points="165.01,-243.83 154.55,-245.54 163.79,-250.72 165.01,-243.83" style=""/>
+</g>
+<!-- 0x555555565778 -->
+<g id="node5" class="node" pointer-events="visible" data-name="0x555555565778">
+
+<polygon fill="#e0e0e0" stroke="#e0e0e0" points="323.8,-247.4 171.07,-247.4 171.07,-188.6 323.8,-188.6 323.8,-247.4" style=""/>
+<text text-anchor="middle" x="247.43" y="-230.6" font-family="Times,serif" font-size="14.00" style="">!b2</text>
+<text text-anchor="middle" x="247.43" y="-213.8" font-family="Times,serif" font-size="14.00" style="">Type: Assignment Node</text>
+<text text-anchor="middle" x="247.43" y="-197" font-family="Times,serif" font-size="14.00" style="">Line: 1</text>
+</g>
+<!-- 0x555555564608&#45;&gt;0x555555565778 -->
+<g id="edge4" class="edge" data-name="0x555555564608-&gt;0x555555565778">
+
+<path fill="none" stroke="black" d="M1556.33,-310.56C1343.46,-307.1 595.48,-292.13 335.34,-247.27" style=""/>
+<polygon fill="black" stroke="black" points="336.01,-243.83 325.55,-245.52 334.78,-250.72 336.01,-243.83" style=""/>
+</g>
+<!-- 0x555555565a08 -->
+<g id="node8" class="node" pointer-events="visible" data-name="0x555555565a08">
+
+<polygon fill="#e0e0e0" stroke="#e0e0e0" points="484.78,-247.4 342.09,-247.4 342.09,-188.6 484.78,-188.6 484.78,-247.4" style=""/>
+<text text-anchor="middle" x="413.43" y="-230.6" font-family="Times,serif" font-size="14.00" style="">!cc</text>
+<text text-anchor="middle" x="413.43" y="-213.8" font-family="Times,serif" font-size="14.00" style="">Type: Int Literal Node</text>
+<text text-anchor="middle" x="413.43" y="-197" font-family="Times,serif" font-size="14.00" style="">Line: 2</text>
+</g>
+<!-- 0x555555564608&#45;&gt;0x555555565a08 -->
+<g id="edge7" class="edge" data-name="0x555555564608-&gt;0x555555565a08">
+
+<path fill="none" stroke="black" d="M1556.49,-310.22C1361.8,-305.86 722.74,-288.84 496.25,-247.25" style=""/>
+<polygon fill="black" stroke="black" points="497.1,-243.85 486.62,-245.41 495.79,-250.72 497.1,-243.85" style=""/>
+</g>
+<!-- 0x555555565aa8 -->
+<g id="node9" class="node" pointer-events="visible" data-name="0x555555565aa8">
+
+<polygon fill="#e0e0e0" stroke="#e0e0e0" points="655.8,-247.4 503.07,-247.4 503.07,-188.6 655.8,-188.6 655.8,-247.4" style=""/>
+<text text-anchor="middle" x="579.43" y="-230.6" font-family="Times,serif" font-size="14.00" style="">!d</text>
+<text text-anchor="middle" x="579.43" y="-213.8" font-family="Times,serif" font-size="14.00" style="">Type: Assignment Node</text>
+<text text-anchor="middle" x="579.43" y="-197" font-family="Times,serif" font-size="14.00" style="">Line: 3</text>
+</g>
+<!-- 0x555555564608&#45;&gt;0x555555565aa8 -->
+<g id="edge8" class="edge" data-name="0x555555564608-&gt;0x555555565aa8">
+
+<path fill="none" stroke="black" d="M1556.46,-309.4C1382.47,-303.02 858.78,-281.6 667.13,-247.25" style=""/>
+<polygon fill="black" stroke="black" points="668.04,-243.86 657.57,-245.46 666.75,-250.74 668.04,-243.86" style=""/>
+</g>
+<!-- 0x555555566738 -->
+<g id="node10" class="node" pointer-events="visible" data-name="0x555555566738">
+
+<polygon fill="#e0e0e0" stroke="#e0e0e0" points="826.8,-247.4 674.07,-247.4 674.07,-188.6 826.8,-188.6 826.8,-247.4" style=""/>
+<text text-anchor="middle" x="750.43" y="-230.6" font-family="Times,serif" font-size="14.00" style="">!b2</text>
+<text text-anchor="middle" x="750.43" y="-213.8" font-family="Times,serif" font-size="14.00" style="">Type: Assignment Node</text>
+<text text-anchor="middle" x="750.43" y="-197" font-family="Times,serif" font-size="14.00" style="">Line: 4</text>
+</g>
+<!-- 0x555555564608&#45;&gt;0x555555566738 -->
+<g id="edge9" class="edge" data-name="0x555555564608-&gt;0x555555566738">
+
+<path fill="none" stroke="black" d="M1556.25,-311.24C1428.47,-309.89 1110.3,-301.12 837.98,-247.3" style=""/>
+<polygon fill="black" stroke="black" points="839.07,-243.95 828.57,-245.42 837.69,-250.81 839.07,-243.95" style=""/>
+</g>
+<!-- 0x5555555667f8 -->
+<g id="node12" class="node" pointer-events="visible" data-name="0x5555555667f8">
+
+<polygon fill="#e0e0e0" stroke="#e0e0e0" points="1007.52,-247.4 845.34,-247.4 845.34,-188.6 1007.52,-188.6 1007.52,-247.4" style=""/>
+<text text-anchor="middle" x="926.43" y="-230.6" font-family="Times,serif" font-size="14.00" style="">escreva</text>
+<text text-anchor="middle" x="926.43" y="-213.8" font-family="Times,serif" font-size="14.00" style="">Type: Function Call Node</text>
+<text text-anchor="middle" x="926.43" y="-197" font-family="Times,serif" font-size="14.00" style="">Line: 5</text>
+</g>
+<!-- 0x555555564608&#45;&gt;0x5555555667f8 -->
+<g id="edge11" class="edge" data-name="0x555555564608-&gt;0x5555555667f8">
+
+<path fill="none" stroke="black" d="M1556.58,-308.93C1451.83,-303.6 1221.38,-288.18 1018.75,-247.29" style=""/>
+<polygon fill="black" stroke="black" points="1019.58,-243.88 1009.08,-245.31 1018.17,-250.74 1019.58,-243.88" style=""/>
+</g>
+<!-- 0x555555566878 -->
+<g id="node14" class="node" pointer-events="visible" data-name="0x555555566878">
+
+<polygon fill="#e0e0e0" stroke="#e0e0e0" points="1188.52,-247.4 1026.34,-247.4 1026.34,-188.6 1188.52,-188.6 1188.52,-247.4" style=""/>
+<text text-anchor="middle" x="1107.43" y="-230.6" font-family="Times,serif" font-size="14.00" style="">leia</text>
+<text text-anchor="middle" x="1107.43" y="-213.8" font-family="Times,serif" font-size="14.00" style="">Type: Function Call Node</text>
+<text text-anchor="middle" x="1107.43" y="-197" font-family="Times,serif" font-size="14.00" style="">Line: 6</text>
+</g>
+<!-- 0x555555564608&#45;&gt;0x555555566878 -->
+<g id="edge13" class="edge" data-name="0x555555564608-&gt;0x555555566878">
+
+<path fill="none" stroke="black" d="M1556.4,-305.35C1477.97,-296.43 1332.37,-277.71 1199.86,-247.63" style=""/>
+<polygon fill="black" stroke="black" points="1200.72,-244.24 1190.19,-245.41 1199.15,-251.06 1200.72,-244.24" style=""/>
+</g>
+<!-- 0x555555566908 -->
+<g id="node16" class="node" pointer-events="visible" data-name="0x555555566908">
+
+<polygon fill="#e0e0e0" stroke="#e0e0e0" points="1400.84,-247.4 1206.03,-247.4 1206.03,-188.6 1400.84,-188.6 1400.84,-247.4" style=""/>
+<text text-anchor="middle" x="1303.43" y="-230.6" font-family="Times,serif" font-size="14.00" style="">!a</text>
+<text text-anchor="middle" x="1303.43" y="-213.8" font-family="Times,serif" font-size="14.00" style="">Type: Variable Reference Node</text>
+<text text-anchor="middle" x="1303.43" y="-197" font-family="Times,serif" font-size="14.00" style="">Line: 7</text>
+</g>
+<!-- 0x555555564608&#45;&gt;0x555555566908 -->
+<g id="edge15" class="edge" data-name="0x555555564608-&gt;0x555555566908">
+
+<path fill="none" stroke="black" d="M1556.58,-294.45C1515.95,-282.34 1460.04,-265.68 1411.1,-251.09" style=""/>
+<polygon fill="black" stroke="black" points="1412.16,-247.75 1401.58,-248.25 1410.16,-254.46 1412.16,-247.75" style=""/>
+</g>
+<!-- 0x555555566948 -->
+<g id="node17" class="node" pointer-events="visible" data-name="0x555555566948">
+
+<polygon fill="#e0e0e0" stroke="#e0e0e0" points="1612.84,-247.4 1418.03,-247.4 1418.03,-188.6 1612.84,-188.6 1612.84,-247.4" style=""/>
+<text text-anchor="middle" x="1515.43" y="-230.6" font-family="Times,serif" font-size="14.00" style="">!b2</text>
+<text text-anchor="middle" x="1515.43" y="-213.8" font-family="Times,serif" font-size="14.00" style="">Type: Variable Reference Node</text>
+<text text-anchor="middle" x="1515.43" y="-197" font-family="Times,serif" font-size="14.00" style="">Line: 7</text>
+</g>
+<!-- 0x555555564608&#45;&gt;0x555555566948 -->
+<g id="edge16" class="edge" data-name="0x555555564608-&gt;0x555555566948">
+
+<path fill="none" stroke="black" d="M1582.96,-282.67C1573.84,-274.07 1563.71,-264.51 1554.13,-255.48" style=""/>
+<polygon fill="black" stroke="black" points="1556.66,-253.06 1546.99,-248.75 1551.86,-258.16 1556.66,-253.06" style=""/>
+</g>
+<!-- 0x5555555669e8 -->
+<g id="node18" class="node" pointer-events="visible" data-name="0x5555555669e8">
+
+<polygon fill="#e0e0e0" stroke="#e0e0e0" points="1792.52,-247.4 1630.34,-247.4 1630.34,-188.6 1792.52,-188.6 1792.52,-247.4" style=""/>
+<text text-anchor="middle" x="1711.43" y="-230.6" font-family="Times,serif" font-size="14.00" style="">escreva</text>
+<text text-anchor="middle" x="1711.43" y="-213.8" font-family="Times,serif" font-size="14.00" style="">Type: Function Call Node</text>
+<text text-anchor="middle" x="1711.43" y="-197" font-family="Times,serif" font-size="14.00" style="">Line: 8</text>
+</g>
+<!-- 0x555555564608&#45;&gt;0x5555555669e8 -->
+<g id="edge17" class="edge" data-name="0x555555564608-&gt;0x5555555669e8">
+
+<path fill="none" stroke="black" d="M1643.91,-282.67C1653.03,-274.07 1663.16,-264.51 1672.74,-255.48" style=""/>
+<polygon fill="black" stroke="black" points="1675.01,-258.16 1679.88,-248.75 1670.2,-253.06 1675.01,-258.16" style=""/>
+</g>
+<!-- 0x555555566ac8 -->
+<g id="node21" class="node" pointer-events="visible" data-name="0x555555566ac8">
+
+<polygon fill="#e0e0e0" stroke="#e0e0e0" points="1973.52,-247.4 1811.34,-247.4 1811.34,-188.6 1973.52,-188.6 1973.52,-247.4" style=""/>
+<text text-anchor="middle" x="1892.43" y="-230.6" font-family="Times,serif" font-size="14.00" style="">escreva</text>
+<text text-anchor="middle" x="1892.43" y="-213.8" font-family="Times,serif" font-size="14.00" style="">Type: Function Call Node</text>
+<text text-anchor="middle" x="1892.43" y="-197" font-family="Times,serif" font-size="14.00" style="">Line: 9</text>
+</g>
+<!-- 0x555555564608&#45;&gt;0x555555566ac8 -->
+<g id="edge20" class="edge" data-name="0x555555564608-&gt;0x555555566ac8">
+
+<path fill="none" stroke="black" d="M1670.57,-292.48C1707.9,-280.12 1757.49,-263.69 1800.32,-249.51" style=""/>
+<polygon fill="black" stroke="black" points="1801.22,-252.9 1809.61,-246.43 1799.02,-246.25 1801.22,-252.9" style=""/>
+</g>
+<!-- 0x555555566c18 -->
+<g id="node24" class="node" pointer-events="visible" data-name="0x555555566c18">
+
+<polygon fill="#e0e0e0" stroke="#e0e0e0" points="2144.8,-247.4 1992.07,-247.4 1992.07,-188.6 2144.8,-188.6 2144.8,-247.4" style=""/>
+<text text-anchor="middle" x="2068.43" y="-230.6" font-family="Times,serif" font-size="14.00" style="">!d</text>
+<text text-anchor="middle" x="2068.43" y="-213.8" font-family="Times,serif" font-size="14.00" style="">Type: Assignment Node</text>
+<text text-anchor="middle" x="2068.43" y="-197" font-family="Times,serif" font-size="14.00" style="">Line: 10</text>
+</g>
+<!-- 0x555555564608&#45;&gt;0x555555566c18 -->
+<g id="edge23" class="edge" data-name="0x555555564608-&gt;0x555555566c18">
+
+<path fill="none" stroke="black" d="M1670.55,-304.08C1741.24,-294.43 1865.38,-275.62 1980.58,-247.52" style=""/>
+<polygon fill="black" stroke="black" points="1981.36,-250.93 1990.23,-245.13 1979.68,-244.14 1981.36,-250.93" style=""/>
+</g>
+<!-- 0x555555566cb8 -->
+<g id="node26" class="node" pointer-events="visible" data-name="0x555555566cb8">
+
+<polygon fill="#e0e0e0" stroke="#e0e0e0" points="2357.84,-247.4 2163.03,-247.4 2163.03,-188.6 2357.84,-188.6 2357.84,-247.4" style=""/>
+<text text-anchor="middle" x="2260.43" y="-230.6" font-family="Times,serif" font-size="14.00" style="">!d</text>
+<text text-anchor="middle" x="2260.43" y="-213.8" font-family="Times,serif" font-size="14.00" style="">Type: Variable Reference Node</text>
+<text text-anchor="middle" x="2260.43" y="-197" font-family="Times,serif" font-size="14.00" style="">Line: 10</text>
+</g>
+<!-- 0x555555564608&#45;&gt;0x555555566cb8 -->
+<g id="edge25" class="edge" data-name="0x555555564608-&gt;0x555555566cb8">
+
+<path fill="none" stroke="black" d="M1670.59,-307.24C1767.6,-299.6 1970.73,-281.13 2151.55,-247.45" style=""/>
+<polygon fill="black" stroke="black" points="2151.93,-250.94 2161.11,-245.65 2150.64,-244.06 2151.93,-250.94" style=""/>
+</g>
+<!-- 0x555555566d78 -->
+<g id="node27" class="node" pointer-events="visible" data-name="0x555555566d78">
+
+<polygon fill="#e0e0e0" stroke="#e0e0e0" points="2517.78,-247.4 2375.09,-247.4 2375.09,-188.6 2517.78,-188.6 2517.78,-247.4" style=""/>
+<text text-anchor="middle" x="2446.43" y="-230.6" font-family="Times,serif" font-size="14.00" style="">100</text>
+<text text-anchor="middle" x="2446.43" y="-213.8" font-family="Times,serif" font-size="14.00" style="">Type: Int Literal Node</text>
+<text text-anchor="middle" x="2446.43" y="-197" font-family="Times,serif" font-size="14.00" style="">Line: 10</text>
+</g>
+<!-- 0x555555564608&#45;&gt;0x555555566d78 -->
+<g id="edge26" class="edge" data-name="0x555555564608-&gt;0x555555566d78">
+
+<path fill="none" stroke="black" d="M1670.36,-311.44C1795.18,-310.49 2102.01,-302.43 2363.49,-247.63" style=""/>
+<polygon fill="black" stroke="black" points="2364.19,-251.06 2373.24,-245.56 2362.73,-244.22 2364.19,-251.06" style=""/>
+</g>
+<!-- 0x555555566db8 -->
+<g id="node28" class="node" pointer-events="visible" data-name="0x555555566db8">
+
+<polygon fill="#e0e0e0" stroke="#e0e0e0" points="2729.84,-247.4 2535.03,-247.4 2535.03,-188.6 2729.84,-188.6 2729.84,-247.4" style=""/>
+<text text-anchor="middle" x="2632.43" y="-230.6" font-family="Times,serif" font-size="14.00" style="">!d</text>
+<text text-anchor="middle" x="2632.43" y="-213.8" font-family="Times,serif" font-size="14.00" style="">Type: Variable Reference Node</text>
+<text text-anchor="middle" x="2632.43" y="-197" font-family="Times,serif" font-size="14.00" style="">Line: 10</text>
+</g>
+<!-- 0x555555564608&#45;&gt;0x555555566db8 -->
+<g id="edge27" class="edge" data-name="0x555555564608-&gt;0x555555566db8">
+
+<path fill="none" stroke="black" d="M1670.5,-311.14C1813.24,-309.67 2197.15,-300.81 2523.59,-247.56" style=""/>
+<polygon fill="black" stroke="black" points="2523.9,-251.06 2533.19,-245.97 2522.76,-244.15 2523.9,-251.06" style=""/>
+</g>
+<!-- 0x555555566e88 -->
+<g id="node29" class="node" pointer-events="visible" data-name="0x555555566e88">
+
+<polygon fill="#e0e0e0" stroke="#e0e0e0" points="2941.84,-247.4 2747.03,-247.4 2747.03,-188.6 2941.84,-188.6 2941.84,-247.4" style=""/>
+<text text-anchor="middle" x="2844.43" y="-230.6" font-family="Times,serif" font-size="14.00" style="">!d</text>
+<text text-anchor="middle" x="2844.43" y="-213.8" font-family="Times,serif" font-size="14.00" style="">Type: Variable Reference Node</text>
+<text text-anchor="middle" x="2844.43" y="-197" font-family="Times,serif" font-size="14.00" style="">Line: 10</text>
+</g>
+<!-- 0x555555564608&#45;&gt;0x555555566e88 -->
+<g id="edge28" class="edge" data-name="0x555555564608-&gt;0x555555566e88">
+
+<path fill="none" stroke="black" d="M1670.58,-309.67C1865.99,-303.54 2507.53,-281.38 2735.51,-247.5" style=""/>
+<polygon fill="black" stroke="black" points="2735.85,-250.99 2745.2,-246.01 2734.78,-244.07 2735.85,-250.99" style=""/>
+</g>
+<!-- 0x555555566ec8 -->
+<g id="node30" class="node" pointer-events="visible" data-name="0x555555566ec8">
+
+<polygon fill="#e0e0e0" stroke="#e0e0e0" points="3101.78,-247.4 2959.09,-247.4 2959.09,-188.6 3101.78,-188.6 3101.78,-247.4" style=""/>
+<text text-anchor="middle" x="3030.43" y="-230.6" font-family="Times,serif" font-size="14.00" style="">2</text>
+<text text-anchor="middle" x="3030.43" y="-213.8" font-family="Times,serif" font-size="14.00" style="">Type: Int Literal Node</text>
+<text text-anchor="middle" x="3030.43" y="-197" font-family="Times,serif" font-size="14.00" style="">Line: 10</text>
+</g>
+<!-- 0x555555564608&#45;&gt;0x555555566ec8 -->
+<g id="edge29" class="edge" data-name="0x555555564608-&gt;0x555555566ec8">
+
+<path fill="none" stroke="black" d="M1670.44,-310.86C1889.44,-308.47 2677.62,-296.67 2947.82,-247.44" style=""/>
+<polygon fill="black" stroke="black" points="2948.09,-250.95 2957.26,-245.66 2946.79,-244.08 2948.09,-250.95" style=""/>
+</g>
+<!-- 0x555555566fa8 -->
+<g id="node31" class="node" pointer-events="visible" data-name="0x555555566fa8">
+
+<polygon fill="#e0e0e0" stroke="#e0e0e0" points="3281.52,-247.4 3119.34,-247.4 3119.34,-188.6 3281.52,-188.6 3281.52,-247.4" style=""/>
+<text text-anchor="middle" x="3200.43" y="-230.6" font-family="Times,serif" font-size="14.00" style="">escreva</text>
+<text text-anchor="middle" x="3200.43" y="-213.8" font-family="Times,serif" font-size="14.00" style="">Type: Function Call Node</text>
+<text text-anchor="middle" x="3200.43" y="-197" font-family="Times,serif" font-size="14.00" style="">Line: 11</text>
+</g>
+<!-- 0x555555564608&#45;&gt;0x555555566fa8 -->
+<g id="edge30" class="edge" data-name="0x555555564608-&gt;0x555555566fa8">
+
+<path fill="none" stroke="black" d="M1670.59,-310.94C1906.21,-308.73 2803.72,-297.26 3108.22,-247.35" style=""/>
+<polygon fill="black" stroke="black" points="3108.47,-250.86 3117.74,-245.74 3107.3,-243.96 3108.47,-250.86" style=""/>
+</g>
+<!-- 0x555555565928 -->
+<g id="node3" class="node" pointer-events="visible" data-name="0x555555565928">
+
+<polygon fill="#e0e0e0" stroke="#e0e0e0" points="152.8,-153 0.07,-153 0.07,-94.2 152.8,-94.2 152.8,-153" style=""/>
+<text text-anchor="middle" x="76.43" y="-136.2" font-family="Times,serif" font-size="14.00" style="">=</text>
+<text text-anchor="middle" x="76.43" y="-119.4" font-family="Times,serif" font-size="14.00" style="">Type: Assignment Node</text>
+<text text-anchor="middle" x="76.43" y="-102.6" font-family="Times,serif" font-size="14.00" style="">Line: 1</text>
+</g>
+<!-- 0x5555555656e8&#45;&gt;0x555555565928 -->
+<g id="edge2" class="edge" data-name="0x5555555656e8-&gt;0x555555565928">
+
+<path fill="none" stroke="black" d="M76.43,-188.27C76.43,-180.8 76.43,-172.61 76.43,-164.66" style=""/>
+<polygon fill="black" stroke="black" points="79.93,-164.83 76.43,-154.83 72.93,-164.83 79.93,-164.83" style=""/>
+</g>
+<!-- 0x555555565968 -->
+<g id="node4" class="node" pointer-events="visible" data-name="0x555555565968">
+
+<polygon fill="#e0e0e0" stroke="#e0e0e0" points="147.78,-58.6 5.09,-58.6 5.09,0.2 147.78,0.2 147.78,-58.6" style=""/>
+<text text-anchor="middle" x="76.43" y="-41.8" font-family="Times,serif" font-size="14.00" style="">7</text>
+<text text-anchor="middle" x="76.43" y="-25" font-family="Times,serif" font-size="14.00" style="">Type: Int Literal Node</text>
+<text text-anchor="middle" x="76.43" y="-8.2" font-family="Times,serif" font-size="14.00" style="">Line: 1</text>
+</g>
+<!-- 0x555555565928&#45;&gt;0x555555565968 -->
+<g id="edge3" class="edge" data-name="0x555555565928-&gt;0x555555565968">
+
+<path fill="none" stroke="black" d="M76.43,-93.87C76.43,-86.4 76.43,-78.21 76.43,-70.26" style=""/>
+<polygon fill="black" stroke="black" points="79.93,-70.43 76.43,-60.43 72.93,-70.43 79.93,-70.43" style=""/>
+</g>
+<!-- 0x555555565868 -->
+<g id="node6" class="node" pointer-events="visible" data-name="0x555555565868">
+
+<polygon fill="#e0e0e0" stroke="#e0e0e0" points="323.8,-153 171.07,-153 171.07,-94.2 323.8,-94.2 323.8,-153" style=""/>
+<text text-anchor="middle" x="247.43" y="-136.2" font-family="Times,serif" font-size="14.00" style="">=</text>
+<text text-anchor="middle" x="247.43" y="-119.4" font-family="Times,serif" font-size="14.00" style="">Type: Assignment Node</text>
+<text text-anchor="middle" x="247.43" y="-102.6" font-family="Times,serif" font-size="14.00" style="">Line: 1</text>
+</g>
+<!-- 0x555555565778&#45;&gt;0x555555565868 -->
+<g id="edge5" class="edge" data-name="0x555555565778-&gt;0x555555565868">
+
+<path fill="none" stroke="black" d="M247.43,-188.27C247.43,-180.8 247.43,-172.61 247.43,-164.66" style=""/>
+<polygon fill="black" stroke="black" points="250.93,-164.83 247.43,-154.83 243.93,-164.83 250.93,-164.83" style=""/>
+</g>
+<!-- 0x5555555658a8 -->
+<g id="node7" class="node" pointer-events="visible" data-name="0x5555555658a8">
+
+<polygon fill="#e0e0e0" stroke="#e0e0e0" points="318.78,-58.6 176.09,-58.6 176.09,0.2 318.78,0.2 318.78,-58.6" style=""/>
+<text text-anchor="middle" x="247.43" y="-41.8" font-family="Times,serif" font-size="14.00" style="">7</text>
+<text text-anchor="middle" x="247.43" y="-25" font-family="Times,serif" font-size="14.00" style="">Type: Int Literal Node</text>
+<text text-anchor="middle" x="247.43" y="-8.2" font-family="Times,serif" font-size="14.00" style="">Line: 1</text>
+</g>
+<!-- 0x555555565868&#45;&gt;0x5555555658a8 -->
+<g id="edge6" class="edge" data-name="0x555555565868-&gt;0x5555555658a8">
+
+<path fill="none" stroke="black" d="M247.43,-93.87C247.43,-86.4 247.43,-78.21 247.43,-70.26" style=""/>
+<polygon fill="black" stroke="black" points="250.93,-70.43 247.43,-60.43 243.93,-70.43 250.93,-70.43" style=""/>
+</g>
+<!-- 0x5555555667b8 -->
+<g id="node11" class="node" pointer-events="visible" data-name="0x5555555667b8">
+
+<polygon fill="#e0e0e0" stroke="#e0e0e0" points="832.84,-153 638.03,-153 638.03,-94.2 832.84,-94.2 832.84,-153" style=""/>
+<text text-anchor="middle" x="735.43" y="-136.2" font-family="Times,serif" font-size="14.00" style="">!a</text>
+<text text-anchor="middle" x="735.43" y="-119.4" font-family="Times,serif" font-size="14.00" style="">Type: Variable Reference Node</text>
+<text text-anchor="middle" x="735.43" y="-102.6" font-family="Times,serif" font-size="14.00" style="">Line: 4</text>
+</g>
+<!-- 0x555555566738&#45;&gt;0x5555555667b8 -->
+<g id="edge10" class="edge" data-name="0x555555566738-&gt;0x5555555667b8">
+
+<path fill="none" stroke="black" d="M745.77,-188.27C744.56,-180.8 743.23,-172.61 741.94,-164.66" style=""/>
+<polygon fill="black" stroke="black" points="745.4,-164.12 740.34,-154.81 738.49,-165.24 745.4,-164.12" style=""/>
+</g>
+<!-- 0x555555566838 -->
+<g id="node13" class="node" pointer-events="visible" data-name="0x555555566838">
+
+<polygon fill="#e0e0e0" stroke="#e0e0e0" points="1002.88,-153 849.99,-153 849.99,-94.2 1002.88,-94.2 1002.88,-153" style=""/>
+<text text-anchor="middle" x="926.43" y="-136.2" font-family="Times,serif" font-size="14.00" style="">Escreva um número </text>
+<text text-anchor="middle" x="926.43" y="-119.4" font-family="Times,serif" font-size="14.00" style="">Type: Text Literal Node</text>
+<text text-anchor="middle" x="926.43" y="-102.6" font-family="Times,serif" font-size="14.00" style="">Line: 5</text>
+</g>
+<!-- 0x5555555667f8&#45;&gt;0x555555566838 -->
+<g id="edge12" class="edge" data-name="0x5555555667f8-&gt;0x555555566838">
+
+<path fill="none" stroke="black" d="M926.43,-188.27C926.43,-180.8 926.43,-172.61 926.43,-164.66" style=""/>
+<polygon fill="black" stroke="black" points="929.93,-164.83 926.43,-154.83 922.93,-164.83 929.93,-164.83" style=""/>
+</g>
+<!-- 0x555555566778 -->
+<g id="node15" class="node" pointer-events="visible" data-name="0x555555566778">
+
+<polygon fill="#e0e0e0" stroke="#e0e0e0" points="1214.84,-153 1020.03,-153 1020.03,-94.2 1214.84,-94.2 1214.84,-153" style=""/>
+<text text-anchor="middle" x="1117.43" y="-136.2" font-family="Times,serif" font-size="14.00" style="">!a</text>
+<text text-anchor="middle" x="1117.43" y="-119.4" font-family="Times,serif" font-size="14.00" style="">Type: Variable Reference Node</text>
+<text text-anchor="middle" x="1117.43" y="-102.6" font-family="Times,serif" font-size="14.00" style="">Line: 6</text>
+</g>
+<!-- 0x555555566878&#45;&gt;0x555555566778 -->
+<g id="edge14" class="edge" data-name="0x555555566878-&gt;0x555555566778">
+
+<path fill="none" stroke="black" d="M1110.54,-188.27C1111.35,-180.8 1112.24,-172.61 1113.1,-164.66" style=""/>
+<polygon fill="black" stroke="black" points="1116.57,-165.13 1114.16,-154.82 1109.61,-164.38 1116.57,-165.13" style=""/>
+</g>
+<!-- 0x555555566a28 -->
+<g id="node19" class="node" pointer-events="visible" data-name="0x555555566a28">
+
+<polygon fill="#e0e0e0" stroke="#e0e0e0" points="1586.88,-153 1433.99,-153 1433.99,-94.2 1586.88,-94.2 1586.88,-153" style=""/>
+<text text-anchor="middle" x="1510.43" y="-136.2" font-family="Times,serif" font-size="14.00" style=""> A é maior</text>
+<text text-anchor="middle" x="1510.43" y="-119.4" font-family="Times,serif" font-size="14.00" style="">Type: Text Literal Node</text>
+<text text-anchor="middle" x="1510.43" y="-102.6" font-family="Times,serif" font-size="14.00" style="">Line: 8</text>
+</g>
+<!-- 0x5555555669e8&#45;&gt;0x555555566a28 -->
+<g id="edge18" class="edge" data-name="0x5555555669e8-&gt;0x555555566a28">
+
+<path fill="none" stroke="black" d="M1648.66,-188.14C1627.98,-178.63 1604.79,-167.98 1583.41,-158.15" style=""/>
+<polygon fill="black" stroke="black" points="1585,-155.02 1574.45,-154.03 1582.07,-161.38 1585,-155.02" style=""/>
+</g>
+<!-- 0x555555566a88 -->
+<g id="node20" class="node" pointer-events="visible" data-name="0x555555566a88">
+
+<polygon fill="#e0e0e0" stroke="#e0e0e0" points="1798.84,-153 1604.03,-153 1604.03,-94.2 1798.84,-94.2 1798.84,-153" style=""/>
+<text text-anchor="middle" x="1701.43" y="-136.2" font-family="Times,serif" font-size="14.00" style="">!a</text>
+<text text-anchor="middle" x="1701.43" y="-119.4" font-family="Times,serif" font-size="14.00" style="">Type: Variable Reference Node</text>
+<text text-anchor="middle" x="1701.43" y="-102.6" font-family="Times,serif" font-size="14.00" style="">Line: 8</text>
+</g>
+<!-- 0x5555555669e8&#45;&gt;0x555555566a88 -->
+<g id="edge19" class="edge" data-name="0x5555555669e8-&gt;0x555555566a88">
+
+<path fill="none" stroke="black" d="M1708.33,-188.27C1707.52,-180.8 1706.63,-172.61 1705.77,-164.66" style=""/>
+<polygon fill="black" stroke="black" points="1709.26,-164.38 1704.7,-154.82 1702.3,-165.13 1709.26,-164.38" style=""/>
+</g>
+<!-- 0x555555566b78 -->
+<g id="node22" class="node" pointer-events="visible" data-name="0x555555566b78">
+
+<polygon fill="#e0e0e0" stroke="#e0e0e0" points="1968.88,-153 1815.99,-153 1815.99,-94.2 1968.88,-94.2 1968.88,-153" style=""/>
+<text text-anchor="middle" x="1892.43" y="-136.2" font-family="Times,serif" font-size="14.00" style="">B é maior</text>
+<text text-anchor="middle" x="1892.43" y="-119.4" font-family="Times,serif" font-size="14.00" style="">Type: Text Literal Node</text>
+<text text-anchor="middle" x="1892.43" y="-102.6" font-family="Times,serif" font-size="14.00" style="">Line: 9</text>
+</g>
+<!-- 0x555555566ac8&#45;&gt;0x555555566b78 -->
+<g id="edge21" class="edge" data-name="0x555555566ac8-&gt;0x555555566b78">
+
+<path fill="none" stroke="black" d="M1892.43,-188.27C1892.43,-180.8 1892.43,-172.61 1892.43,-164.66" style=""/>
+<polygon fill="black" stroke="black" points="1895.93,-164.83 1892.43,-154.83 1888.93,-164.83 1895.93,-164.83" style=""/>
+</g>
+<!-- 0x555555566bd8 -->
+<g id="node23" class="node" pointer-events="visible" data-name="0x555555566bd8">
+
+<polygon fill="#e0e0e0" stroke="#e0e0e0" points="2180.84,-153 1986.03,-153 1986.03,-94.2 2180.84,-94.2 2180.84,-153" style=""/>
+<text text-anchor="middle" x="2083.43" y="-136.2" font-family="Times,serif" font-size="14.00" style="">!b2</text>
+<text text-anchor="middle" x="2083.43" y="-119.4" font-family="Times,serif" font-size="14.00" style="">Type: Variable Reference Node</text>
+<text text-anchor="middle" x="2083.43" y="-102.6" font-family="Times,serif" font-size="14.00" style="">Line: 9</text>
+</g>
+<!-- 0x555555566ac8&#45;&gt;0x555555566bd8 -->
+<g id="edge22" class="edge" data-name="0x555555566ac8-&gt;0x555555566bd8">
+
+<path fill="none" stroke="black" d="M1952.08,-188.14C1971.65,-178.68 1993.57,-168.07 2013.81,-158.28" style=""/>
+<polygon fill="black" stroke="black" points="2015.07,-161.56 2022.55,-154.05 2012.02,-155.26 2015.07,-161.56" style=""/>
+</g>
+<!-- 0x555555566c58 -->
+<g id="node25" class="node" pointer-events="visible" data-name="0x555555566c58">
+
+<polygon fill="#e0e0e0" stroke="#e0e0e0" points="2340.78,-153 2198.09,-153 2198.09,-94.2 2340.78,-94.2 2340.78,-153" style=""/>
+<text text-anchor="middle" x="2269.43" y="-136.2" font-family="Times,serif" font-size="14.00" style="">1</text>
+<text text-anchor="middle" x="2269.43" y="-119.4" font-family="Times,serif" font-size="14.00" style="">Type: Int Literal Node</text>
+<text text-anchor="middle" x="2269.43" y="-102.6" font-family="Times,serif" font-size="14.00" style="">Line: 10</text>
+</g>
+<!-- 0x555555566c18&#45;&gt;0x555555566c58 -->
+<g id="edge24" class="edge" data-name="0x555555566c18-&gt;0x555555566c58">
+
+<path fill="none" stroke="black" d="M2131.21,-188.14C2151.89,-178.63 2175.08,-167.98 2196.46,-158.15" style=""/>
+<polygon fill="black" stroke="black" points="2197.8,-161.38 2205.42,-154.03 2194.87,-155.02 2197.8,-161.38" style=""/>
+</g>
+<!-- 0x555555566fe8 -->
+<g id="node32" class="node" pointer-events="visible" data-name="0x555555566fe8">
+
+<polygon fill="#e0e0e0" stroke="#e0e0e0" points="3180.88,-153 3027.99,-153 3027.99,-94.2 3180.88,-94.2 3180.88,-153" style=""/>
+<text text-anchor="middle" x="3104.43" y="-136.2" font-family="Times,serif" font-size="14.00" style="">D</text>
+<text text-anchor="middle" x="3104.43" y="-119.4" font-family="Times,serif" font-size="14.00" style="">Type: Text Literal Node</text>
+<text text-anchor="middle" x="3104.43" y="-102.6" font-family="Times,serif" font-size="14.00" style="">Line: 11</text>
+</g>
+<!-- 0x555555566fa8&#45;&gt;0x555555566fe8 -->
+<g id="edge31" class="edge" data-name="0x555555566fa8-&gt;0x555555566fe8">
+
+<path fill="none" stroke="black" d="M3170.59,-188.27C3161.65,-179.67 3151.72,-170.11 3142.34,-161.08" style=""/>
+<polygon fill="black" stroke="black" points="3144.99,-158.77 3135.36,-154.36 3140.13,-163.82 3144.99,-158.77" style=""/>
+</g>
+<!-- 0x555555567048 -->
+<g id="node33" class="node" pointer-events="visible" data-name="0x555555567048">
+
+<polygon fill="#e0e0e0" stroke="#e0e0e0" points="3392.84,-153 3198.03,-153 3198.03,-94.2 3392.84,-94.2 3392.84,-153" style=""/>
+<text text-anchor="middle" x="3295.43" y="-136.2" font-family="Times,serif" font-size="14.00" style="">!d</text>
+<text text-anchor="middle" x="3295.43" y="-119.4" font-family="Times,serif" font-size="14.00" style="">Type: Variable Reference Node</text>
+<text text-anchor="middle" x="3295.43" y="-102.6" font-family="Times,serif" font-size="14.00" style="">Line: 11</text>
+</g>
+<!-- 0x555555566fa8&#45;&gt;0x555555567048 -->
+<g id="edge32" class="edge" data-name="0x555555566fa8-&gt;0x555555567048">
+
+<path fill="none" stroke="black" d="M3229.97,-188.27C3238.82,-179.67 3248.64,-170.11 3257.93,-161.08" style=""/>
+<polygon fill="black" stroke="black" points="3260.1,-163.85 3264.83,-154.37 3255.22,-158.83 3260.1,-163.85" style=""/>
+</g>
+</g>
+</svg>

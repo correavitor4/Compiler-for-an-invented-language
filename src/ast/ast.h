@@ -14,5 +14,9 @@ typedef struct ASTNode
 
 ASTNode *ast_generate_root();
 ASTNode * ast_add_child(ASTNode *parent, ASTNodeType type, char *literal, int line_num);
+ASTNode* ast_add_existing_child_copy(ASTNode *parent, ASTNode *child);
+ASTNode* generate_temporary_node(char *literal, int line_num);
+ASTNode* pop_child(ASTNode *parent);
+ASTNode* delete_node(ASTNode *node);
 
 #endif

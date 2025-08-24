@@ -118,8 +118,18 @@ static void parse_term(Parser *p, ASTNode* parent)
     switch (tok.type)
     {
     case TOKEN_INT:
+        advance_token(p);
+        ast_add_child(parent, AST_INT_LITERAL_NODE, tok.literal, tok.line_num);
+        break;
     case TOKEN_DECIMAL:
+        advance_token(p);
+        ast_add_child(parent, AST_DECIMAL_LITERAL_NODE, tok.literal, tok.line_num);
+        break;
+        
     case TOKEN_TEXT:
+        ast_add_child(parent, AST_TEXT_LITERAL_NODE, tok.literal, tok.line_num);
+        advance_token(p);
+        break;
     case TOKEN_IDENT_VAR:
         if (tok.type == TOKEN_IDENT_VAR)
         {
@@ -280,7 +290,8 @@ static void parse_variable_declaration(Parser *p, ASTNode* parent)
     TokenType declaration_type = current_token(p).type;
     advance_token(p);
 
-    ASTNode *current_node = ast_add_child(parent, AST_TEXT_VARIABLE_DECLARATION_NODE, current_token(p).literal, current_token(p).line_num);
+    ASTNode** variable_declaration_nodes = allocate_memory(sizeof(ASTNode*));
+    int var_decl_count = 0;
 
     while (1)
     {
@@ -295,15 +306,15 @@ static void parse_variable_declaration(Parser *p, ASTNode* parent)
             exit(EXIT_FAILURE);
         }
 
+        variable_declaration_nodes[var_decl_count++] = ast_add_child(parent, declaration_type, var_token.literal, var_token.line_num);
+        variable_declaration_nodes = reallocate_memory(variable_declaration_nodes, sizeof(ASTNode*) * (var_decl_count + 1));
+
         if (declaration_type == TOKEN_DEC_TYPE && current_token(p).type == TOKEN_LBRACKET)
         {   
-            current_node->type = AST_INT_VARIABLE_DECLARATION_NODE;
             parse_decimal_specifier(p);
         }
         else if (declaration_type == TOKEN_INT_TYPE && current_token(p).type == TOKEN_LBRACKET)
         {
-            current_node->type = AST_INT_VARIABLE_DECLARATION_NODE;
-
             advance_token(p);
 
             expect_token(p, TOKEN_INT, "Tamanho do vetor deve ser um inteiro");
@@ -314,7 +325,17 @@ static void parse_variable_declaration(Parser *p, ASTNode* parent)
         {
             advance_token(p);
 
-            parse_expression(p, current_node);
+            ASTNode* temporary_tree = generate_temporary_node(NULL, current_token(p).line_num);
+            temporary_tree->type = AST_ASSIGNMENT_NODE;
+            temporary_tree->literal = "=";
+
+            parse_expression(p, temporary_tree);
+
+            while(var_decl_count > 0) {
+                ASTNode* var_node = variable_declaration_nodes[--var_decl_count];
+                ast_add_existing_child_copy(var_node, temporary_tree);
+            }
+
         }
 
         if (current_token(p).type != TOKEN_COMMA)
@@ -325,6 +346,7 @@ static void parse_variable_declaration(Parser *p, ASTNode* parent)
         advance_token(p);
     }
 
+    free_memory(variable_declaration_nodes);
     expect_token(p, TOKEN_SEMICOLON, "Esperado ';' no final da declaração de variável");
 }
 
@@ -340,6 +362,8 @@ static void parse_assignment_statement(Parser *p, ASTNode* parent)
 {
     Token var_token = current_token(p);
 
+    parent = ast_add_child(parent, AST_ASSIGNMENT_NODE, var_token.literal, var_token.line_num);
+
     if (scope_manager_lookup(p->sm, var_token.literal) == NULL)
     {
         fprintf(stderr, "[ERROR|Semantic] Linha %lu: A variável '%s' não foi declarada.\n",
@@ -350,6 +374,9 @@ static void parse_assignment_statement(Parser *p, ASTNode* parent)
     expect_token(p, TOKEN_IDENT_VAR, "Esperado uma variável para atribuição");
     expect_token(p, TOKEN_ASSIGN, "Esperado '=' em uma atribuição");
     parse_expression(p, parent);
+
+    parent = parent->parent;
+
     expect_token(p, TOKEN_SEMICOLON, "Esperado ';' no final da atribuição");
 }
 
@@ -362,9 +389,10 @@ static void parse_assignment_statement(Parser *p, ASTNode* parent)
  */
 static void parse_io_statement(Parser *p, ASTNode* parent)
 {
+    ASTNode *io_node = ast_add_child(parent, AST_FUNCTION_CALL_NODE, current_token(p).literal, current_token(p).line_num);
     TokenType type = current_token(p).type;
     advance_token(p);
-    parse_argument_list(p, parent);
+    parse_argument_list(p, io_node);
     if (type == TOKEN_READ)
         expect_token(p, TOKEN_SEMICOLON, "Esperado ';' no final da chamada 'leia'");
     else
@@ -488,7 +516,6 @@ static void parse_statement(Parser *p, ASTNode* parent)
         parse_variable_declaration(p, parent);
         break;
     case TOKEN_IDENT_VAR:
-        //TODO: implement ast
         parse_assignment_statement(p, parent);
         break;
     case TOKEN_FUNCTION:

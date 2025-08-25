@@ -156,8 +156,8 @@ static void parse_term(Parser *p, ASTNode *parent)
 
 static void parse_expression(Parser *p, ASTNode *parent)
 {
-
-    parse_term(p, parent);
+    ASTNode *expr_node = ast_add_child(parent, AST_EXPRESSION_NODE, "expression", current_token(p).line_num);
+    parse_term(p, expr_node);
 
     while (current_token(p).type == TOKEN_PLUS || current_token(p).type == TOKEN_MINUS ||
            current_token(p).type == TOKEN_ASTERISK || current_token(p).type == TOKEN_SLASH ||
@@ -168,7 +168,7 @@ static void parse_expression(Parser *p, ASTNode *parent)
            current_token(p).type == TOKEN_ASSIGN)
     {
         advance_token(p);
-        parse_term(p, parent);
+        parse_term(p, expr_node);
     }
 }
 
@@ -271,8 +271,9 @@ static void parse_function_declaration(Parser *p, ASTNode *parent)
 
 static void parse_return_statement(Parser *p, ASTNode *parent)
 {
+    ASTNode *return_node = ast_add_child(parent, AST_FUNCTION_CALL_NODE, "return", current_token(p).line_num);
     advance_token(p);
-    parse_expression(p, parent);
+    parse_expression(p, return_node);
     expect_token(p, TOKEN_SEMICOLON, "Esperado ';' após a expressão de retorno");
 }
 

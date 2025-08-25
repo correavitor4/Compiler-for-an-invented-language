@@ -6,6 +6,8 @@
 
 ASTNode *ast_root_node = NULL;
 
+//FIXME: It must has something like a comparising node for ast
+
 struct Parser
 {
     Token *tokens;
@@ -432,16 +434,17 @@ static void parse_io_statement(Parser *p, ASTNode *parent)
  */
 static void parse_if_statement(Parser *p, ASTNode *parent)
 {
+    ASTNode *if_node = ast_add_child(parent, AST_IF_NODE, "if", current_token(p).line_num);
     advance_token(p);
     expect_token(p, TOKEN_LPAREN, "Esperado '(' após 'se'");
-    parse_expression(p, parent);
+    parse_expression(p, if_node);
     expect_token(p, TOKEN_RPAREN, "Esperado ')' após a condição do 'se'");
     skip_eols(p);
 
     if (current_token(p).type == TOKEN_LBRACE)
-        parse_block(p, parent);
+        parse_block(p, if_node);
     else
-        parse_statement(p, parent);
+        parse_statement(p, if_node);
 
     skip_eols(p);
     if (current_token(p).type == TOKEN_ELSE)
@@ -449,9 +452,9 @@ static void parse_if_statement(Parser *p, ASTNode *parent)
         advance_token(p);
         skip_eols(p);
         if (current_token(p).type == TOKEN_LBRACE)
-            parse_block(p, parent);
+            parse_block(p, if_node);
         else
-            parse_statement(p, parent);
+            parse_statement(p, if_node);
     }
 }
 
@@ -545,11 +548,9 @@ static void parse_statement(Parser *p, ASTNode *parent)
         parse_function_declaration(p, parent);
         break;
     case TOKEN_RETURN:
-        // TODO: implement ast
         parse_return_statement(p, parent);
         break;
     case TOKEN_IF:
-        // TODO: implement ast
         parse_if_statement(p, parent);
         break;
     case TOKEN_FOR:

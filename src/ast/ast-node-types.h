@@ -15,6 +15,7 @@ typedef enum {
     AST_TEXT_LITERAL_NODE,
     AST_ASSIGNMENT_TEMPORARY_NODE, // New node type for temporary assignment (can be used for multi-assignments)
     AST_EXPRESSION_NODE, // New node type for expressions
+    AST_IF_NODE, // New node type for if statements
 } ASTNodeType;
 
 static const char *ASTNodeTypeStrings[] = {
@@ -30,7 +31,8 @@ static const char *ASTNodeTypeStrings[] = {
     "Decimal Literal Node",
     "Text Literal Node",
     "Assignment Temporary Node",
-    "Expression Node"
+    "Expression Node",
+    "IF Node",
 };
 
 

@@ -274,6 +274,19 @@ static void parse_return_statement(Parser *p, ASTNode* parent)
     expect_token(p, TOKEN_SEMICOLON, "Esperado ';' após a expressão de retorno");
 }
 
+ASTNodeType get_variable_type(TokenType type) {
+    switch(type) {
+        case TOKEN_INT_TYPE:
+            return AST_INT_VARIABLE_DECLARATION_NODE;
+        case TOKEN_TEXT_TYPE:
+            return AST_TEXT_VARIABLE_DECLARATION_NODE;
+        case TOKEN_DEC_TYPE:
+            return AST_DECIMAL_LITERAL_NODE;
+        default:
+            return -1;
+    }
+}
+
 /**
  * @brief Parses a variable declaration in the source code.
  *
@@ -306,7 +319,7 @@ static void parse_variable_declaration(Parser *p, ASTNode* parent)
             exit(EXIT_FAILURE);
         }
 
-        variable_declaration_nodes[var_decl_count++] = ast_add_child(parent, declaration_type, var_token.literal, var_token.line_num);
+        variable_declaration_nodes[var_decl_count++] = ast_add_child(parent, get_variable_type(declaration_type), var_token.literal, var_token.line_num);
         variable_declaration_nodes = reallocate_memory(variable_declaration_nodes, sizeof(ASTNode*) * (var_decl_count + 1));
 
         if (declaration_type == TOKEN_DEC_TYPE && current_token(p).type == TOKEN_LBRACKET)
@@ -495,6 +508,7 @@ static void parse_main_function(Parser *p, ASTNode* parent)
     skip_eols(p);
     parse_block(p, parent);
 }
+
 
 /**
  * @brief Parses a single statement from the input using the provided parser.

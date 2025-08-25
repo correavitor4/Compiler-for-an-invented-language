@@ -11,4 +11,8 @@ senao escreva("B é maior", !b2);
 para (!d = 1; !d<=100; !d=!d+2){
 escreva("D", !d);
 }
+
+funcao __declaracao(){
+    inteiro !gg = 8;
+}
 }

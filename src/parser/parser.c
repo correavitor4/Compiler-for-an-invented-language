@@ -104,11 +104,12 @@ static void skip_eols(Parser *p)
  */
 static void parse_block(Parser *p, ASTNode *parent)
 {
+    ASTNode *block_node = ast_add_child(parent, AST_BLOCK_NODE, "block", current_token(p).line_num);
     expect_token(p, TOKEN_LBRACE, "Esperado '{' para iniciar um bloco");
     skip_eols(p);
     while (current_token(p).type != TOKEN_RBRACE && current_token(p).type != TOKEN_EOF)
     {
-        parse_statement(p, parent);
+        parse_statement(p, block_node);
         skip_eols(p);
     }
     expect_token(p, TOKEN_RBRACE, "Esperado '}' para fechar um bloco");
@@ -469,30 +470,55 @@ static void parse_if_statement(Parser *p, ASTNode *parent)
  */
 static void parse_for_statement(Parser *p, ASTNode *parent)
 {
-
     expect_token(p, TOKEN_FOR, "Esperado 'para' para iniciar um loop");
+    
+    ASTNode *for_node = ast_add_child(parent, AST_FOR_NODE, "for", current_token(p).line_num);
+
     expect_token(p, TOKEN_LPAREN, "Esperado '(' após a palavra-chave 'para'");
+
+    ASTNode *for_sttm_node = ast_add_child(for_node, AST_FOR_STATEMENT_NODE, "FOR Expression", current_token(p).line_num);
 
     if (current_token(p).type != TOKEN_SEMICOLON)
     {
-        parse_assignment_statement(p, parent);
+        
+        ASTNode *for_init_node = ast_add_child(for_sttm_node, AST_FOR_STATEMENT_INITIALIZATION_NODE, "FOR initialization", current_token(p).line_num);
+        
+        if (current_token(p).type == TOKEN_IDENT_VAR)
+        {
+            parse_assignment_statement(p, for_init_node);
+        }
+        else{
+            parse_variable_declaration(p, for_init_node);
+        }
     }
     else
     {
+        ASTNode *for_init_node = ast_add_child(for_sttm_node, AST_FOR_STATEMENT_EMPTY_INITIALIZATION_NODE, "FOR empty initialization", current_token(p).line_num);
         expect_token(p, TOKEN_SEMICOLON, "Esperado ';' após a inicialização (vazia) do loop 'para'");
     }
 
     if (current_token(p).type != TOKEN_SEMICOLON)
     {
+        ASTNode *for_cond_node = ast_add_child(for_sttm_node, AST_FOR_STATEMENT_NODE, "FOR condition", current_token(p).line_num);
         parse_expression(p, parent);
+        expect_token(p, TOKEN_SEMICOLON, "Esperado ';' após a condição do loop 'para'");
     }
-    expect_token(p, TOKEN_SEMICOLON, "Esperado ';' após a condição do loop 'para'");
+    else{
+        ASTNode *for_cond_node = ast_add_child(for_sttm_node, AST_FOR_STATEMENT_EMPTY_CONDITION_NODE, "FOR empty condition", current_token(p).line_num);
+        expect_token(p, TOKEN_SEMICOLON, "Esperado ';' após a condição vazia do loop 'para'");
+    }
 
     if (current_token(p).type != TOKEN_RPAREN)
     {
+        ASTNode *for_control_node = ast_add_child(for_sttm_node, AST_FOR_STATEMENT_CONTROL_NODE, "FOR control", current_token(p).line_num);
         parse_expression(p, parent);
+        expect_token(p, TOKEN_RPAREN, "Esperado ')' para fechar a declaração do loop 'para'");
     }
-    expect_token(p, TOKEN_RPAREN, "Esperado ')' para fechar a declaração do loop 'para'");
+    else{
+        ASTNode *for_control_node = ast_add_child(for_sttm_node, AST_FOR_STATEMENT_EMPTY_CONTROL_NODE, "FOR empty control", current_token(p).line_num);
+        expect_token(p, TOKEN_RPAREN, "Esperado ')' para fechar a declaração do loop 'para'");
+    }
+
     skip_eols(p);
 
     if (current_token(p).type == TOKEN_LBRACE)

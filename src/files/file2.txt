@@ -16,5 +16,14 @@ funcao __declaracao(){
     inteiro !gg = 8;
 
     retorno !gg < 8;
+
+    para(inteiro !i=1; !i<=20; !i=!i+1){
+        inteiro !lpa = 0;
+
+        !lpa=!lpa+1;
+    }
+
+    para(;;){
+    }
 }
 }

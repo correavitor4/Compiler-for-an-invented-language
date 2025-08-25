@@ -15,7 +15,16 @@ typedef enum {
     AST_TEXT_LITERAL_NODE,
     AST_ASSIGNMENT_TEMPORARY_NODE, // New node type for temporary assignment (can be used for multi-assignments)
     AST_EXPRESSION_NODE, // New node type for expressions
-    AST_IF_NODE, // New node type for if statements
+    AST_IF_NODE, // New node type for if statements,
+    AST_FOR_NODE, // New node type for for loops,
+    AST_FOR_STATEMENT_NODE,
+    AST_FOR_STATEMENT_INITIALIZATION_NODE, // ( {non empty initialization }; ...; ...) for loop
+    AST_FOR_STATEMENT_EMPTY_INITIALIZATION_NODE, // ( {empty initialization} ; ...; ...) for loop with empty initialization (x is empty)
+    AST_FOR_STATEMENT_CONDITION_NODE, // (...; {condition}; ...) for loop
+    AST_FOR_STATEMENT_EMPTY_CONDITION_NODE, // (...; {empty condition}; ...) for loop with empty condition (x is empty)
+    AST_FOR_STATEMENT_CONTROL_NODE, // (...; ...; {control}) for loop
+    AST_FOR_STATEMENT_EMPTY_CONTROL_NODE, // (...; ...; {empty control}) for loop with empty control (x is empty)
+    AST_BLOCK_NODE, // New node type for blocks (enclosed in { } )
 } ASTNodeType;
 
 static const char *ASTNodeTypeStrings[] = {
@@ -33,6 +42,15 @@ static const char *ASTNodeTypeStrings[] = {
     "Assignment Temporary Node",
     "Expression Node",
     "IF Node",
+    "FOR Node",
+    "FOR Statement Node",
+    "FOR Statement Initialization Node",
+    "FOR Statement Empty Initialization Node",
+    "FOR Statement Condition Node",
+    "FOR Statement Empty Condition Node",
+    "FOR Statement Control Node",
+    "FOR Statement Empty Control Node",
+    "Block Node",
 };
 
 

@@ -33,6 +33,7 @@
         "ctype.h": "c",
         "hash.h": "c",
         "ast-node-types.h": "c",
-        "stat.h": "c"
+        "stat.h": "c",
+        "ast.h": "c"
     }
 }

@@ -523,7 +523,8 @@ static void parse_for_statement(Parser *p, ASTNode *parent)
 
     if (current_token(p).type == TOKEN_LBRACE)
     {
-        parse_block(p, parent);
+        parse_block(p, for_node);
+        int a=0;
     }
     else
     {
@@ -577,10 +578,10 @@ static void parse_statement(Parser *p, ASTNode *parent)
         parse_return_statement(p, parent);
         break;
     case TOKEN_IF:
+        //TODO: implement else
         parse_if_statement(p, parent);
         break;
     case TOKEN_FOR:
-        // TODO: implement ast
         parse_for_statement(p, parent);
         break;
     case TOKEN_READ:

@@ -14,6 +14,7 @@ escreva("D", !d);
 
 funcao __declaracao(){
     inteiro !gg = 8;
+    inteiro !hg = 9;
 
     retorno !gg < 8;
 

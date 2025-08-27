@@ -4,3 +4,4 @@
 
 /src/tests/*
 /build/*
+/src/generated-diagrams/AST/

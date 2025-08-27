@@ -1,5 +1,7 @@
 #include "ast.h"
 #include "memory/memory_controller.h"
+#include <string.h>
+#include "utils/string/string_utils.h"
 
 ASTNode *ast_generate_root()
 {
@@ -13,14 +15,14 @@ ASTNode *ast_generate_root()
     return root;
 }
 
-ASTNode* ast_add_child(ASTNode *parent, ASTNodeType type, char *literal, int line_num)
+ASTNode *ast_add_child(ASTNode *parent, ASTNodeType type, char *literal, int line_num)
 {
     if (parent == NULL)
         return NULL;
 
     ASTNode *child = allocate_memory(sizeof(ASTNode));
     child->type = type;
-    child->literal = literal;
+    child->literal = string_copy(literal);
     child->children = NULL;
     child->parent = parent;
     child->child_count = 0;
@@ -48,9 +50,9 @@ ASTNode *ast_add_existing_child_copy(ASTNode *parent, ASTNode *child)
     if (parent == NULL || child == NULL)
         return NULL;
 
-   ASTNode *child_copy = allocate_memory(sizeof(ASTNode));
+    ASTNode *child_copy = allocate_memory(sizeof(ASTNode));
     child_copy->type = child->type;
-    child_copy->literal = child->literal;
+    child_copy->literal = string_copy(child->literal);
     child_copy->children = NULL;
     child_copy->parent = parent;
     child_copy->child_count = 0;
@@ -65,11 +67,11 @@ ASTNode *ast_add_existing_child_copy(ASTNode *parent, ASTNode *child)
     parent->children[parent->child_count] = child_copy;
     parent->child_count++;
     child_copy->parent = parent; // Update the parent pointer of the copied child
-    
-    return child;
+
+    return child_copy;
 }
 
-ASTNode* generate_temporary_node(char *literal, int line_num)
+ASTNode *generate_temporary_node(char *literal, int line_num)
 {
     ASTNode *temp_node = allocate_memory(sizeof(ASTNode));
     temp_node->type = AST_ASSIGNMENT_TEMPORARY_NODE;
@@ -94,7 +96,7 @@ ASTNode* generate_temporary_node(char *literal, int line_num)
  * @return Pointer to the popped child node, or NULL if the parent has no
  *         children.
  */
-ASTNode* pop_child(ASTNode *parent)
+ASTNode *pop_child(ASTNode *parent)
 {
     if (parent == NULL || parent->child_count == 0)
         return NULL;

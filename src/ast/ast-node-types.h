@@ -30,6 +30,7 @@ typedef enum {
     AST_ELSE_EXCUTION_CODE_BLOCK_NODE, // New node type for else execution code (not enclosed in { } )
     AST_ELSE_INLINE_EXECUTION_CODE_NODE, // New node type for else inline execution code (not enclosed in {
     AST_IF_STATEMENT_EXPRESSION_NODE, // New node type for if statement expressions
+    AST_DECIMAL_VARIABLE_DECLARATION_NODE, // New node type for decimal variable declarations
 } ASTNodeType;
 
 static const char *ASTNodeTypeStrings[] = {
@@ -60,7 +61,8 @@ static const char *ASTNodeTypeStrings[] = {
     "IF Inline Execution Code Node",
     "ELSE Execution Code Block Node",
     "ELSE Inline Execution Code Node",
-    "IF Statement Expression Node"
+    "IF Statement Expression Node",
+    "Decimal Variable Declaration Node",
 };
 
 

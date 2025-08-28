@@ -36,4 +36,5 @@ senao{
     escreva("A é maior do que 7: ", !a);
 }
 
+decimal !jc[2.5] = 18.98654;
 }

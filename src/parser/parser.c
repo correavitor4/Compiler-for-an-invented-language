@@ -289,16 +289,11 @@ ASTNodeType get_variable_type(TokenType type)
     case TOKEN_TEXT_TYPE:
         return AST_TEXT_VARIABLE_DECLARATION_NODE;
     case TOKEN_DEC_TYPE:
-        return AST_DECIMAL_LITERAL_NODE;
+        return AST_DECIMAL_VARIABLE_DECLARATION_NODE;
     default:
         return -1;
     }
 }
-
-/*FIXME: there is a bug when declare a decimal variable type. Basically,
-it inserts in ast as a single decimal literal node, instead of a decimal declaration
- node and it's children
- */
 
 /**
  * @brief Parses a variable declaration in the source code.

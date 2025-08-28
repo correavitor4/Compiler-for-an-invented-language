@@ -1,16 +1,18 @@
 {
-    "version": "2.0.0",
-    "tasks": [
-        {
-            "label": "Build with Make",
-            "type": "shell",
-            "command": "make",
-            "args": [],
-            "group": "build",
-            "problemMatcher": [
-                "$gcc"
-            ],
-            "detail": "Runs the default make command to build the project."
-        }
-    ]
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "run make",
+      "type": "shell",
+      "command": "make",
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+      "problemMatcher": [
+        "$gcc"
+      ],
+      "detail": "Executa o comando make antes de iniciar o debug"
+    }
+  ]
 }

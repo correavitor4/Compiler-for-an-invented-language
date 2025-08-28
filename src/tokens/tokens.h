@@ -6,11 +6,16 @@ typedef enum
     // --- Tokens de Controle ---
     TOKEN_ILLEGAL, // Token/caractere desconhecido
     TOKEN_TEXT_INVALID, // Texto inválido (ex: "texto sem fechamento)
+    TOKEN_RETURN,   // Retorno de função (ex: returno 0;)
     TOKEN_EOL,     // End of Line (Fim de Linha)
+    TOKEN_EOF,     // End of File (Fim de Arquivo)
 
     // --- Identificadores e Literais (Valores) ---
     TOKEN_IDENT_FUNC, // Iniciada por __ (ex: __minhaFuncao)
     TOKEN_IDENT_VAR,  // Iniciada por ! (ex: !minhaVariavel)
+    TOKEN_INT_TYPE,   // Tipo de dado inteiro (ex: inteiro)
+    TOKEN_DEC_TYPE,   // Tipo de dado decimal (ex: decimal)
+    TOKEN_TEXT_TYPE,  // Tipo de dado texto (ex: texto)
     TOKEN_INT,        // Números inteiros (ex: 10, 50, 123) - inteiro
     TOKEN_DECIMAL,    // Números de ponto flutuante (ex: 10.5, 0.25) - decimal
     TOKEN_TEXT,       // Strings de texto (ex: "ola mundo") - texto
@@ -55,68 +60,5 @@ typedef enum
     TOKEN_FOR,      // "para"
 
 } TokenType;
-
-#pragma region return codes
-//try parse (general)
-#define TRY_PARSE_IS_A_TOKEN_SUCCESS 0
-#define TRY_PARSE_IS_A_NOT_TOKEN 1
-#define TRY_PARSE_IS_A_TOKEN_ERROR -1
-
-// try parse data type
-#define TRY_PARSE_DATA_TYPE_TOKEN_SUCCESS 0
-#define TRY_PARSE_DATA_TYPE_TOKEN_NOT_FOUND 1
-#define TRY_PARSE_DATA_TYPE_TOKEN_ERROR -1
-
-// try parse function
-#define TRY_PARSE_FUNCTION_TOKEN_SUCCESS 0
-#define TRY_PARSE_FUNCTION_TOKEN_NOT_FOUND 1
-#define TRY_PARSE_FUNCTION_TOKEN_ERROR -1
-
-// try parse console operations
-#define TRY_PARSE_CONSOLE_OPS_TOKEN_SUCCESS 0
-#define TRY_PARSE_CONSOLE_OPS_TOKEN_NOT_FOUND 1
-#define TRY_PARSE_CONSOLE_OPS_TOKEN_ERROR -1
-
-// try parse conditional
-#define TRY_PARSE_CONDITIONAL_TOKEN_SUCCESS 0
-#define TRY_PARSE_CONDITIONAL_TOKEN_NOT_FOUND 1
-#define TRY_PARSE_CONDITIONAL_TOKEN_ERROR -1
-
-// try parse for loop
-#define TRY_PARSE_FOR_LOOP_TOKEN_SUCCESS 0
-#define TRY_PARSE_FOR_LOOP_TOKEN_NOT_FOUND 1
-#define TRY_PARSE_FOR_LOOP_TOKEN_ERROR -1
-
-//try parse function name
-#define TRY_PARSE_FUNCTION_NAME_TOKEN_SUCCESS 0
-#define TRY_PARSE_FUNCTION_NAME_TOKEN_NOT_FOUND 1
-#define TRY_PARSE_FUNCTION_NAME_TOKEN_ERROR -1
-
-// try parse variable
-#define TRY_PARSE_VARIABLE_TOKEN_SUCCESS 0
-#define TRY_PARSE_VARIABLE_TOKEN_NOT_FOUND 1
-#define TRY_PARSE_VARIABLE_TOKEN_ERROR -1
-
-// try parse special token
-#define TRY_PARSE_SPECIAL_TOKEN_SUCCESS 0
-#define TRY_PARSE_SPECIAL_TOKEN_NOT_FOUND 1
-#define TRY_PARSE_SPECIAL_TOKEN_ERROR -1
-
-// try parse arithmetic operator
-#define TRY_PARSE_ARITHMETIC_OPERATOR_TOKEN_SUCCESS 0
-#define TRY_PARSE_ARITHMETIC_OPERATOR_TOKEN_NOT_FOUND 1
-#define TRY_PARSE_ARITHMETIC_OPERATOR_TOKEN_ERROR -1
-
-// try parse comparison operator
-#define TRY_PARSE_COMPARISON_OPERATOR_TOKEN_SUCCESS 0
-#define TRY_PARSE_COMPARISON_OPERATOR_TOKEN_NOT_FOUND 1
-#define TRY_PARSE_COMPARISON_OPERATOR_TOKEN_ERROR -1
-
-// try parse logical operator
-#define TRY_PARSE_LOGICAL_OPERATOR_TOKEN_SUCCESS 0
-#define TRY_PARSE_LOGICAL_OPERATOR_TOKEN_NOT_FOUND 1
-#define TRY_PARSE_LOGICAL_OPERATOR_TOKEN_ERROR -1
-
-#pragma endregion
 
 #endif

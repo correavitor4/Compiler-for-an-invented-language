@@ -1,0 +1,40 @@
+principal(){
+inteiro !a, !b2 = 7;
+decimal !cc[2.5];
+inteiro !d;
+!b2 = !a;
+escreva("Escreva um número ");
+leia (!a);
+se (!a <= !b2)
+escreva(" A é maior", !a);
+senao escreva("B é maior", !b2);
+para (!d = 1; !d<=100; !d=!d+2){
+escreva("D", !d);
+}
+
+funcao __declaracao(){
+    inteiro !gg = 8;
+    inteiro !hg = 9;
+
+    retorno !gg < 8;
+
+    para(inteiro !i=1; !i<=20; !i=!i+1){
+        inteiro !lpa = 0;
+
+        !lpa=!lpa+1;
+    }
+
+    para(;;){
+    }
+}
+
+se(!a < 7){
+    escreva("A é menor do que 7: ", !a);
+    !a = 7;
+}
+senao{
+    escreva("A é maior do que 7: ", !a);
+}
+
+decimal !jc[2.5] = 18.98654;
+}

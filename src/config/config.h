@@ -1,6 +1,7 @@
 #ifndef CONFIG_H
 #define CONFIG_H
 
+#include <stdbool.h>
 #include <stdio.h>
 
 void read_directory_path();
@@ -11,4 +12,5 @@ char* my_fgets(char* str, int num, FILE* stream);
 
 // Lex options
 int get_initial_lex_token_accumulator_size();
+
 #endif

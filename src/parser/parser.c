@@ -583,11 +583,12 @@ static void parse_for_statement(Parser *p, ASTNode *parent)
  */
 static void parse_main_function(Parser *p, ASTNode *parent)
 {
+    ASTNode *main_node = ast_add_child(parent, AST_FUNCTION_DECLARATION_NODE, "main", current_token(p).line_num);
     advance_token(p);
     expect_token(p, TOKEN_LPAREN, "Esperado '(' na função principal");
     expect_token(p, TOKEN_RPAREN, "Esperado ')' na função principal");
     skip_eols(p);
-    parse_block(p, parent);
+    parse_block(p, main_node);
 }
 
 /**
@@ -626,11 +627,9 @@ static void parse_statement(Parser *p, ASTNode *parent)
         break;
     case TOKEN_READ:
     case TOKEN_PRINT:
-        // TODO: implement ast
         parse_io_statement(p, parent);
         break;
     case TOKEN_MAIN:
-        // TODO: implement ast
         parse_main_function(p, parent);
         break;
     default:

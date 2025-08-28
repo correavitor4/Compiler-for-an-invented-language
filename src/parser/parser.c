@@ -619,7 +619,6 @@ static void parse_statement(Parser *p, ASTNode *parent)
         parse_return_statement(p, parent);
         break;
     case TOKEN_IF:
-        // TODO: implement else
         parse_if_statement(p, parent);
         break;
     case TOKEN_FOR:

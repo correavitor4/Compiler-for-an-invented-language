@@ -27,4 +27,13 @@ funcao __declaracao(){
     para(;;){
     }
 }
+
+se(!a < 7){
+    escreva("A é menor do que 7: ", !a);
+    !a = 7;
+}
+senao{
+    escreva("A é maior do que 7: ", !a);
+}
+
 }

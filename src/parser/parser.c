@@ -6,7 +6,7 @@
 
 ASTNode *ast_root_node = NULL;
 
-//FIXME: It must has something like a comparising node for ast
+// FIXME: It must has something like a comparising node for ast
 
 struct Parser
 {
@@ -442,10 +442,34 @@ static void parse_if_statement(Parser *p, ASTNode *parent)
     expect_token(p, TOKEN_RPAREN, "Esperado ')' após a condição do 'se'");
     skip_eols(p);
 
+    for(int i = 0; i < if_node->child_count; i++)
+    {
+        ASTNode *child = if_node->children[i];
+        if (child->type == AST_EXPRESSION_NODE)
+        {
+            child->type = AST_IF_STATEMENT_EXPRESSION_NODE;
+            child->literal = "if condition";
+        }
+    }
+
     if (current_token(p).type == TOKEN_LBRACE)
+    {
         parse_block(p, if_node);
+        for (int i = 0; i < if_node->child_count; i++)
+        {
+            ASTNode *child = if_node->children[i];
+            if (child->type == AST_BLOCK_NODE)
+            {
+                child->type = AST_IF_BLOCK_NODE;
+                child->literal = "if block";
+            }
+        }
+    }
     else
-        parse_statement(p, if_node);
+    {
+        ASTNode *if_inline_execution_code_node = ast_add_child(if_node, AST_IF_INLINE_EXECUTION_CODE_NODE, "if_inline_block", current_token(p).line_num);
+        parse_statement(p, if_inline_execution_code_node);
+    }
 
     skip_eols(p);
     if (current_token(p).type == TOKEN_ELSE)
@@ -453,9 +477,23 @@ static void parse_if_statement(Parser *p, ASTNode *parent)
         advance_token(p);
         skip_eols(p);
         if (current_token(p).type == TOKEN_LBRACE)
+        {
             parse_block(p, if_node);
+            for (int i = 0; i < if_node->child_count; i++)
+            {
+                ASTNode *child = if_node->children[i];
+                if (child->type == AST_BLOCK_NODE)
+                {
+                    child->type = AST_ELSE_EXCUTION_CODE_BLOCK_NODE;
+                    child->literal = "else code block";
+                }
+            }
+        }
         else
-            parse_statement(p, if_node);
+        {
+            ASTNode *else_inline_execution_code_node = ast_add_child(if_node, AST_ELSE_INLINE_EXECUTION_CODE_NODE, "else_inline_block", current_token(p).line_num);
+            parse_statement(p, else_inline_execution_code_node);
+        }
     }
 }
 
@@ -471,7 +509,7 @@ static void parse_if_statement(Parser *p, ASTNode *parent)
 static void parse_for_statement(Parser *p, ASTNode *parent)
 {
     expect_token(p, TOKEN_FOR, "Esperado 'para' para iniciar um loop");
-    
+
     ASTNode *for_node = ast_add_child(parent, AST_FOR_NODE, "for", current_token(p).line_num);
 
     expect_token(p, TOKEN_LPAREN, "Esperado '(' após a palavra-chave 'para'");
@@ -480,14 +518,15 @@ static void parse_for_statement(Parser *p, ASTNode *parent)
 
     if (current_token(p).type != TOKEN_SEMICOLON)
     {
-        
+
         ASTNode *for_init_node = ast_add_child(for_sttm_node, AST_FOR_STATEMENT_INITIALIZATION_NODE, "FOR initialization", current_token(p).line_num);
-        
+
         if (current_token(p).type == TOKEN_IDENT_VAR)
         {
             parse_assignment_statement(p, for_init_node);
         }
-        else{
+        else
+        {
             parse_variable_declaration(p, for_init_node);
         }
     }
@@ -503,7 +542,8 @@ static void parse_for_statement(Parser *p, ASTNode *parent)
         parse_expression(p, parent);
         expect_token(p, TOKEN_SEMICOLON, "Esperado ';' após a condição do loop 'para'");
     }
-    else{
+    else
+    {
         ASTNode *for_cond_node = ast_add_child(for_sttm_node, AST_FOR_STATEMENT_EMPTY_CONDITION_NODE, "FOR empty condition", current_token(p).line_num);
         expect_token(p, TOKEN_SEMICOLON, "Esperado ';' após a condição vazia do loop 'para'");
     }
@@ -514,7 +554,8 @@ static void parse_for_statement(Parser *p, ASTNode *parent)
         parse_expression(p, parent);
         expect_token(p, TOKEN_RPAREN, "Esperado ')' para fechar a declaração do loop 'para'");
     }
-    else{
+    else
+    {
         ASTNode *for_control_node = ast_add_child(for_sttm_node, AST_FOR_STATEMENT_EMPTY_CONTROL_NODE, "FOR empty control", current_token(p).line_num);
         expect_token(p, TOKEN_RPAREN, "Esperado ')' para fechar a declaração do loop 'para'");
     }
@@ -524,7 +565,7 @@ static void parse_for_statement(Parser *p, ASTNode *parent)
     if (current_token(p).type == TOKEN_LBRACE)
     {
         parse_block(p, for_node);
-        int a=0;
+        int a = 0;
     }
     else
     {
@@ -578,7 +619,7 @@ static void parse_statement(Parser *p, ASTNode *parent)
         parse_return_statement(p, parent);
         break;
     case TOKEN_IF:
-        //TODO: implement else
+        // TODO: implement else
         parse_if_statement(p, parent);
         break;
     case TOKEN_FOR:

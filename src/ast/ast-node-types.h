@@ -25,6 +25,11 @@ typedef enum {
     AST_FOR_STATEMENT_CONTROL_NODE, // (...; ...; {control}) for loop
     AST_FOR_STATEMENT_EMPTY_CONTROL_NODE, // (...; ...; {empty control}) for loop with empty control (x is empty)
     AST_BLOCK_NODE, // New node type for blocks (enclosed in { } )
+    AST_IF_BLOCK_NODE, // New node type for if blocks (enclosed in { } )
+    AST_IF_INLINE_EXECUTION_CODE_NODE, // New node type for if inline execution code (not enclosed in { } )
+    AST_ELSE_EXCUTION_CODE_BLOCK_NODE, // New node type for else execution code (not enclosed in { } )
+    AST_ELSE_INLINE_EXECUTION_CODE_NODE, // New node type for else inline execution code (not enclosed in {
+    AST_IF_STATEMENT_EXPRESSION_NODE, // New node type for if statement expressions
 } ASTNodeType;
 
 static const char *ASTNodeTypeStrings[] = {
@@ -51,6 +56,11 @@ static const char *ASTNodeTypeStrings[] = {
     "FOR Statement Control Node",
     "FOR Statement Empty Control Node",
     "Block Node",
+    "IF Block Node",
+    "IF Inline Execution Code Node",
+    "ELSE Execution Code Block Node",
+    "ELSE Inline Execution Code Node",
+    "IF Statement Expression Node"
 };
 
 

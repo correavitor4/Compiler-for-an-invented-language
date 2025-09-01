@@ -58,7 +58,7 @@ void scope_manager_exit_scope(ScopeManager *sm);
  * @param type The token type associated with the symbol.
  * @return int Returns 0 on success, or a negative value on failure (e.g., if the symbol already exists).
  */
-int scope_manager_insert(ScopeManager *sm, const char *name, SymbolKind kind, TokenType type);
+int scope_manager_insert(ScopeManager *sm, char *name, SymbolKind kind, TokenType type);
 /**
  * Looks up a symbol by name within the current scope managed by the given ScopeManager.
  *

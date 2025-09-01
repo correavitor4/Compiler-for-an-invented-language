@@ -560,7 +560,6 @@ static void parse_for_statement(Parser *p, ASTNode *parent)
     if (current_token(p).type == TOKEN_LBRACE)
     {
         parse_block(p, for_node);
-        int a = 0;
     }
     else
     {

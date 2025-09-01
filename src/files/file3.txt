@@ -1,6 +1,7 @@
 funcao __soma ( !e, !aa){
 inteiro !num;
 !num = !e + !aa;
+!num = !num + 8 + !e;
 retorno !num;
 }
 

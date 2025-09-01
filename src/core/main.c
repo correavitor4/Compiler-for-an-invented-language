@@ -4,6 +4,7 @@
 
 #include "hash/hash.h"
 #include "symbol_table/symbol_table.h"
+#include "semantic/semantic.h"
 #include "memory/memory_controller.h"
 #include "reader/reader.h"
 #include "lex/lex.h"
@@ -149,7 +150,10 @@ int main(int argc, char *argv[])
 
     ASTNode* ast = get_ast();
 
-    generate_dot_file(ast);
+    // Navega pela arvore para validação semântica
+    navigate_ast(ast, sm);
+    
+    //generate_dot_file(ast);
 
     // Syntax analysis
     printf("Análise sintática:\n");

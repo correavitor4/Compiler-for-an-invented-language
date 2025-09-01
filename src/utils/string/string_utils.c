@@ -1,3 +1,5 @@
+#include <string.h>
+
 #include "string_utils.h"
 #include "memory/memory_controller.h"
 

@@ -12,6 +12,7 @@
 
 typedef struct SymbolTable {
     Symbol *table[SYMBOL_TABLE_SIZE];
+    short initialized;
 } SymbolTable;
 
 struct ScopeManager {
@@ -104,7 +105,13 @@ void scope_manager_enter_scope(ScopeManager *sm) {
         exit(EXIT_FAILURE);
     }
     sm->current_scope_level++;
-    sm->scope_stack[sm->current_scope_level] = symbol_table_create_internal();
+
+    // Initialize a new symbol table for the new scope if it doesn't exist
+    if (sm->scope_stack[sm->current_scope_level]->initialized != 1) {
+        sm->scope_stack[sm->current_scope_level] = symbol_table_create_internal();
+        sm->scope_stack[sm->current_scope_level]->initialized = 1;
+    }
+    
 }
 
 /**
@@ -119,8 +126,8 @@ void scope_manager_enter_scope(ScopeManager *sm) {
  */
 void scope_manager_exit_scope(ScopeManager *sm) {
     if (sm->current_scope_level < 0) return;
-    symbol_table_destroy_internal(sm->scope_stack[sm->current_scope_level]);
-    sm->scope_stack[sm->current_scope_level] = NULL;
+    //symbol_table_destroy_internal(sm->scope_stack[sm->current_scope_level]);
+    //sm->scope_stack[sm->current_scope_level] = NULL;
     sm->current_scope_level--;
 }
 
@@ -133,7 +140,7 @@ void scope_manager_exit_scope(ScopeManager *sm) {
  * @param type  Token type representing the symbol's data type.
  * @return      0 on success, non-zero on failure (e.g., if the symbol already exists).
  */
-int scope_manager_insert(ScopeManager *sm, const char *name, SymbolKind kind, TokenType type) {
+int scope_manager_insert(ScopeManager *sm, char *name, SymbolKind kind, TokenType type) {
     SymbolTable *current_scope = sm->scope_stack[sm->current_scope_level];
     unsigned long index = HASH.djb2(name) % SYMBOL_TABLE_SIZE;
     

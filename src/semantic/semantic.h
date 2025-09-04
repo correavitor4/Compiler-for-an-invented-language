@@ -5,6 +5,6 @@
 #include "symbol_table/symbol_table.h"
 #include "ast/ast.h"
 
-void navigate_ast(ASTNode* node, ScopeManager* sm);
+TokenType navigate_ast(ASTNode* node, ScopeManager* sm);
 
 #endif // SEMANTIC_H

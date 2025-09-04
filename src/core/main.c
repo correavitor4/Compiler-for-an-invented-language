@@ -149,7 +149,9 @@ int main(int argc, char *argv[])
     }
 
     ASTNode* ast = get_ast();
-    generate_dot_file(ast);
+    //generate_dot_file(ast);
+
+    navigate_ast(ast, sm);
 
     for (int i = 0; i < tokens_count - 1; i++)
     {   

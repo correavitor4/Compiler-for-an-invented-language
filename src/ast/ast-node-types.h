@@ -2,17 +2,19 @@
 #define AST_NODE_TYPES_H
 
 typedef enum {
+    AST_INVALID_NODE,
     AST_ROOT_NODE, 
-    AST_MAIN_FUNCTION_NODE,
+    AST_MAIN_NODE,
     AST_FUNCTION_DECLARATION_NODE,
-    AST_INT_VARIABLE_DECLARATION_NODE,
-    AST_TEXT_VARIABLE_DECLARATION_NODE,
+    AST_FUNCTION_RETURN_NODE,
+    AST_VARIABLE_DECLARATION_NODE,
     AST_VARIABLE_REF_NODE,
     AST_FUNCTION_CALL_NODE,
     AST_ASSIGNMENT_NODE,
     AST_INT_LITERAL_NODE,
     AST_DECIMAL_LITERAL_NODE,
     AST_TEXT_LITERAL_NODE,
+    AST_OP_NODE, // New node type for operators (+, -, *, /, etc.)
     AST_ASSIGNMENT_TEMPORARY_NODE, // New node type for temporary assignment (can be used for multi-assignments)
     AST_EXPRESSION_NODE, // New node type for expressions
     AST_IF_NODE, // New node type for if statements,
@@ -34,17 +36,19 @@ typedef enum {
 } ASTNodeType;
 
 static const char *ASTNodeTypeStrings[] = {
+    "Invalid Node",
     "Root Node",
-    "Main Function Node",
-    "Function Declaration Node",
-    "Int Variable Declaration Node",
-    "Text Variable Declaration Node",
-    "Variable Reference Node",
-    "Function Call Node",
+    "Main Node",
+    "FUNCTION Declaration Node",
+    "FUNCTION Return Node",
+    "VARIABLE Declaration Node",
+    "VARIABLE Reference Node",
+    "FUNCTION Call Node",
     "Assignment Node",
-    "Int Literal Node",
-    "Decimal Literal Node",
-    "Text Literal Node",
+    "INT Literal Node",
+    "DECIMAL Literal Node",
+    "TEXT Literal Node",
+    "OPERATOR Node",
     "Assignment Temporary Node",
     "Expression Node",
     "IF Node",

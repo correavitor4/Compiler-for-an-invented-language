@@ -6,6 +6,7 @@
 #include "memory/memory_controller.h"
 #include "utils/string/string_utils.h"
 
+
 ASTNode *ast_generate_root()
 {
     ASTNode *root = allocate_memory(sizeof(ASTNode));

@@ -1,6 +1,8 @@
 
-.vscode/*
 *.code-workspace
 
 /src/tests/*
 /build/*
+/src/generated-diagrams/AST/
+
+generated-diagrams/*

@@ -3,6 +3,7 @@
 #include "memory_controller.h"
 #include <stdlib.h>
 #include <stdio.h>
+#include <unistd.h>
 
 // Definição e inicialização da constante
 const size_t MEMORY_LIMIT_BYTES = 2 * 1024 * 1024; // 2 MB

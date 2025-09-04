@@ -8,7 +8,8 @@ typedef struct
 {
     TokenType type; // Tipo do token
     char *literal;  // String literal do token
-    int line_num;   // Linha onde o token foi encontrado
+    unsigned long int line_num;   // Linha onde o token foi encontrado
+    unsigned long int position;   // Posição do token na linha
 } Token;
 
 typedef struct

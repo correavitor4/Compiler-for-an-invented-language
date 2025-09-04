@@ -15,58 +15,34 @@ typedef enum {
     AST_DECIMAL_LITERAL_NODE,
     AST_TEXT_LITERAL_NODE,
     AST_OP_NODE, // New node type for operators (+, -, *, /, etc.)
-    AST_ASSIGNMENT_TEMPORARY_NODE, // New node type for temporary assignment (can be used for multi-assignments)
+    AST_GROUP_NODE, // New node type for grouping expressions (parentheses)
     AST_EXPRESSION_NODE, // New node type for expressions
     AST_IF_NODE, // New node type for if statements,
+    AST_ELSE_NODE, // New node type for else statements,
     AST_FOR_NODE, // New node type for for loops,
-    AST_FOR_STATEMENT_NODE,
-    AST_FOR_STATEMENT_INITIALIZATION_NODE, // ( {non empty initialization }; ...; ...) for loop
-    AST_FOR_STATEMENT_EMPTY_INITIALIZATION_NODE, // ( {empty initialization} ; ...; ...) for loop with empty initialization (x is empty)
-    AST_FOR_STATEMENT_CONDITION_NODE, // (...; {condition}; ...) for loop
-    AST_FOR_STATEMENT_EMPTY_CONDITION_NODE, // (...; {empty condition}; ...) for loop with empty condition (x is empty)
-    AST_FOR_STATEMENT_CONTROL_NODE, // (...; ...; {control}) for loop
-    AST_FOR_STATEMENT_EMPTY_CONTROL_NODE, // (...; ...; {empty control}) for loop with empty control (x is empty)
-    AST_BLOCK_NODE, // New node type for blocks (enclosed in { } )
-    AST_IF_BLOCK_NODE, // New node type for if blocks (enclosed in { } )
-    AST_IF_INLINE_EXECUTION_CODE_NODE, // New node type for if inline execution code (not enclosed in { } )
-    AST_ELSE_EXCUTION_CODE_BLOCK_NODE, // New node type for else execution code (not enclosed in { } )
-    AST_ELSE_INLINE_EXECUTION_CODE_NODE, // New node type for else inline execution code (not enclosed in {
-    AST_IF_STATEMENT_EXPRESSION_NODE, // New node type for if statement expressions
-    AST_DECIMAL_VARIABLE_DECLARATION_NODE, // New node type for decimal variable declarations
+    AST_BLOCK_NODE // New node type for code blocks
 } ASTNodeType;
 
 static const char *ASTNodeTypeStrings[] = {
-    "Invalid Node",
-    "Root Node",
-    "Main Node",
+    "INVALID Node",
+    "ROOT Node",
+    "MAIN Node",
     "FUNCTION Declaration Node",
     "FUNCTION Return Node",
     "VARIABLE Declaration Node",
     "VARIABLE Reference Node",
     "FUNCTION Call Node",
-    "Assignment Node",
+    "ASSIGNMENT Node",
     "INT Literal Node",
     "DECIMAL Literal Node",
     "TEXT Literal Node",
     "OPERATOR Node",
-    "Assignment Temporary Node",
-    "Expression Node",
+    "GROUP Node",
+    "EXPRESSION Node",
     "IF Node",
+    "ELSE Node",
     "FOR Node",
-    "FOR Statement Node",
-    "FOR Statement Initialization Node",
-    "FOR Statement Empty Initialization Node",
-    "FOR Statement Condition Node",
-    "FOR Statement Empty Condition Node",
-    "FOR Statement Control Node",
-    "FOR Statement Empty Control Node",
-    "Block Node",
-    "IF Block Node",
-    "IF Inline Execution Code Node",
-    "ELSE Execution Code Block Node",
-    "ELSE Inline Execution Code Node",
-    "IF Statement Expression Node",
-    "Decimal Variable Declaration Node",
+    "BLOCK Node"
 };
 
 

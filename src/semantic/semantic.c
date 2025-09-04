@@ -163,7 +163,19 @@ TokenType get_expression_type(ASTNode *node, ScopeManager *sm)
         }
         else
         {
-            fprintf(stderr, "[ERROR|Semantic]: Expressão '%s' incorreta na linha %d.\n", node->literal, node->line_num);
+            fprintf(stderr, "[WARN|Semantic]: Expressão '%s' incorreta na linha %d.\n", node->literal, node->line_num);
+        }
+        break;
+    }
+    case AST_GROUP_NODE:
+    {
+        if (node->child_count == 1)
+        {
+            return get_expression_type(node->children[0], sm);
+        }
+        else
+        {
+            fprintf(stderr, "[WARN|Semantic]: Grupo de expressão incorreto na linha %d.\n", node->line_num);
         }
         break;
     }
@@ -187,7 +199,7 @@ void validate_function_declaration(ASTNode *func_node, ScopeManager *sm, Symbol 
     }
 
     ASTNode *func_return = func_block->children[func_block->child_count - 1];
-    if ((func_return == NULL || func_return->type != AST_FUNCTION_RETURN_NODE) || func_symbol->type != TOKEN_VOID_TYPE)
+    if ((func_return == NULL && func_return->type != AST_FUNCTION_RETURN_NODE) && func_symbol->type != TOKEN_VOID_TYPE)
     {
         fprintf(stderr, "[WARN|Semantic]: Função '%s' deve ter uma instrução de retorno a partir da linha %d.\n", func_node->literal, func_node->line_num);
         return;
@@ -212,15 +224,10 @@ void validate_function_declaration(ASTNode *func_node, ScopeManager *sm, Symbol 
         func_symbol->type = var_symbol ? var_symbol->type : TOKEN_ILLEGAL;
         break;
     }
-    case AST_FUNCTION_CALL_NODE:
-    {
-        // Verifica o tipo de retorno da função chamada
-        // e compara com o tipo de retorno da função atual
-        break;
-    }
     case AST_EXPRESSION_NODE:
     {
         // Avalia a expressão e determina seu tipo
+        func_symbol->type = get_expression_type(func_return->children[0], sm);
         break;
     }
     default:

@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
-// #include "../config/options.h"
+#include <string.h>
 
 #include "hash/hash.h"
 #include "symbol_table/symbol_table.h"
@@ -16,7 +16,8 @@ int main(int argc, char *argv[])
 {
 
     if (argc < 2) {
-        fprintf(stderr, "Uso: %s <caminho_do_arquivo>\n", argv[0]);
+        fprintf(stderr, "Como utilizar: %s <caminho_do_arquivo>\n", argv[0]);
+        fprintf(stderr, "--dot: para gerar o arquivo .dot do AST.\n");
         return 1;
     }
 
@@ -149,7 +150,9 @@ int main(int argc, char *argv[])
     }
 
     ASTNode* ast = get_ast();
-    //generate_dot_file(ast);
+
+    if(argc > 2 && strcmp(argv[2], "--dot") == 0)
+        generate_dot_file(ast);
 
     navigate_ast(ast, sm);
 

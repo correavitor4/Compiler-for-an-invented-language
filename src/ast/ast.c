@@ -79,7 +79,6 @@ ASTNode *ast_add_existing_child_copy(ASTNode *parent, ASTNode *child)
 ASTNode *generate_temporary_node(char *literal, int line_num)
 {
     ASTNode *temp_node = allocate_memory(sizeof(ASTNode));
-    temp_node->type = AST_ASSIGNMENT_TEMPORARY_NODE;
     temp_node->literal = literal;
     temp_node->children = NULL;
     temp_node->parent = NULL;

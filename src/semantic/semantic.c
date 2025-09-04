@@ -6,11 +6,10 @@ void navigate_ast(ASTNode* node, ScopeManager* sm) {
     switch (node->type) {
         case AST_FUNCTION_DECLARATION_NODE: {
             const char* func_name = node->literal;
-            scope_manager_enter_scope(sm);
+            scope_manager_enter_scope(sm, func_name);
             break;
         }
         case AST_ASSIGNMENT_NODE: {
-            // Step 1: Get the declared type of the variable on the left
             Symbol* symbol = scope_manager_lookup(sm, node->literal);
             if (symbol) {
                 //
@@ -21,9 +20,6 @@ void navigate_ast(ASTNode* node, ScopeManager* sm) {
             break;
     }
 
-    for (int i = 0; i < node->child_count; i++) {
-        navigate_ast(node->children[i], sm);
-    }
 
     switch (node->type) {
         case AST_FUNCTION_DECLARATION_NODE:
@@ -35,4 +31,15 @@ void navigate_ast(ASTNode* node, ScopeManager* sm) {
         default:
             break;
     }
+}
+
+short validate_ast(ASTNode* root, ScopeManager* sm) {
+    if (root == NULL || sm == NULL) {
+        fprintf(stderr, "Erro: AST ou ScopeManager nulo.\n");
+        return 0;
+    }
+
+    navigate_ast(root, sm);
+
+    return 1;
 }

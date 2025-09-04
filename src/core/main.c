@@ -149,15 +149,17 @@ int main(int argc, char *argv[])
     }
 
     ASTNode* ast = get_ast();
+    generate_dot_file(ast);
 
-    // Navega pela arvore para validação semântica
-    navigate_ast(ast, sm);
+    for (int i = 0; i < tokens_count - 1; i++)
+    {   
+        free_memory(tokens_vector[i].literal);
+    }
+
+    free_memory(tokens_vector);
+
+    scope_manager_destroy(sm);
+    ast_destroy(ast);
     
-    //generate_dot_file(ast);
-
-    // Syntax analysis
-    printf("Análise sintática:\n");
-    
-
     return 0;
 }

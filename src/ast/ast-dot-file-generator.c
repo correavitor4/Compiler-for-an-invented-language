@@ -91,6 +91,8 @@ void generate_dot_file(ASTNode *root) {
     printDot(root, file);
     fprintf(file, "}\n");
     fclose(file);
+
+    free_memory(filename);
 }
 
 

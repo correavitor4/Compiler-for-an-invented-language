@@ -3,22 +3,15 @@
 
 #include "parser.h"
 #include "symbol_table/symbol_table.h"
+#include "utils/string/string_utils.h"
 
 ASTNode *ast_root_node = NULL;
-
-// FIXME: It must has something like a comparising node for ast
-
-struct Parser
-{
-    Token *tokens;
-    int token_count;
-    int current_pos;
-    ScopeManager *sm;
-};
 
 /* PROTOTYPES */
 static void parse_function_call(Parser *p, ASTNode *parent);
 static void parse_statement(Parser *p, ASTNode *parent);
+ASTNodeType get_variable_type(TokenType type);
+static void parse_expression(Parser *p, ASTNode *parent);
 
 /**
  * @brief Retrieves the current token from the parser.
@@ -150,6 +143,11 @@ static void parse_term(Parser *p, ASTNode *parent)
     case TOKEN_IDENT_FUNC:
         parse_function_call(p, parent);
         break;
+    case TOKEN_LPAREN:
+        advance_token(p);
+        parse_expression(p, parent);
+        expect_token(p, TOKEN_RPAREN, "Esperado ')' para fechar a expressão");
+        break;
     default:
         fprintf(stderr, "[Erro Sintático] Linha %lu: Token inesperado '%s' numa expressão. Esperado um valor, variável ou chamada de função.\n",
                 tok.line_num, tok.literal);
@@ -173,6 +171,22 @@ static void parse_expression(Parser *p, ASTNode *parent)
         advance_token(p);
         parse_term(p, expr_node);
     }
+    // If the expression has only one child, simplify the tree
+    if (expr_node->child_count == 1)
+    {
+        ASTNode *single_child = expr_node->children[0];
+        // Remove expr_node from parent
+        parent->child_count--;
+        parent->children = (ASTNode **)reallocate_memory(parent->children, sizeof(ASTNode *) * parent->child_count);
+        // Add single_child directly to parent
+        ast_add_existing_child_copy(parent, single_child);
+        // Free the now unnecessary expr_node
+        free_memory(single_child->children);
+        free_memory(single_child);
+        free_memory(expr_node->children);
+        free_memory(expr_node);
+    }
+
 }
 
 /**
@@ -198,24 +212,66 @@ static void parse_argument_list(Parser *p, ASTNode *parent)
     expect_token(p, TOKEN_RPAREN, "Esperado ')' após a lista de argumentos");
 }
 
-static void parse_parameter_list(Parser *p)
+static void parse_parameter_list(Parser *p, Token func_token, ASTNode *parent)
 {
     expect_token(p, TOKEN_LPAREN, "Esperado '(' para a lista de parâmetros da função");
+
+    Param *param_list_head = NULL;
+
     if (current_token(p).type != TOKEN_RPAREN)
     {
+
+        Param *param_list_tail = NULL;
+
         while (1)
         {
+            int token_type = current_token(p).type;
+
+            if (token_type != TOKEN_INT_TYPE && token_type != TOKEN_TEXT_TYPE && token_type != TOKEN_DEC_TYPE)
+            {
+                fprintf(stderr, "[Erro Sintático] Linha %lu: Tipo de dado inválido para parâmetro. Esperado 'inteiro', 'decimal' ou 'texto'.\n",
+                        current_token(p).line_num);
+                exit(EXIT_FAILURE);
+            }
+            advance_token(p);
+
             Token param_token = current_token(p);
             expect_token(p, TOKEN_IDENT_VAR, "Esperado um nome de parâmetro (variável)");
 
-            if (!scope_manager_insert(p->sm, param_token.literal, KIND_VAR, TOKEN_ILLEGAL))
+            ast_add_child(parent, get_variable_type(token_type), param_token.literal, param_token.line_num);
+
+            if (!scope_manager_insert(p->sm, param_token.literal, KIND_VAR, token_type))
             {
                 fprintf(stderr, "[Erro Semântico] Linha %lu: Parâmetro '%s' redeclarado.\n", param_token.line_num, param_token.literal);
                 exit(EXIT_FAILURE);
             }
+            
+            Symbol* param_symbol = scope_manager_lookup(p->sm, param_token.literal);
+            if (param_symbol) {
+                Param *new_param = allocate_memory(sizeof(Param));
+                new_param->symbol = param_symbol;
+                new_param->next = NULL;
+
+                if (param_list_head == NULL) {
+                    // If the list is empty, this is the first and only node
+                    param_list_head = new_param;
+                    param_list_tail = new_param;
+                } else {
+                    // Otherwise, append to the end of the list and update the tail
+                    param_list_tail->next = new_param;
+                    param_list_tail = new_param;
+                }
+            }
             if (current_token(p).type != TOKEN_COMMA)
                 break;
+
+            
             advance_token(p);
+        }
+
+        Symbol* func_symbol = scope_manager_lookup(p->sm, func_token.literal);
+        if (func_symbol) {
+            bind_function_params(func_symbol, param_list_head);
         }
     }
     expect_token(p, TOKEN_RPAREN, "Esperado ')' para fechar a lista de parâmetros");
@@ -261,11 +317,11 @@ static void parse_function_declaration(Parser *p, ASTNode *parent)
 
     scope_manager_insert(p->sm, func_token.literal, KIND_FUNC, TOKEN_ILLEGAL);
 
-    scope_manager_enter_scope(p->sm);
+    scope_manager_enter_scope(p->sm, func_token.literal);
 
     ASTNode *func_node = ast_add_child(parent, AST_FUNCTION_DECLARATION_NODE, func_token.literal, func_token.line_num);
 
-    parse_parameter_list(p);
+    parse_parameter_list(p, func_token, func_node);
     skip_eols(p);
     parse_block(p, func_node);
 
@@ -357,6 +413,12 @@ static void parse_variable_declaration(Parser *p, ASTNode *parent)
                 ASTNode *var_node = variable_declaration_nodes[--var_decl_count];
                 ast_add_existing_child_copy(var_node, temporary_tree);
             }
+            for(int i = 0; i < temporary_tree->child_count; i++)
+            {
+                free_memory(temporary_tree->children[i]);
+            }
+            free_memory(temporary_tree->children);
+            free_memory(temporary_tree);
         }
 
         if (current_token(p).type != TOKEN_COMMA)

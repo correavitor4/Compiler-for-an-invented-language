@@ -8,7 +8,13 @@
 #include "symbol_table/symbol_table.h"
 #include "ast/ast.h"
 
-typedef struct Parser Parser;
+typedef struct Parser
+{
+    Token *tokens;
+    int token_count;
+    int current_pos;
+    ScopeManager *sm;
+} Parser;
 
 /**
  * @brief Executa a análise sintática em um vetor de tokens.

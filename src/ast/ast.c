@@ -1,7 +1,11 @@
+#include <string.h>
+#include <stdio.h>
+#include <stdlib.h>
+
 #include "ast.h"
 #include "memory/memory_controller.h"
-#include <string.h>
 #include "utils/string/string_utils.h"
+
 
 ASTNode *ast_generate_root()
 {
@@ -22,7 +26,7 @@ ASTNode *ast_add_child(ASTNode *parent, ASTNodeType type, char *literal, int lin
 
     ASTNode *child = allocate_memory(sizeof(ASTNode));
     child->type = type;
-    child->literal = string_copy(literal);
+    child->literal = literal;
     child->children = NULL;
     child->parent = parent;
     child->child_count = 0;
@@ -47,12 +51,13 @@ ASTNode *ast_add_child(ASTNode *parent, ASTNodeType type, char *literal, int lin
  */
 ASTNode *ast_add_existing_child_copy(ASTNode *parent, ASTNode *child)
 {
+
     if (parent == NULL || child == NULL)
         return NULL;
 
     ASTNode *child_copy = allocate_memory(sizeof(ASTNode));
     child_copy->type = child->type;
-    child_copy->literal = string_copy(child->literal);
+    child_copy->literal = child->literal;
     child_copy->children = NULL;
     child_copy->parent = parent;
     child_copy->child_count = 0;
@@ -74,12 +79,12 @@ ASTNode *ast_add_existing_child_copy(ASTNode *parent, ASTNode *child)
 ASTNode *generate_temporary_node(char *literal, int line_num)
 {
     ASTNode *temp_node = allocate_memory(sizeof(ASTNode));
-    temp_node->type = AST_ASSIGNMENT_TEMPORARY_NODE;
     temp_node->literal = literal;
     temp_node->children = NULL;
     temp_node->parent = NULL;
     temp_node->child_count = 0;
     temp_node->line_num = line_num;
+    
     return temp_node;
 }
 
@@ -120,10 +125,15 @@ ASTNode *delete_node(ASTNode *node)
     }
 
     // Free the children array
-    free_memory(node->children);
+    if (node->children) free_memory(node->children);
+    //if (node->parent) free_memory(node->parent);
 
-    // Free the node itself
-    free_memory(node);
+    if(node) free_memory(node);
 
     return NULL;
+}
+
+void *ast_destroy(ASTNode *root)
+{
+    return delete_node(root);
 }

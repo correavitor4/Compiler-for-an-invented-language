@@ -16,6 +16,7 @@ typedef enum
     TOKEN_INT_TYPE,   // Tipo de dado inteiro (ex: inteiro)
     TOKEN_DEC_TYPE,   // Tipo de dado decimal (ex: decimal)
     TOKEN_TEXT_TYPE,  // Tipo de dado texto (ex: texto)
+    TOKEN_VOID_TYPE,  // Tipo de dado vazio (ex: vazio)
     TOKEN_INT,        // Números inteiros (ex: 10, 50, 123) - inteiro
     TOKEN_DECIMAL,    // Números de ponto flutuante (ex: 10.5, 0.25) - decimal
     TOKEN_TEXT,       // Strings de texto (ex: "ola mundo") - texto

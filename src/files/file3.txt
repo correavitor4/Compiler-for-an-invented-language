@@ -1,6 +1,7 @@
-funcao __soma ( !e, !aa){
+funcao __soma (inteiro !e,inteiro !aa){
 inteiro !num;
 !num = !e + !aa;
+!num = !num + (8 + !e) + 22;
 retorno !num;
 }
 
@@ -9,5 +10,5 @@ inteiro !a, !b2 = 7;
 inteiro !d;
 escreva("Escreva um número ");
 leia (!a);
-!d = __soma (!a, !b2);
+!d = !a + __soma (!a, !b2) + 7 * 22;
 }

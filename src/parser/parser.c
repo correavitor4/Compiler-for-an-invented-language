@@ -3,22 +3,17 @@
 
 #include "parser.h"
 #include "symbol_table/symbol_table.h"
+#include "utils/string/string_utils.h"
 
 ASTNode *ast_root_node = NULL;
 
-// FIXME: It must has something like a comparising node for ast
-
-struct Parser
-{
-    Token *tokens;
-    int token_count;
-    int current_pos;
-    ScopeManager *sm;
-};
+int expression_counter = 0;
 
 /* PROTOTYPES */
 static void parse_function_call(Parser *p, ASTNode *parent);
 static void parse_statement(Parser *p, ASTNode *parent);
+static void parse_expression(Parser *p, ASTNode *parent);
+static void parse_group(Parser *p, ASTNode *parent);
 
 /**
  * @brief Retrieves the current token from the parser.
@@ -50,6 +45,14 @@ static void advance_token(Parser *p)
     {
         p->current_pos++;
     }
+}
+
+static Token peek_token(Parser *p)
+{
+    if (p->current_pos + 1 < p->token_count)
+        return p->tokens[p->current_pos + 1];
+
+    return p->tokens[p->token_count - 1];
 }
 
 /**
@@ -138,7 +141,7 @@ static void parse_term(Parser *p, ASTNode *parent)
         {
             if (scope_manager_lookup(p->sm, tok.literal) == NULL)
             {
-                fprintf(stderr, "[Erro Semântico] Linha %lu: A variável '%s' não foi declarada.\n",
+                fprintf(stderr, "[ERROR|Syntax] Linha %lu: A variável '%s' não foi declarada.\n",
                         tok.line_num, tok.literal);
                 exit(EXIT_FAILURE);
             }
@@ -150,17 +153,30 @@ static void parse_term(Parser *p, ASTNode *parent)
     case TOKEN_IDENT_FUNC:
         parse_function_call(p, parent);
         break;
+    case TOKEN_LPAREN:
+        advance_token(p);
+        parse_group(p, parent);
+        expect_token(p, TOKEN_RPAREN, "Esperado ')' para fechar a expressão");
+        break;
     default:
-        fprintf(stderr, "[Erro Sintático] Linha %lu: Token inesperado '%s' numa expressão. Esperado um valor, variável ou chamada de função.\n",
+        fprintf(stderr, "[ERROR|Syntax]: Linha %lu: Token inesperado '%s' numa expressão. Esperado um valor, variável ou chamada de função.\n",
                 tok.line_num, tok.literal);
         exit(EXIT_FAILURE);
     }
+}
+
+static void parse_group(Parser *p, ASTNode *parent)
+{
+    ASTNode *group_node = ast_add_child(parent, AST_GROUP_NODE, "group", current_token(p).line_num);
+    parse_expression(p, group_node);
 }
 
 static void parse_expression(Parser *p, ASTNode *parent)
 {
     ASTNode *expr_node = ast_add_child(parent, AST_EXPRESSION_NODE, "expression", current_token(p).line_num);
     parse_term(p, expr_node);
+
+    ASTNode *expr_node_itr = expr_node;
 
     while (current_token(p).type == TOKEN_PLUS || current_token(p).type == TOKEN_MINUS ||
            current_token(p).type == TOKEN_ASTERISK || current_token(p).type == TOKEN_SLASH ||
@@ -170,8 +186,50 @@ static void parse_expression(Parser *p, ASTNode *parent)
            current_token(p).type == TOKEN_AND || current_token(p).type == TOKEN_OR ||
            current_token(p).type == TOKEN_ASSIGN)
     {
+        ast_add_child(expr_node_itr, AST_OP_NODE, current_token(p).literal, current_token(p).line_num);
+        
+        expr_node_itr = ast_add_child(expr_node_itr, AST_EXPRESSION_NODE, "expression", current_token(p).line_num);
         advance_token(p);
-        parse_term(p, expr_node);
+        parse_term(p, expr_node_itr);
+    }
+
+    // If the expression has only one child, simplify the tree
+    if (expr_node->child_count == 1 && expr_node->type == AST_EXPRESSION_NODE)
+    {
+        ASTNode *single_child = expr_node->children[0];
+        // Remove expr_node from parent
+        parent->child_count--;
+        parent->children = (ASTNode **)reallocate_memory(parent->children, sizeof(ASTNode *) * parent->child_count);
+        // Add single_child directly to parent
+        ast_add_existing_child_copy(parent, single_child);
+        free_memory(single_child->children);
+        free_memory(single_child);
+
+    }
+
+    if ((void*)expr_node != (void*)expr_node_itr && expr_node_itr->type == AST_EXPRESSION_NODE && expr_node_itr->children[0]->child_count == 0)
+    {
+
+        ASTNode *single_child = expr_node_itr->children[0];
+        ASTNode *parent = expr_node_itr->parent;
+
+        parent->child_count--;
+        parent->children = (ASTNode **)reallocate_memory(parent->children, sizeof(ASTNode *) * parent->child_count);
+        // Add single_child directly to parent
+        ast_add_existing_child_copy(parent, single_child);
+        // Free the now unnecessary expr_node
+
+        free_memory(single_child->children);
+        free_memory(single_child);
+        free_memory(expr_node_itr->children);
+        free_memory(expr_node_itr);
+    }
+
+    // Free memory only after working with expr_node_itr
+    if (expr_node->child_count == 1)
+    {
+        free_memory(expr_node->children);
+        free_memory(expr_node);
     }
 }
 
@@ -198,24 +256,70 @@ static void parse_argument_list(Parser *p, ASTNode *parent)
     expect_token(p, TOKEN_RPAREN, "Esperado ')' após a lista de argumentos");
 }
 
-static void parse_parameter_list(Parser *p)
+static void parse_parameter_list(Parser *p, Token func_token, ASTNode *parent)
 {
     expect_token(p, TOKEN_LPAREN, "Esperado '(' para a lista de parâmetros da função");
+
+    Param *param_list_head = NULL;
+
     if (current_token(p).type != TOKEN_RPAREN)
     {
+
+        Param *param_list_tail = NULL;
+
         while (1)
         {
+            int token_type = current_token(p).type;
+
+            if (token_type != TOKEN_INT_TYPE && token_type != TOKEN_TEXT_TYPE && token_type != TOKEN_DEC_TYPE)
+            {
+                fprintf(stderr, "[ERROR|Syntax]: Linha %lu: Tipo de dado inválido para parâmetro. Esperado 'inteiro', 'decimal' ou 'texto'.\n",
+                        current_token(p).line_num);
+                exit(EXIT_FAILURE);
+            }
+            advance_token(p);
+
             Token param_token = current_token(p);
             expect_token(p, TOKEN_IDENT_VAR, "Esperado um nome de parâmetro (variável)");
 
-            if (!scope_manager_insert(p->sm, param_token.literal, KIND_VAR, TOKEN_ILLEGAL))
+            ast_add_child(parent, AST_VARIABLE_DECLARATION_NODE, param_token.literal, param_token.line_num);
+
+            if (!scope_manager_insert(p->sm, param_token.literal, KIND_VAR, token_type))
             {
-                fprintf(stderr, "[Erro Semântico] Linha %lu: Parâmetro '%s' redeclarado.\n", param_token.line_num, param_token.literal);
+                fprintf(stderr, "[ERROR|Semantic]: Linha %lu: Parâmetro '%s' redeclarado.\n", param_token.line_num, param_token.literal);
                 exit(EXIT_FAILURE);
+            }
+
+            Symbol *param_symbol = scope_manager_lookup(p->sm, param_token.literal);
+            if (param_symbol)
+            {
+                Param *new_param = allocate_memory(sizeof(Param));
+                new_param->symbol = param_symbol;
+                new_param->next = NULL;
+
+                if (param_list_head == NULL)
+                {
+                    // If the list is empty, this is the first and only node
+                    param_list_head = new_param;
+                    param_list_tail = new_param;
+                }
+                else
+                {
+                    // Otherwise, append to the end of the list and update the tail
+                    param_list_tail->next = new_param;
+                    param_list_tail = new_param;
+                }
             }
             if (current_token(p).type != TOKEN_COMMA)
                 break;
+
             advance_token(p);
+        }
+
+        Symbol *func_symbol = scope_manager_lookup(p->sm, func_token.literal);
+        if (func_symbol)
+        {
+            bind_function_params(func_symbol, param_list_head);
         }
     }
     expect_token(p, TOKEN_RPAREN, "Esperado ')' para fechar a lista de parâmetros");
@@ -235,22 +339,22 @@ static void parse_function_call(Parser *p, ASTNode *parent)
     Symbol *func_symbol = scope_manager_lookup(p->sm, func_token.literal);
     if (func_symbol == NULL)
     {
-        fprintf(stderr, "[Erro Semântico] Linha %lu: Tentativa de chamar a função não declarada '%s'.\n",
+        fprintf(stderr, "[ERROR|Semantic]: Linha %lu: Tentativa de chamar a função não declarada '%s'.\n",
                 func_token.line_num, func_token.literal);
         exit(EXIT_FAILURE);
     }
     if (func_symbol->kind != KIND_FUNC)
     {
-        fprintf(stderr, "[Erro Semântico] Linha %lu: O identificador '%s' não é uma função e não pode ser chamado.\n",
+        fprintf(stderr, "[ERROR|Semantic]: Linha %lu: O identificador '%s' não é uma função e não pode ser chamado.\n",
                 func_token.line_num, func_token.literal);
         exit(EXIT_FAILURE);
     }
 
-    ast_add_child(parent, AST_FUNCTION_CALL_NODE, func_token.literal, func_token.line_num);
+    ASTNode *func_call_node = ast_add_child(parent, AST_FUNCTION_CALL_NODE, func_token.literal, func_token.line_num);
 
     advance_token(p);
 
-    parse_argument_list(p, parent);
+    parse_argument_list(p, func_call_node);
 }
 
 static void parse_function_declaration(Parser *p, ASTNode *parent)
@@ -259,13 +363,13 @@ static void parse_function_declaration(Parser *p, ASTNode *parent)
     Token func_token = current_token(p);
     expect_token(p, TOKEN_IDENT_FUNC, "Esperado um identificador de função (iniciado com '__')");
 
-    scope_manager_insert(p->sm, func_token.literal, KIND_FUNC, TOKEN_ILLEGAL);
+    scope_manager_insert(p->sm, func_token.literal, KIND_FUNC, TOKEN_VOID_TYPE);
 
-    scope_manager_enter_scope(p->sm);
+    scope_manager_enter_scope(p->sm, func_token.literal);
 
     ASTNode *func_node = ast_add_child(parent, AST_FUNCTION_DECLARATION_NODE, func_token.literal, func_token.line_num);
 
-    parse_parameter_list(p);
+    parse_parameter_list(p, func_token, func_node);
     skip_eols(p);
     parse_block(p, func_node);
 
@@ -274,25 +378,10 @@ static void parse_function_declaration(Parser *p, ASTNode *parent)
 
 static void parse_return_statement(Parser *p, ASTNode *parent)
 {
-    ASTNode *return_node = ast_add_child(parent, AST_FUNCTION_CALL_NODE, "return", current_token(p).line_num);
+    ASTNode *return_node = ast_add_child(parent, AST_FUNCTION_RETURN_NODE, "return", current_token(p).line_num);
     advance_token(p);
     parse_expression(p, return_node);
     expect_token(p, TOKEN_SEMICOLON, "Esperado ';' após a expressão de retorno");
-}
-
-ASTNodeType get_variable_type(TokenType type)
-{
-    switch (type)
-    {
-    case TOKEN_INT_TYPE:
-        return AST_INT_VARIABLE_DECLARATION_NODE;
-    case TOKEN_TEXT_TYPE:
-        return AST_TEXT_VARIABLE_DECLARATION_NODE;
-    case TOKEN_DEC_TYPE:
-        return AST_DECIMAL_VARIABLE_DECLARATION_NODE;
-    default:
-        return -1;
-    }
 }
 
 /**
@@ -327,7 +416,7 @@ static void parse_variable_declaration(Parser *p, ASTNode *parent)
             exit(EXIT_FAILURE);
         }
 
-        variable_declaration_nodes[var_decl_count++] = ast_add_child(parent, get_variable_type(declaration_type), var_token.literal, var_token.line_num);
+        variable_declaration_nodes[var_decl_count++] = ast_add_child(parent, AST_VARIABLE_DECLARATION_NODE, var_token.literal, var_token.line_num);
         variable_declaration_nodes = reallocate_memory(variable_declaration_nodes, sizeof(ASTNode *) * (var_decl_count + 1));
 
         if (declaration_type == TOKEN_DEC_TYPE && current_token(p).type == TOKEN_LBRACKET)
@@ -357,6 +446,12 @@ static void parse_variable_declaration(Parser *p, ASTNode *parent)
                 ASTNode *var_node = variable_declaration_nodes[--var_decl_count];
                 ast_add_existing_child_copy(var_node, temporary_tree);
             }
+            for (int i = 0; i < temporary_tree->child_count; i++)
+            {
+                free_memory(temporary_tree->children[i]);
+            }
+            free_memory(temporary_tree->children);
+            free_memory(temporary_tree);
         }
 
         if (current_token(p).type != TOKEN_COMMA)
@@ -379,7 +474,7 @@ static void parse_variable_declaration(Parser *p, ASTNode *parent)
  *
  * @param p Pointer to the Parser structure containing parsing context.
  */
-static void parse_assignment_statement(Parser *p, ASTNode *parent)
+static void parse_assignment_statement(Parser *p, ASTNode *parent, short is_semicolon_expected)
 {
     Token var_token = current_token(p);
 
@@ -398,7 +493,8 @@ static void parse_assignment_statement(Parser *p, ASTNode *parent)
 
     parent = parent->parent;
 
-    expect_token(p, TOKEN_SEMICOLON, "Esperado ';' no final da atribuição");
+    if (is_semicolon_expected)
+        expect_token(p, TOKEN_SEMICOLON, "Esperado ';' no final da atribuição");
 }
 
 /**
@@ -437,13 +533,13 @@ static void parse_if_statement(Parser *p, ASTNode *parent)
     expect_token(p, TOKEN_RPAREN, "Esperado ')' após a condição do 'se'");
     skip_eols(p);
 
-    for(int i = 0; i < if_node->child_count; i++)
+    for (int i = 0; i < if_node->child_count; i++)
     {
         ASTNode *child = if_node->children[i];
         if (child->type == AST_EXPRESSION_NODE)
         {
-            child->type = AST_IF_STATEMENT_EXPRESSION_NODE;
-            child->literal = "if condition";
+            child->type = AST_EXPRESSION_NODE;
+            child->literal = "IF Condition";
         }
     }
 
@@ -455,15 +551,14 @@ static void parse_if_statement(Parser *p, ASTNode *parent)
             ASTNode *child = if_node->children[i];
             if (child->type == AST_BLOCK_NODE)
             {
-                child->type = AST_IF_BLOCK_NODE;
-                child->literal = "if block";
+                child->type = AST_BLOCK_NODE;
+                child->literal = "IF Block";
             }
         }
     }
     else
     {
-        ASTNode *if_inline_execution_code_node = ast_add_child(if_node, AST_IF_INLINE_EXECUTION_CODE_NODE, "if_inline_block", current_token(p).line_num);
-        parse_statement(p, if_inline_execution_code_node);
+        parse_statement(p, if_node);
     }
 
     skip_eols(p);
@@ -479,15 +574,14 @@ static void parse_if_statement(Parser *p, ASTNode *parent)
                 ASTNode *child = if_node->children[i];
                 if (child->type == AST_BLOCK_NODE)
                 {
-                    child->type = AST_ELSE_EXCUTION_CODE_BLOCK_NODE;
-                    child->literal = "else code block";
+                    child->type = AST_BLOCK_NODE;
+                    child->literal = "ELSE Block";
                 }
             }
         }
         else
         {
-            ASTNode *else_inline_execution_code_node = ast_add_child(if_node, AST_ELSE_INLINE_EXECUTION_CODE_NODE, "else_inline_block", current_token(p).line_num);
-            parse_statement(p, else_inline_execution_code_node);
+            parse_statement(p, if_node);
         }
     }
 }
@@ -509,49 +603,40 @@ static void parse_for_statement(Parser *p, ASTNode *parent)
 
     expect_token(p, TOKEN_LPAREN, "Esperado '(' após a palavra-chave 'para'");
 
-    ASTNode *for_sttm_node = ast_add_child(for_node, AST_FOR_STATEMENT_NODE, "FOR Expression", current_token(p).line_num);
-
     if (current_token(p).type != TOKEN_SEMICOLON)
     {
 
-        ASTNode *for_init_node = ast_add_child(for_sttm_node, AST_FOR_STATEMENT_INITIALIZATION_NODE, "FOR initialization", current_token(p).line_num);
-
         if (current_token(p).type == TOKEN_IDENT_VAR)
         {
-            parse_assignment_statement(p, for_init_node);
+            parse_assignment_statement(p, for_node, 1);
         }
         else
         {
-            parse_variable_declaration(p, for_init_node);
+            parse_variable_declaration(p, for_node);
         }
     }
     else
     {
-        ASTNode *for_init_node = ast_add_child(for_sttm_node, AST_FOR_STATEMENT_EMPTY_INITIALIZATION_NODE, "FOR empty initialization", current_token(p).line_num);
         expect_token(p, TOKEN_SEMICOLON, "Esperado ';' após a inicialização (vazia) do loop 'para'");
     }
 
     if (current_token(p).type != TOKEN_SEMICOLON)
     {
-        ASTNode *for_cond_node = ast_add_child(for_sttm_node, AST_FOR_STATEMENT_NODE, "FOR condition", current_token(p).line_num);
-        parse_expression(p, parent);
+        parse_expression(p, for_node);
         expect_token(p, TOKEN_SEMICOLON, "Esperado ';' após a condição do loop 'para'");
     }
     else
     {
-        ASTNode *for_cond_node = ast_add_child(for_sttm_node, AST_FOR_STATEMENT_EMPTY_CONDITION_NODE, "FOR empty condition", current_token(p).line_num);
         expect_token(p, TOKEN_SEMICOLON, "Esperado ';' após a condição vazia do loop 'para'");
     }
 
     if (current_token(p).type != TOKEN_RPAREN)
     {
-        ASTNode *for_control_node = ast_add_child(for_sttm_node, AST_FOR_STATEMENT_CONTROL_NODE, "FOR control", current_token(p).line_num);
-        parse_expression(p, parent);
+        parse_assignment_statement(p, for_node, 0);
         expect_token(p, TOKEN_RPAREN, "Esperado ')' para fechar a declaração do loop 'para'");
     }
     else
     {
-        ASTNode *for_control_node = ast_add_child(for_sttm_node, AST_FOR_STATEMENT_EMPTY_CONTROL_NODE, "FOR empty control", current_token(p).line_num);
         expect_token(p, TOKEN_RPAREN, "Esperado ')' para fechar a declaração do loop 'para'");
     }
 
@@ -560,7 +645,6 @@ static void parse_for_statement(Parser *p, ASTNode *parent)
     if (current_token(p).type == TOKEN_LBRACE)
     {
         parse_block(p, for_node);
-        int a = 0;
     }
     else
     {
@@ -578,7 +662,7 @@ static void parse_for_statement(Parser *p, ASTNode *parent)
  */
 static void parse_main_function(Parser *p, ASTNode *parent)
 {
-    ASTNode *main_node = ast_add_child(parent, AST_FUNCTION_DECLARATION_NODE, "main", current_token(p).line_num);
+    ASTNode *main_node = ast_add_child(parent, AST_MAIN_NODE, "main", current_token(p).line_num);
     advance_token(p);
     expect_token(p, TOKEN_LPAREN, "Esperado '(' na função principal");
     expect_token(p, TOKEN_RPAREN, "Esperado ')' na função principal");
@@ -603,10 +687,10 @@ static void parse_statement(Parser *p, ASTNode *parent)
     case TOKEN_INT_TYPE:
     case TOKEN_DEC_TYPE:
     case TOKEN_TEXT_TYPE:
-        parse_variable_declaration(p, parent);
+            parse_variable_declaration(p, parent);
         break;
     case TOKEN_IDENT_VAR:
-        parse_assignment_statement(p, parent);
+        parse_assignment_statement(p, parent, 1);
         break;
     case TOKEN_FUNCTION:
         parse_function_declaration(p, parent);

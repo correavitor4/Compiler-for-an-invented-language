@@ -13,6 +13,16 @@
         "$gcc"
       ],
       "detail": "Executa o comando make antes de iniciar o debug"
+    },
+    {
+      "label": "Build with Make",
+      "type": "shell",
+      "command": "make",
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+      "problemMatcher": ["$gcc"]
     }
   ]
 }
